@@ -1,0 +1,39 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>
+      <ion-icon name="map-outline"></ion-icon>
+      แผนที่และแปลงอ้อย
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-segment value="map" class="bgWhite" (ionChange)="segmentChanged($event)">
+    <ion-segment-button value="map">
+      <ion-chip class="bgOrangeSoft">
+        <ion-icon name="map" color="primary"></ion-icon>
+        <ion-label class="txtBold">แผนที่</ion-label>
+      </ion-chip>
+      <!-- <ion-label class="txtLarge"><ion-icon name="map-outline"></ion-icon> แผนที่</ion-label> -->
+    </ion-segment-button>
+    <ion-segment-button value="cpdata"  [disabled]="true">
+      <ion-chip class="bgOrangeSoft">
+        <ion-icon name="list" color="primary"></ion-icon>
+        <ion-label class="txtBold">แปลงอ้อย</ion-label>
+      </ion-chip>
+      <!-- <ion-label class="txtLarge "><ion-icon name="list-outline"></ion-icon> แปลงอ้อย</ion-label> -->
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-content *ngIf="mapP && mapFbFm" class="animate__animated animate__faster" [ngClass]="{animate__slideInRight: !dataP}">
+    <!-- <ion-text>map segment</ion-text> -->
+    <div id="map" style="width: 100%;  height: 100%;"></div>
+  </ion-content>
+
+  <ion-content *ngIf="dataP && cpFmdata" class="animate__animated animate__faster" [ngClass]="{animate__slideInRight: !dataP}">
+    <ion-text>Data segment</ion-text>
+  </ion-content>
+
+  <!-- <app-explore-container name="Tab 2 page"></app-explore-container> -->
+</ion-content>

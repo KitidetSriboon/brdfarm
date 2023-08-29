@@ -1,0 +1,174 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>กิจกรรมแปลง {{ yearDesc }}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <div style="padding: 2% 5%;">
+    <div class="info">
+      <p style="margin: 0;">
+        <ion-icon name="person-outline"></ion-icon>กิจกรรมแปลงของท่าน
+      </p>
+      <ion-text color="secondary">
+        <div style="display: flex; justify-content: space-between;align-items: center;">
+          <ion-label name="landname" *ngIf="cpdata.landname_fm !== null" style="font-size: 20px; transition: all 1s;">{{
+            cpdata.landname_fm }}</ion-label>
+        </div>
+        <p style="margin-left: 5%; margin: 0;">หมายเลขแปลง: {{cpdata.intlandno}}</p>
+        <p style="margin-left: 5%; margin: 0;">{{ cpdata.CaneTypeName}} {{ cpdata.landvalue }} ไร่ โซน:
+          {{cpdata.supzone}}</p>
+      </ion-text>
+    </div>
+  </div>
+</ion-header>
+
+<ion-content [fullscreen]="true" *ngFor="let item of cpActivityData">
+
+  <ion-grid>
+    <ion-row style="border-bottom: 1px solid; font-size: 18px; font-weight: 900;">
+      <ion-col>
+        #
+      </ion-col>
+      <ion-col>
+        <ion-icon name="person"></ion-icon> ท่าน
+      </ion-col>
+      <ion-col>
+        <ion-icon name="people"></ion-icon> นสส.
+      </ion-col>
+    </ion-row>
+    <ion-row style="border-bottom: 1px solid #0003;">
+      <ion-col>
+        ประเมิน
+      </ion-col>
+      <ion-col>
+        {{ item.ton_fm }}
+      </ion-col>
+      <ion-col>
+        {{ item.Ton }}
+      </ion-col>
+    </ion-row>
+    <ion-row style="border-bottom: 1px solid #0003;">
+      <ion-col>
+        ใส่อินทรีย์
+      </ion-col>
+      <ion-col>
+        <ion-icon name="checkmark-circle" *ngIf="item.NaturalFertilizer_fm !== '0' && item.NaturalFertilizer_fm !== ''">
+        </ion-icon>
+      </ion-col>
+      <ion-col>
+        <ion-icon name="checkmark-circle" *ngIf="item.NaturalFertilizer !== null"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row style="border-bottom: 1px solid #0003;">
+      <ion-col>
+        ไดโลไมท์
+      </ion-col>
+      <ion-col>
+        <ion-icon name="checkmark-circle" *ngIf="item.Dolomite_fm === '1'"></ion-icon>
+      </ion-col>
+      <ion-col>
+        <ion-icon name="checkmark-circle" *ngIf="item.Dolomite === '1'"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row style="border-bottom: 1px solid #0003;">
+      <ion-col>
+        ระเบิดดาน
+      </ion-col>
+      <ion-col>
+        <ion-icon name="checkmark-circle" *ngIf="item.hardSoilBlast_fm === '1'"></ion-icon>
+      </ion-col>
+      <ion-col>
+        <ion-icon name="checkmark-circle" *ngIf="item.hardSoilBlast === '1'"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row style="border-bottom: 1px solid #0003;">
+      <ion-col>
+        เคมี 1
+      </ion-col>
+      <ion-col>
+        <ion-icon name="checkmark-circle" *ngIf="item.FertilizerRound1_fm === '1'"></ion-icon>
+      </ion-col>
+      <ion-col>
+        <ion-icon name="checkmark-circle" *ngIf="item.FertilizerRound1 === '1'"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row style="border-bottom: 1px solid #0003;">
+      <ion-col>
+        เคมี 2
+      </ion-col>
+      <ion-col>
+        <ion-icon name="checkmark-circle" *ngIf="item.FertilizerRound2_fm === '1'"></ion-icon>
+      </ion-col>
+      <ion-col>
+        <ion-icon name="checkmark-circle" *ngIf="item.FertilizerRound2 === '1'"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row style="border-bottom: 1px solid #0003;">
+      <ion-col>
+        เคมี 3
+      </ion-col>
+      <ion-col>
+        <ion-icon name="checkmark-circle" *ngIf="item.FertilizerRound3_fm === '1'"></ion-icon>
+      </ion-col>
+      <ion-col>
+        <ion-icon name="checkmark-circle" *ngIf="item.FertilizerRound3 === '1'"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row style="border-bottom: 1px solid #0003;">
+      <ion-col>
+        ปุ๋ยน้ำ
+      </ion-col>
+      <ion-col>
+        <ion-icon name="checkmark-circle" *ngIf="item.liquidFertilizer_fm === '1'"></ion-icon>
+      </ion-col>
+      <ion-col>
+        <ion-icon name="checkmark-circle" *ngIf="item.liquidFertilizer === '1'"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row style="border-bottom: 1px solid #0003;">
+      <ion-col>
+        แมลง
+      </ion-col>
+      <ion-col>
+        <ion-icon name="bug-outline" color="danger" *ngIf="item.Insect_fm === '1'"></ion-icon>
+      </ion-col>
+      <ion-col>
+        <ion-icon name="bug-outline" color="danger" *ngIf="item.Insect === '1'"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row style="border-bottom: 1px solid #0003;">
+      <ion-col>
+        โรค
+      </ion-col>
+      <ion-col>
+        <ion-icon name="medical-outline" color="danger" *ngIf="item.Disease_fm === '1'"></ion-icon>
+      </ion-col>
+      <ion-col>
+        <ion-icon name="medical-outline" color="danger" *ngIf="item.Disease === '1'"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row style="border-bottom: 1px solid #0003;">
+      <ion-col>
+        เปอร์เซ็นต์งอก
+      </ion-col>
+      <ion-col>
+        {{ item.GerminationPercent_fm }}
+      </ion-col>
+      <ion-col>
+        {{ item.lastGerminationPercent }}
+      </ion-col>
+    </ion-row>
+    <ion-row style="border-bottom: 1px solid #0003;">
+      <ion-col>
+        ข้อมูล ณ วันที่
+      </ion-col>
+      <ion-col>
+        {{ item.update_date_fm | date: 'dd/MM/yyyy' }}
+      </ion-col>
+      <ion-col>
+        {{ item.lastupdate | date: 'dd/MM/yyyy' }}
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

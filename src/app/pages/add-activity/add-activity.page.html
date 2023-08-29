@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>บันทึกกิจกรรมแปลง</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-card class="borderDashData">
+  <ion-card-header>
+    <ion-chip>
+      <ion-icon name="pin" color="primary"></ion-icon>
+      <ion-label class="txtBold">แปลง {{ cpdata.intlandno }}</ion-label>
+      <!-- <ion-icon name="close"></ion-icon> -->
+    </ion-chip>
+    <!-- <ion-card-title>Card Title</ion-card-title>  -->
+    <ion-card-subtitle>{{ cpdata.CaneTypeName}} พท. {{ cpdata.landvalue}} ไร่</ion-card-subtitle>
+  </ion-card-header>
+
+  <!-- <ion-card-content>
+    Here's a small text description for the card content. Nothing more, nothing less.
+  </ion-card-content> -->
+</ion-card>
+
+<ion-content>
+
+  <ion-card class="borderDashForm">
+
+    <form *ngIf="cpdata" [formGroup]="frm_addcpact" (ngSubmit)="submit(frm_addcpact.value)" novalidate>
+
+      <ion-input type="hidden" [(ngModel)]="itid" formControlName="itid"></ion-input>
+      <ion-input type="hidden" [(ngModel)]="yearCr" formControlName="yearid"></ion-input>
+
+      <ion-title class="txtxxlarge ion-text-center txtBlue">ท่านประเมิน {{ perTon }}/ไร่</ion-title>
+      <ion-range formControlName="ton" [min]="0" [max]="35" [value]="0" [pin]="true" [ticks]="true" [snaps]="true"
+        (ionChange)="newTon($event)">
+      </ion-range>
+      <ion-item class="txtxxlarge txtRed ion-text-center ion-padding" color="warning">
+        <!-- <ion-label style="opacity: 1;">ปริมาณตันอ้อย</ion-label> -->
+        <ion-label>{{ ton }} ตัน</ion-label>
+      </ion-item>
+
+      <ion-grid>
+        <ion-row class="ion-text-center">
+          <ion-col>
+            <ion-button shape="round" type="submit" [disabled]="!frm_addcpact.valid">
+              <ion-icon name="save-outline"></ion-icon>
+              ...บันทึกข้อมูล
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+    </form>
+
+  </ion-card>
+
+</ion-content>

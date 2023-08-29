@@ -1,0 +1,7 @@
+{
+  "name": "brdfarm",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
