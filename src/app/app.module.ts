@@ -9,8 +9,10 @@ import { AppComponent } from './app.component';
 import { AngularFireModule} from '@angular/fire/compat';
 // import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
-
+// import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { HttpClientModule } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+
 import { BrdsqlService } from './services/brdsql.service';
 import { ThaidatePipe } from './pipes/thaidate.pipe';
 
@@ -26,7 +28,9 @@ import { ThaidatePipe } from './pipes/thaidate.pipe';
     HttpClientModule,
     AngularFireModule,
     // AngularFirestoreModule,
-    AngularFireDatabaseModule
+    AngularFireDatabaseModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    // AngularFireAuthModule,
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

@@ -15,7 +15,6 @@ import {
   AnimationController
 } from '@ionic/angular';
 
-// import { FirebaseService } from '../services/firebase.service';
 import { BrdsqlService } from '../services/brdsql.service';
 import { GlobalConstants } from '../global-constants';
 
@@ -50,22 +49,15 @@ export class Tab1Page {
     private toastCtrl: ToastController,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
-    public fb: FormBuilder, 
+    public fb: FormBuilder,
     private firebase: FirebaseService,
     private brdsql: BrdsqlService,
-  ) { 
-
-    // this.fmdata = GlobalConstants.fmdata[0] 
-    // console.log('fmdata :' ,this.fmdata)
-
-    // this.fmcode = this.fmdata.fmcode_b1 
-    // this.fmname = this.fmdata.fmname 
-    // this.fmimg = this.fmdata.pic_url
+  ) {
 
     this.frm_search = fb.group({
-      fmcode: this.fmcode,
+      fmcode: [this.fmcode,[Validators.minLength(10),Validators.maxLength(10),Validators.required]] ,
     })
- 
+
   }
 
   ngOnInit() {
@@ -88,7 +80,7 @@ export class Tab1Page {
 
     // ตรวจสอบ มีข้อมูลชาวไร่ใน localstorage
     let ckfmcode = localStorage.getItem('fmcode')
-    if(ckfmcode) {
+    if (ckfmcode) {
       let fmcode = JSON.parse(ckfmcode)
       this.fmcode = fmcode
     } else {
@@ -96,27 +88,35 @@ export class Tab1Page {
       localStorage.setItem('fmcode', f.fmcode)
     }
 
-    this.fmdata = []
+    // this.fmdata = []
     this.subFmdata = await this.brdsql.getFmdata(f.fmcode).subscribe({
       next: (res: any) => {
-        this.fmdata = res.recordset[0]
-        console.log('fmdata : ' ,this.fmdata)
-        this.closeLoading()
-      },error(err) {
+        this.fmdata = res.recordset
+        this.fmimg = this.fmdata[0].pic_url
+        this.fmname = this.fmdata[0].fmname.trim()
+        // this.closeLoading()
+      }, error(err) {
         alert('Error :' + err)
-      },complete() {
+      }, complete() {
 
       },
     })
-    this.closeLoading()
+    // this.closeLoading()
     this.getMapFm(f.fmcode)
   }
 
   // แผนที่แปลงอ้อยจาก firebase และข้อมูลแปลงจาก sql ของชาวไร่
   async getMapFm(fmcode: string) {
-    await this.firebase.getMapByBNMCode(this.yearCr ,fmcode).then({
-
-    })
+    await this.firebase.getMapByBNMCode(this.yearCr, fmcode)
+      .then((res: any) => {
+        this.mapfm = res
+        console.log('firebase res:', this.mapfm)
+        this.closeLoading()
+      })
+      .catch((err) => { console.error(err) })
+      .finally(() => {
+        this.closeLoading()
+      })
   }
 
   async presentLoading(msg: string) {

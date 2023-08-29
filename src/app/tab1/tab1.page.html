@@ -1,6 +1,6 @@
 <!-- left-Side Menu -->
 <ion-menu side="start" menuId="main" contentId="main-content">
-  <ion-header >
+  <ion-header>
     <ion-toolbar color="secondary">
       <ion-title>
         <!-- <ion-icon name="happy-outline"></ion-icon>
@@ -18,13 +18,13 @@
 
     <form [formGroup]="frm_search" (ngSubmit)="getFmdata(frm_search.value)" novalidate>
 
-        <ion-searchbar class="appsearchbar" formControlName="fmcode" search-icon="people-outline"
-          [(ngModel)]="fmcode" placeholder="โควต้า 5 หรือ 6 หลัก">
-        </ion-searchbar>
-        <ion-button expand="full" shape="round" type="submit" [disabled]="!frm_search.valid">
-          <ion-icon name="search-outline"></ion-icon>
-          ตกลง
-        </ion-button>
+      <ion-searchbar class="appsearchbar" formControlName="fmcode" search-icon="people-outline" [(ngModel)]="fmcode"
+        placeholder="โควต้า 10 หลัก">
+      </ion-searchbar>
+      <ion-button expand="full" shape="round" type="submit" [disabled]="!frm_search.valid">
+        <ion-icon name="search-outline"></ion-icon>
+        ตกลง
+      </ion-button>
 
     </form>
 
@@ -182,66 +182,55 @@
       </ion-button>
     </ion-toolbar>
   </ion-header>
-  <ion-content>
 
-    <div *ngIf = "fmdata">
-      <div class="img-cov">
-        <img src="{{ fmdata.pic_url }}" class="img-dis" />
-      </div>
-      <ion-card-title class="ion-text-center">
-        <ion-text class="txtxxlarge txtBolder txtOrange">{{ fmdata.fmname }} </ion-text>
+  <ion-content *ngFor="let item of fmdata" style="--background:tranparent" id="con" class="animate__animated "
+    [ngClass]="{animate__fadeIn: start}">
+
+    <div class="img-cov">
+      <img src="{{ item.pic_url}}" class="img-dis" />
+      <ion-card-title>
+        {{ item.fmname }}
       </ion-card-title>
+      <ion-card-subtitle color="dark">
+        <ion-icon name="call-outline"></ion-icon> {{ item.TEL }}
+      </ion-card-subtitle>
+      <ion-card-subtitle color="dark">
+        โซน {{ item.SUPZONE }} นสส. {{ item.SUPCODE }}
+      </ion-card-subtitle>
     </div>
 
-    <div *ngIf = "!fmdata">
-      <ion-text>No fmdata</ion-text>
-    </div>
+    <ion-card>
+      <ion-card-content>
+        <div style="margin-top: 3%;">
+          <ion-card-title style="margin-bottom: 3%;" color="dark">ข้อมูลทั่วไป</ion-card-title>
+          <h4 class="head-pro" color="dark">
+            <ion-icon name="location-outline" color="dark"></ion-icon> ทีอยู
+          </h4>
+          <p class="pro-text" color="dark">
+            {{ item.HOMENO }}หมู่ {{ item.MOO }}ต. {{item.district}} อ.{{ item.county}} จ.{{ item.province }}{{ item.zip
+            }}
+          </p>
+          <h3 class="head-pro">
+            <ion-icon name="person-outline"></ion-icon> สมาชิก
+          </h3>
+          <p class="pro-text">โรงงาน : {{ item.FMCODE_B1 }}</p>
+          <p class="pro-text">สมาคม : {{ item.AssoID }}</p>
+          <p class="pro-text">สอน. : {{ item.CARDFARMER }}</p>
+          <p class="pro-text">กลุ่ม : {{ item.GROUPCODE }}</p>
+          <h3 class="head-pro">
+            <ion-icon name="podium-outline"></ion-icon> บัญชีธนาคาร
+          </h3>
+          <p class="pro-text">กรุงเทพ : {{ item.BANKBBL }}</p>
+          <p class="pro-text">ธกส : {{ item.BANKTKS }}</p>
+          <p class="pro-text">กรุงไทย : {{ item.BANKKTB }}</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
 
-    <!-- <ion-card-subtitle color="dark">
-      <ion-icon name="call-outline"></ion-icon> {{ item.TEL }}
-    </ion-card-subtitle>
-    <ion-card-subtitle color="dark">
-      โซน {{ item.SUPZONE }} นสส. {{ item.SUPCODE }}
-    </ion-card-subtitle> -->
-
-      <!-- <div class="img-cov" *ngFor="let item of fmdata">
-        <img src="{{ item.pic_url}}" class="img-dis" />
-        <ion-card-title>
-          {{ item.fmname }}
-        </ion-card-title>
-        <ion-card-subtitle color="dark">
-          <ion-icon name="call-outline"></ion-icon> {{ item.TEL }}
-        </ion-card-subtitle>
-        <ion-card-subtitle color="dark">
-          โซน {{ item.SUPZONE }} นสส. {{ item.SUPCODE }}
-        </ion-card-subtitle>
-      </div> -->
   </ion-content>
 
+  <div *ngIf="!fmdata">
+    <ion-text>No fmdata</ion-text>
+  </div>
+
 </div>
-
-<!-- Old code +++++++++++++++++++++++++  -->
-
-<!-- <ion-segment [scrollable]="true" (ionChange)="segmentChanged($event)" value="data">
-      <ion-segment-button value="data">
-        <ion-icon name="bar-chart-outline"></ion-icon>
-        <ion-label>ภาพรวม</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="activity">
-        <ion-icon name="trending-up-outline"></ion-icon>
-        <ion-label>กิจกรรม</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="factor">
-        <ion-icon name="newspaper-outline"></ion-icon>
-        <ion-label>ปัจจัย</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-    <ion-content *ngIf="overallP">
-      <ion-text>ภาพรวม</ion-text>
-    </ion-content>
-    <ion-content *ngIf="activityP">
-      <ion-text>กิจกรรม</ion-text>
-    </ion-content>
-    <ion-content *ngIf="factorP">
-      <ion-text>ปัจจัย</ion-text>
-    </ion-content> -->

@@ -367,6 +367,12 @@ ion-tab-bar {
     font-weight: bolder;
 }
 
+.pro-text {
+    text-indent: 30px;
+    // font-size: 17px;
+    color: var(--ion-color-dark);
+}
+
 
 // ++++++++++++++++ Action sheet ++++++++++++++++++++++++++
 /* Note: These styles should be located in your global stylesheet */
@@ -552,4 +558,4 @@ button.alert-button.alert-button-confirm {
 .load {
     color: #ffffff;
     --background: var(--ion-color-step-100);
-  }
+}

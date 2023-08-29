@@ -22,7 +22,7 @@ export class BrdsqlService {
     const url = this.baseSelectUrl
       + "s=*"
       + "&f=CPS6263.dbo.v_farmer_basic"
-      + "&w=fmcode='" + fmcode + "'";
+      + "&w=fmcode_b1='" + fmcode + "'";
     return this.http.get<any[]>(url);
   }
 
