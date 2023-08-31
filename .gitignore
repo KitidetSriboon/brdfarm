@@ -68,3 +68,4 @@ testem.log
 Thumbs.db
 
 resources/ios/**/*
+resources/android/**/*
