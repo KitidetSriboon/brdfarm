@@ -28,59 +28,6 @@
 
     </form>
 
-    <ion-accordion-group>
-      <ion-accordion value="first">
-        <ion-item slot="header">
-          <ion-icon name="locate" slot="start"></ion-icon>
-          <ion-label>GPS</ion-label>
-        </ion-item>
-        <div class="ion-padding" slot="content">
-          <ion-button fill="clear">
-            <ion-icon name="navigate-outline"></ion-icon>
-            <div>การอนุญาต</div>
-            <ion-icon name="shield-checkmark-outline"></ion-icon>
-            <ion-icon color="danger" name="close-circle-outline"></ion-icon>
-          </ion-button>
-          <ion-item>
-            <ion-label> gpsstatus </ion-label>
-          </ion-item>
-          <ion-button fill="clear">
-            <ion-icon name="play-outline"></ion-icon>
-            <div>เริ่มแทร็ค</div>
-          </ion-button>
-          <ion-button fill="clear">
-            <ion-icon name="stop-outline"></ion-icon>
-            <div>หยุดแทร็ค</div>
-          </ion-button>
-        </div>
-      </ion-accordion>
-      <ion-accordion value="second">
-        <ion-item slot="header">
-          <ion-icon name="settings-outline" slot="start"></ion-icon>
-          <ion-label>ตั้งค่า</ion-label>
-        </ion-item>
-        <div class="ion-padding" slot="content">
-          <ion-item lines="none" button>
-            <ion-icon name="settings" slot="start"></ion-icon>
-            <ion-label>Setting</ion-label>
-            <!-- <ion-button fill="clear" color="primary" (click)="routerSetting()">Setting</ion-button> -->
-          </ion-item>
-        </div>
-      </ion-accordion>
-      <ion-accordion value="third">
-        <ion-item slot="header">
-          <ion-icon name="chatbubbles-outline" slot="start"></ion-icon>
-          <ion-label>คำถาม</ion-label>
-        </ion-item>
-        <div class="ion-padding" slot="content">
-          <ion-item detail="true" lines="none" button>
-            <!-- <ion-icon name="chatbubbles" slot="start"></ion-icon> -->
-            <ion-label>เงื่อนไขคิว</ion-label>
-          </ion-item>
-        </div>
-      </ion-accordion>
-    </ion-accordion-group>
-
   </ion-content>
 
 </ion-menu>
@@ -183,7 +130,8 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-content *ngFor="let item of fmdata" style="--background:tranparent" id="con" class="animate__animated "
+  <ion-content *ngFor="let item of fmdata" style="--background:tranparent" id="con" 
+    class="animate__animated "
     [ngClass]="{animate__fadeIn: start}">
 
     <div class="img-cov">

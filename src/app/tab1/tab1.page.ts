@@ -35,7 +35,7 @@ export class Tab1Page {
   appUpdate?: string = GlobalConstants.lastupdate
   fmdata?: any = [];
   cpfm?: any = [];
-  fmcode?: string;
+  fmcode?: string = '';
   fmname?: string;
   fmimg?: string;
   mapfm?: any = [];
@@ -54,8 +54,15 @@ export class Tab1Page {
     private brdsql: BrdsqlService,
   ) {
 
+    let fmcode = localStorage.getItem('fmcode')
+    if(fmcode) {
+      this.fmcode = fmcode
+      console.log('fmcode:' ,fmcode)
+      this.getFmdata({fmcode: fmcode})
+    }
+
     this.frm_search = fb.group({
-      fmcode: [this.fmcode,[Validators.minLength(10),Validators.maxLength(10),Validators.required]] ,
+      fmcode: ['',[Validators.minLength(10),Validators.maxLength(10),Validators.required]] ,
     })
 
   }
@@ -76,25 +83,18 @@ export class Tab1Page {
   subFmdata!: Subscription;
   async getFmdata(f: any) {
 
-    this.presentLoading('...กำลังโหลดข้อมูลทั่วไปของท่าน')
+    console.log('form: ',f)
 
-    // ตรวจสอบ มีข้อมูลชาวไร่ใน localstorage
-    let ckfmcode = localStorage.getItem('fmcode')
-    if (ckfmcode) {
-      let fmcode = JSON.parse(ckfmcode)
-      this.fmcode = fmcode
-    } else {
-      this.fmcode = f.fmcode
-      localStorage.setItem('fmcode', f.fmcode)
-    }
+    this.presentLoading('...กำลังโหลดข้อมูล ทั่วไป แปลงอ้อย แผนที่แปลง...')
+    localStorage.setItem('fmcode', f.fmcode)
 
-    // this.fmdata = []
     this.subFmdata = await this.brdsql.getFmdata(f.fmcode).subscribe({
       next: (res: any) => {
         this.fmdata = res.recordset
+        localStorage.setItem('fmdata' ,JSON.stringify(this.fmdata))
         this.fmimg = this.fmdata[0].pic_url
         this.fmname = this.fmdata[0].fmname.trim()
-        // this.closeLoading()
+        this.closeLoading()
       }, error(err) {
         alert('Error :' + err)
       }, complete() {
@@ -102,7 +102,27 @@ export class Tab1Page {
       },
     })
     // this.closeLoading()
-    this.getMapFm(f.fmcode)
+    this.getCpFmdata(f.fmcode)
+  }
+
+  // โหลดข้อมูลแปลงอ้อยของชาวไร่จาก api
+  subMapFmdata!: Subscription;
+  async getCpFmdata(fmcode: string) {
+
+    // this.fmdata = []
+    this.subMapFmdata = await this.brdsql.getCpFm(this.yearCr, fmcode).subscribe({
+      next: (res: any) => {
+        this.cpfm = res.recordset
+        localStorage.setItem('cpfmdata' ,JSON.stringify(this.cpfm))
+        this.closeLoading()
+      }, error(err) {
+        alert('Error :' + err)
+      }, complete() {
+
+      },
+    })
+    // this.closeLoading()
+    this.getMapFm(fmcode)
   }
 
   // แผนที่แปลงอ้อยจาก firebase และข้อมูลแปลงจาก sql ของชาวไร่
@@ -110,12 +130,13 @@ export class Tab1Page {
     await this.firebase.getMapByBNMCode(this.yearCr, fmcode)
       .then((res: any) => {
         this.mapfm = res
+        localStorage.setItem('mapfm' ,JSON.stringify(this.mapfm))
         console.log('firebase res:', this.mapfm)
-        this.closeLoading()
+        this.closeLoading()  
       })
       .catch((err) => { console.error(err) })
       .finally(() => {
-        this.closeLoading()
+        this.closeLoading()  
       })
   }
 

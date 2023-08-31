@@ -46,9 +46,16 @@ export class Tab2Page {
   ) {
 
     this.yeardata = appdata.yearapp;
-    this.fmdata = appdata.fmuser;
-    this.cpFmdata = appdata.cpgroupsql;
-    this.mapFbFm = appdata.mapfb;
+    let fm_data: any = localStorage.getItem('fmdata')
+    fm_data = JSON.parse(fm_data)
+    let cp_data: any = localStorage.getItem('cpfmdata')
+    cp_data = JSON.parse(cp_data)
+    let map_data: any = localStorage.getItem('mapfm')
+    map_data = JSON.parse(map_data)
+
+    this.fmdata = fm_data;
+    this.cpFmdata = cp_data;
+    this.mapFbFm = map_data;
 
   }
 
@@ -158,18 +165,14 @@ export class Tab2Page {
 
   async presentActionSheet(keypara: string) {
     console.log('key :', keypara)
-
     let mapsql: any = []
     mapsql = this.cpFmdata
-    // mapsql = localStorage.getItem('cpgroupsql')
-    // mapsql = JSON.parse(mapsql)
-    // console.log('mapsql :', mapsql)
     mapsql = mapsql.filter((o: any) => o.itid === keypara)
     console.log('mapsql filter :', mapsql)
     mapsql = mapsql[0]
 
     const actionSheet = await this.acsCtrl.create({
-      header: `แปลง ${mapsql.CaneTypeName} พท.${mapsql.landvalue}ไร่`,
+      header: `แปลง ${mapsql.CaneTypeName} พท.${mapsql.landvalue.toFixed(2)} ไร่`,
       subHeader:  `${mapsql.fmname} กลุ่ม ${mapsql.groupCode}`,
       cssClass: 'acs-orange',
       buttons: [{

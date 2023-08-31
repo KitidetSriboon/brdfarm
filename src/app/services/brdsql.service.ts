@@ -73,13 +73,17 @@ export class BrdsqlService {
 
   // บันทึก กิจกรรมแปลงของชาวไร่
   updateFmActivity(f: any): Observable<any[]> {
+    const d = new Date()
+    let m = d.getMonth()+1
+    console.log('month: ' ,m)
     console.log('form in brdservice:', f)
     // function pad(s) { return (s < 10) ? '0' + s : s; }
     // let d = new Date();
     // let newd = [pad(d.getMonth() + 1), pad(d.getDate()), d.getFullYear()].join('/')
     const url = "https://asia-southeast2-brr-farmluck.cloudfunctions.net/app_smfbrr/push_p_farmer?itid="
-      + f.itid + "&year=" + f.yearid + "&ton=" + f.ton;
-    // console.log('url to updateTermsUse ' ,url)
+      + f.itid + "&year=" + f.yearid 
+      + "&tonm"+m+"=" + f.ton + "&wastedSpaceRai="
+      + f.wastedSpaceRai+"&Cutseed="+f.Cutseed+"&ton_lost="+f.ton_lost;
     return this.http.get<any[]>(url)
   }
 

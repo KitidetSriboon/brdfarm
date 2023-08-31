@@ -373,6 +373,12 @@ ion-tab-bar {
     color: var(--ion-color-dark);
 }
 
+.txtxxLBR {
+    font-size: xx-large;
+    color: red;
+    font-weight: bold;
+}
+
 
 // ++++++++++++++++ Action sheet ++++++++++++++++++++++++++
 /* Note: These styles should be located in your global stylesheet */
@@ -522,6 +528,13 @@ button.alert-button.alert-button-confirm {
 
 /* ++++++++++ อื่นๆ ++++++++++++++++++*/
 .divPadding-5 {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px
+}
+
+.divPadding-10 {
     padding-top: 10px;
     padding-bottom: 10px;
     margin-top: 10px;
@@ -556,6 +569,30 @@ button.alert-button.alert-button-confirm {
 }
 
 .load {
-    color: #ffffff;
+    color: #ff8d37;
     --background: var(--ion-color-step-100);
+}
+
+// +++++++++++++++++ padding margin +++++++++++++++++++++++++++
+.paddingLR5 {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.paddingLR10 {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.paddingAll10 {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+// ++++++++++++++++++ form +++++++++++++++++++++++++++
+.inputBGBW:hover {
+    background-color: black;
+    color: white;
 }
