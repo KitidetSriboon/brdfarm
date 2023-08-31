@@ -60,13 +60,14 @@ export class Tab2Page {
   }
 
   ngOnInit() {
-    console.log('mapFbFm:' ,this.mapFbFm)
+    console.log('ngOnInit:')
     // setTimeout(() => {
     //   this.draw();
     // }, 1000);
   }
 
   ngAfterViewInit(): void {
+    console.log('ngAfterViewInit:')
     setTimeout(() => {
       this.draw();
     }, 1000);

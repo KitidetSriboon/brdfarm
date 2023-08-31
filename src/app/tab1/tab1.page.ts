@@ -94,7 +94,7 @@ export class Tab1Page {
         localStorage.setItem('fmdata' ,JSON.stringify(this.fmdata))
         this.fmimg = this.fmdata[0].pic_url
         this.fmname = this.fmdata[0].fmname.trim()
-        this.closeLoading()
+        // this.closeLoading()
       }, error(err) {
         alert('Error :' + err)
       }, complete() {
@@ -114,7 +114,7 @@ export class Tab1Page {
       next: (res: any) => {
         this.cpfm = res.recordset
         localStorage.setItem('cpfmdata' ,JSON.stringify(this.cpfm))
-        this.closeLoading()
+        // this.closeLoading()
       }, error(err) {
         alert('Error :' + err)
       }, complete() {
@@ -132,7 +132,7 @@ export class Tab1Page {
         this.mapfm = res
         localStorage.setItem('mapfm' ,JSON.stringify(this.mapfm))
         console.log('firebase res:', this.mapfm)
-        this.closeLoading()  
+        // this.closeLoading()  
       })
       .catch((err) => { console.error(err) })
       .finally(() => {

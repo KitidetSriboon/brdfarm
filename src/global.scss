@@ -521,6 +521,11 @@ button.alert-button.alert-button-confirm {
     border-color: rgb(23, 139, 255);
 }
 
+.borderNonlineRedius {
+    /* top-left top-right bottom-right bottom-left */
+    border-radius: 75px 75px 75px 75px;
+}
+
 /* +++++++++++ สีพื้นหลัง ++++++++++++++++++*/
 .yellowSoft {
     --background: #fdf6e6;
@@ -594,5 +599,16 @@ button.alert-button.alert-button-confirm {
 // ++++++++++++++++++ form +++++++++++++++++++++++++++
 .inputBGBW:hover {
     background-color: black;
-    color: white;
+    color: rgb(2, 255, 129);
+    font-weight: bolder;
+    border-radius: 0px 75px 75px 0px;
 }
+
+// ++++++++++++++++++++ div element +++++++++++++++++++
+.el-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // height: 200px;
+    // border: 3px solid green;
+  }

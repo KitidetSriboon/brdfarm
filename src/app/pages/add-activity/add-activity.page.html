@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-card class="borderDashData">
-  <ion-card-header>
+  <ion-card-header class="el-center">
     <ion-chip>
       <ion-icon name="pin" color="primary"></ion-icon>
       <ion-label class="txtBold">แปลง {{ cpdata.intlandno }}</ion-label>
@@ -30,14 +30,14 @@
     <form *ngIf="cpdata" [formGroup]="frm_addcpact" (ngSubmit)="submit(frm_addcpact.value)" novalidate>
 
       <ion-list>
-        <ion-item>
-          <ion-input formControlName="wastedSpaceRai" class="inputBGBW" label="พื้นที่เสียหาย(ไร่)" placeholder="เช่น 0.5"></ion-input>
+        <ion-item class="ion-text-center">
+          <ion-input [(ngModel)]="cpdata.wastedSpaceRai_fm" formControlName="wastedSpaceRai" class="inputBGBW" label="พื้นที่เสียหาย(ไร่)" placeholder="เช่น 0.5"></ion-input>
         </ion-item>
-        <ion-item>
-          <ion-input formControlName="Cutseed" class="inputBGBW" label="ตัดพันธุ์(ตัน)" placeholder="เช่น 15"></ion-input>
+        <ion-item class="ion-text-center">
+          <ion-input [(ngModel)]="cpdata.Cutseed_fm" formControlName="Cutseed" class="inputBGBW" label="ตัดพันธุ์(ตัน)" placeholder="เช่น 15"></ion-input>
         </ion-item>
-        <ion-item>
-          <ion-input formControlName="ton_lost" class="inputBGBW" label="สูญเสียจากตัด(ตัน)" placeholder="เช่น 5"></ion-input>
+        <ion-item class="ion-text-center">
+          <ion-input [(ngModel)]="cpdata.ton_lost_fm" formControlName="ton_lost" class="inputBGBW" label="สูญเสียจากตัด(ตัน)" placeholder="เช่น 5"></ion-input>
         </ion-item>
       </ion-list>
 
@@ -45,23 +45,27 @@
         <ion-text class="txtBolder txtLarge txtBlue">ท่านประเมิน 
           <ion-text class="txtRed">ตัน {{ perTon }}</ion-text> /ไร่
         </ion-text>
-        <ion-range class="paddingLR10" formControlName="ton" 
+        <ion-item>
+          <ion-range class="paddingLR10 inputBGBW" formControlName="ton" 
           [min]="0" [max]="35" [pin]="true" [ticks]="true" [snaps]="true"
-          [(ngModel)]="cpdata.ton_fm"
+          [(ngModel)]="cpdata.ton_last_fm"
           (ionChange)="newTon($event,frm_addcpact.value)">
         </ion-range>
-        <ion-item color="success" class="paddingAll10">
-          <ion-row>
-            <ion-col class="ion-text-center">
-              <p>พื้นที่เสียหาย {{ fminput.la }} ไร่</p>
-              <p>คงเหลือพื้นที่ {{ fminput.arealeft | number: '1.1-2'}} ไร่</p>
-              <p>ตัดพันธุ์ {{ fminput.cst }} ตัน</p>
-              <p>สูญเสียจากตัด {{ fminput.lc }} ตัน</p>
-            </ion-col>
-          </ion-row>
         </ion-item>
-        <ion-item class="txtBolder txtLarge ion-text-center paddingLR10" color="warning">
-          <ion-label> <ion-text class="txtRed">คงเหลืออ้อย {{ ton }} </ion-text> ตัน</ion-label>
+        <ion-item class="ion-text-center">
+          <ion-grid [fixed]="true">
+            <ion-row>
+              <ion-col class="bgGreenSoft">
+                <p>พื้นที่เสียหาย {{ fminput.la }} ไร่</p>
+                <p>คงเหลือพื้นที่ {{ fminput.arealeft | number: '1.1-2'}} ไร่</p>
+                <p>ตัดพันธุ์ {{ fminput.cst }} ตัน</p>
+                <p>สูญเสียจากตัด {{ fminput.lc }} ตัน</p>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+        <ion-item class="txtBolder txtLarge ion-text-center paddingLR10 borderNonlineRedius" color="warning">
+          <ion-label> คงเหลืออ้อย <ion-text class="txtRed"> {{ ton }} </ion-text> ตัน</ion-label>
         </ion-item>
       </div>
 
@@ -71,6 +75,10 @@
             <ion-button shape="round" type="submit" [disabled]="!frm_addcpact.valid">
               <ion-icon name="save-outline"></ion-icon>
               ...บันทึกข้อมูล
+            </ion-button>
+            <ion-button (click)="closeCurrentPage()" shape="round" fill="outline" color="danger">
+              <ion-icon name="close-circle-outline"></ion-icon>
+              ปิด
             </ion-button>
           </ion-col>
         </ion-row>

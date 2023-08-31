@@ -31,6 +31,7 @@ export class AddActivityPage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private navCtrl: NavController,
     private fb: FormBuilder,
     private brdsql: BrdsqlService,
@@ -128,6 +129,10 @@ export class AddActivityPage implements OnInit {
 
       },
     })
+  }
+
+  closeCurrentPage() {
+    this.navCtrl.back();
   }
 
   dismiss() {

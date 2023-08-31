@@ -17,6 +17,10 @@ const routes: Routes = [
   {
     path: 'show-activity/:itid',
     loadChildren: () => import('./pages/show-activity/show-activity.module').then( m => m.ShowActivityPageModule)
+  },
+  {
+    path: 'test',
+    loadChildren: () => import('./pages/test/test.module').then( m => m.TestPageModule)
   }
 ];
 @NgModule({
