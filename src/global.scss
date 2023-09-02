@@ -29,10 +29,49 @@
 @import "~animate.css/animate.compat.css";
 
 /* KTD */
-@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@200&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Chonburi&family=Prompt&family=Sriracha&family=Mitr&family=Sarabun&fmmily=K2D&family=Pattata&family=Maitree&family=KoHo&family=Fahkwang&display=swap');
+// @import "bootstrap";
+
+// ++++++++++++++++++ Google font ++++++++++++++++++++++++++++
+.gfFahkwang {
+    font-family: 'Fahkwang', cursive;
+}
+
+.gfMitr {
+    font-family: 'Mitr', cursive;
+}
+
+.gfSarabun {
+    font-family: 'Sarabun', cursive;
+}
+
+.gfK2D {
+    font-family: 'K2D', cursive;
+}
+
+.gfPattata {
+    font-family: 'Pattata', cursive;
+}
+
+.gfMaitree {
+    font-family: 'Maitree', cursive;
+}
+
+.gfKoHo {
+    font-family: 'KoHo', cursive;
+}
+
+.gfChonburi {
+    font-family: 'Chonburi', cursive;
+}
+
+.gfSriracha {
+    font-family: 'Sriracha', cursive;
+}
 
 * {
-    font-family: 'Prompt', sans-serif !important;
+    font-family: 'Mitr', sans-serif !important;
 }
 
 body.dark {
@@ -331,6 +370,10 @@ ion-tab-bar {
     font-size: large;
 }
 
+.txtLarger {
+    font-size: larger;
+}
+
 .txtxxlarge {
     font-size: xx-large;
 }
@@ -377,6 +420,14 @@ ion-tab-bar {
     font-size: xx-large;
     color: red;
     font-weight: bold;
+}
+
+.txtShadowW {
+    text-shadow: 2px 2px 0 #ffffff;
+}
+
+.txtShadowB {
+    text-shadow: 1px 1px 0 #000000;
 }
 
 
@@ -508,6 +559,15 @@ button.alert-button.alert-button-confirm {
     background-color: rgb(199, 253, 199);
 }
 
+.bgGreenLight {
+    background-color: rgb(52, 255, 52);
+}
+
+.bgBlackFg {
+    background-color: black;
+    color: rgb(2, 255, 129);
+}
+
 // +++++++++++++++++ border ++++++++++++++++++++++++
 .borderDashData {
     border-style: dashed;
@@ -526,12 +586,16 @@ button.alert-button.alert-button-confirm {
     border-radius: 75px 75px 75px 75px;
 }
 
+.borderLineR {
+    border: 1px solid rgb(255, 0, 0);
+}
+
 /* +++++++++++ สีพื้นหลัง ++++++++++++++++++*/
 .yellowSoft {
     --background: #fdf6e6;
 }
 
-/* ++++++++++ อื่นๆ ++++++++++++++++++*/
+/* ++++++++++ div element ++++++++++++++++++*/
 .divPadding-5 {
     padding-top: 5px;
     padding-bottom: 5px;
@@ -540,10 +604,24 @@ button.alert-button.alert-button-confirm {
 }
 
 .divPadding-10 {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+    --margin-top: 10px;
+    --margin-bottom: 10px
+}
+
+.divMg-5 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.divMg-10 {
+    margin-top: 101px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .appsearchbar:hover {
@@ -573,6 +651,12 @@ button.alert-button.alert-button-confirm {
     width: 150px;
 }
 
+.imgCane1 {
+    background-image: url('assets/images/brdfarm-splash.png');
+    background-repeat: no-repeat;
+    opacity: 0.5;
+}
+
 .load {
     color: #ff8d37;
     --background: var(--ion-color-step-100);
@@ -587,6 +671,17 @@ button.alert-button.alert-button-confirm {
 .paddingLR10 {
     padding-left: 10px;
     padding-right: 10px;
+}
+
+.paddingTB5 {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+
+.paddingTB10 {
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .paddingAll10 {
@@ -611,4 +706,479 @@ button.alert-button.alert-button-confirm {
     align-items: center;
     // height: 200px;
     // border: 3px solid green;
-  }
+}
+
+// ++++++++++++++++ row +++++++++++++++++++++++++++++
+.rowHover:hover {
+    font-weight: bolder;
+    font-size: larger;
+    color: red;
+    background-color: rgb(255, 233, 160);
+}
+
+// ++++++++++++++++++ Ribbon ++++++++++++++++++++++++++++++
+.ribbon {
+    width: 200px;
+    height: 50px;
+    margin: 10px auto 0px;
+    position: relative;
+    color: #fff;
+    font: 16px/18px sans-serif;
+    text-align: center;
+    text-transform: uppercase;
+    background: #3D79D0;
+
+    -webkit-animation: main 250ms;
+    -moz-animation: main 250ms;
+    -ms-animation: main 250ms;
+    animation: main 250ms;
+}
+
+.ribbon i {
+    position: absolute;
+}
+
+.ribbon i:first-child,
+.ribbon i:nth-child(2) {
+    position: absolute;
+    left: -20px;
+    bottom: -20px;
+    z-index: -1;
+    border: 20px solid transparent;
+    border-right-color: #043140;
+
+    -webkit-animation: edge 500ms;
+    -moz-animation: edge 500ms;
+    -ms-animation: edge 500ms;
+    animation: edge 500ms;
+}
+
+.ribbon i:nth-child(2) {
+    left: auto;
+    right: -20px;
+    border-right-color: transparent;
+    border-left-color: #043140;
+}
+
+.ribbon i:nth-child(3),
+.ribbon i:last-child {
+    width: 20px;
+    bottom: -20px;
+    left: -60px;
+    z-index: -2;
+    border: 30px solid #1D53C0;
+    border-left-color: transparent;
+
+    -webkit-animation: back 600ms;
+    -moz-animation: back 600ms;
+    -ms-animation: back 600ms;
+    animation: back 600ms;
+
+    -webkit-transform-origin: 100% 0;
+    -moz-transform-origin: 100% 0;
+    -ms-transform-origin: 100% 0;
+    transform-origin: 100% 0;
+}
+
+.ribbon i:last-child {
+    bottom: -20px;
+    left: auto;
+    right: -60px;
+    border: 30px solid #1D53C0;
+    border-right-color: transparent;
+
+    -webkit-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
+    -ms-transform-origin: 0 0;
+    transform-origin: 0 0;
+}
+
+// p {
+//     text-align: center;
+//     color: #ffffff;
+//     font-weight: bolder;
+// }
+
+/* animations */
+
+@-webkit-keyframes main {
+    0% {
+        -webkit-transform: scaleX(0);
+    }
+
+    100% {
+        -webkit-transform: scaleX(1);
+    }
+}
+
+@-webkit-keyframes edge {
+
+    0%,
+    50% {
+        -webkit-transform: scaleY(0);
+    }
+
+    100% {
+        -webkit-transform: scaleY(1);
+    }
+}
+
+@-webkit-keyframes back {
+
+    0%,
+    75% {
+        -webkit-transform: scaleX(0);
+    }
+
+    100% {
+        -webkit-transform: scaleX(1);
+    }
+}
+
+
+@-moz-keyframes main {
+    0% {
+        -moz-transform: scaleX(0);
+    }
+
+    100% {
+        -moz-transform: scaleX(1);
+    }
+}
+
+@-moz-keyframes edge {
+
+    0%,
+    50% {
+        -moz-transform: scaleY(0);
+    }
+
+    100% {
+        -moz-transform: scaleY(1);
+    }
+}
+
+@-moz-keyframes back {
+
+    0%,
+    75% {
+        -moz-transform: scaleX(0);
+    }
+
+    100% {
+        -moz-transform: scaleX(1);
+    }
+}
+
+
+@keyframes main {
+    0% {
+        transform: scaleX(0);
+    }
+
+    100% {
+        transform: scaleX(1);
+    }
+}
+
+@keyframes edge {
+
+    0%,
+    50% {
+        transform: scaleY(0);
+    }
+
+    100% {
+        transform: scaleY(1);
+    }
+}
+
+@keyframes back {
+
+    0%,
+    75% {
+        transform: scaleX(0);
+    }
+
+    100% {
+        transform: scaleX(1);
+    }
+}
+
+// +++++++++++++ box +++++++++++++++++++
+.boxGrayShadow {
+    border: 1px solid;
+    padding: 10px;
+    box-shadow: 5px 10px #888888;
+}
+
+.boxGreenShadow {
+    border: 1px solid;
+    padding: 10px;
+    box-shadow: 5px 10px #7eff75;
+}
+
+.boxYellowShadow {
+    border: 1px solid;
+    padding: 10px;
+    box-shadow: 5px 10px #ffe282;
+}
+
+.boxWhiteShadow {
+    border: 1px solid;
+    padding: 10px;
+    box-shadow: 5px 10px #ffffff;
+}
+
+.boxRedShadow {
+    border: 1px solid;
+    padding: 10px;
+    box-shadow: 5px 10px #fe8b7e;
+}
+
+.boxGreenPowerpointR {
+    border-radius: 5px 20px 5px;
+    // background: #BADA55;
+}
+
+.boxGreenPowerpointL {
+    border-radius: 50px 0px 50px;
+    // background: #BADA55;
+    // padding-top: 50px;
+    // padding-bottom: 50px;
+}
+
+// ++++++++++++++++ Progress bar ++++++++++++++++++++++++++++
+// @import url("https://fonts.googleapis.com/css?family=Lato:300");
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/*** <--- CIRCLE STYLES ---> ***/
+.wrap-circles {
+    display: flex;
+    min-height: 5vh;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 1rem;
+    // background: #000;
+}
+
+.circle {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 0.5rem;
+    border-radius: 50%;
+    background: #FFCDB2;
+    overflow: hidden;
+}
+
+.circle.per-25 {
+    background-image: conic-gradient(#B5838D 25%, #FFCDB2 0);
+}
+
+.circle.per-50 {
+    background-image: conic-gradient(#B5838D 50%, #FFCDB2 0);
+}
+
+.circle.per-75 {
+    background-image: conic-gradient(#B5838D 75%, #FFCDB2 0);
+}
+
+.circle.per-100 {
+    background-image: conic-gradient(#B5838D 100%, #FFCDB2 0);
+}
+
+.circle .inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 115px;
+    height: 115px;
+    background: #000;
+    border-radius: 50%;
+    font-size: 1.85em;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+// ++++++++++++++++++ Stepper progress bar ++++++++++++++++++++++++++++++++
+@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+
+:root {
+    --line-border-fill: #3498db;
+    --line-border-empty: #e0e0e0;
+}
+
+
+* {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    box-sizing: inherit;
+}
+
+// html {
+//     box-sizing: border-box;
+// }
+
+// body {
+//     background: #F3F4F6;
+//     font-family: "Rubik", sans-serif;
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     justify-content: center;
+//     height: 100vh;
+//     overflow: hidden;
+//     margin: 0;
+// }
+
+// .container {
+//     margin-top: 15px;
+//     text-align: center;
+// }
+
+.progress-container::before {
+    content: "";
+    background: var(--line-border-empty);
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    height: 4px;
+    width: 100%;
+    z-index: -1;
+}
+
+.progress-container {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin-bottom: 30px;
+    max-width: 100%;
+    width: 350px;
+}
+
+.progress {
+    background: var(--line-border-fill);
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    height: 4px;
+    width: 0%;
+    z-index: -1;
+    transition: 0.4s ease;
+}
+
+// .circle {
+//     background: #fff;
+//     color: #999;
+//     border-radius: 50%;
+//     height: 50px;
+//     width: 50px;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     border: 3px solid var(--line-border-empty);
+//     transition: .4s ease;
+// }
+
+.circle.active {
+    border-color: var(--line-border-fill);
+}
+
+.btn {
+    background-color: var(--line-border-fill);
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+    border: 0;
+    border-radius: 6px;
+    padding: 8px 30px;
+    margin: 5px;
+    font-size: 14px;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn:focus {
+    outline: 0;
+}
+
+.btn:disabled {
+    background-color: var(--line-border-empty);
+    cursor: not-allowed;
+}
+
+.mr-n2 {
+    margin-right: -.75em !important;
+}
+
+// +++++++++++++  progress step from https://www.sliderrevolution.com/resources/css-progress-bar/ ++++++++++++++++++++++
+
+// +++++++++++++++++++ Arror +++++++++++++++++++++
+.arrow-right {
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+
+    border-left: 10px solid green;
+}
+
+// .arrow-right {
+//     border-top-right-radius: 500px;
+//     border-bottom-right-radius: 500px;
+//     //     border-top: 19px solid transparent;
+//     //   border-bottom: 17px solid transparent;
+//     // border-left: 17px solid #2f69aa;
+// }
+
+// .arrow-up {
+//     width: 0;
+//     height: 0;
+//     border-left: 5px solid transparent;
+//     border-right: 5px solid transparent;
+
+//     border-bottom: 5px solid black;
+// }
+
+// .arrow-down {
+//     width: 0;
+//     height: 0;
+//     border-left: 20px solid transparent;
+//     border-right: 20px solid transparent;
+
+//     border-top: 20px solid #f00;
+// }
+
+// .arrow-right {
+//     width: 0;
+//     height: 0;
+//     border-top: 60px solid transparent;
+//     border-bottom: 60px solid transparent;
+
+//     border-left: 60px solid green;
+// }
+
+// .arrow-left {
+//     width: 0;
+//     height: 0;
+//     border-top: 10px solid transparent;
+//     border-bottom: 10px solid transparent;
+
+//     border-right: 10px solid blue;
+// }

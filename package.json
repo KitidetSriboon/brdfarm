@@ -41,6 +41,7 @@
     "@capacitor/toast": "^5.0.6",
     "@ionic/angular": "^7.0.0",
     "animate.css": "^4.1.1",
+    "bootstrap": "^5.3.1",
     "chart.js": "^4.4.0",
     "firebase": "^9.16.0",
     "ionicons": "^7.0.0",
@@ -81,5 +82,8 @@
     "ts-node": "^8.3.0",
     "typescript": "~5.0.2"
   },
-  "description": "An Ionic project"
+  "description": "brdFarm Ionic app for BRR member",
+  "config": {
+    "ionic_sass": "./sass.config.js"
+  }
 }

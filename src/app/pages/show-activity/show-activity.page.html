@@ -1,50 +1,87 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
-    <ion-title>กิจกรรมแปลง {{ yearDesc }}</ion-title>
+    <ion-title>
+      <ion-icon name="walk"></ion-icon> กิจกรรมแปลง {{ yearDesc }}
+    </ion-title>
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
-  <div style="padding: 2% 5%;">
-    <div class="info">
-      <p style="margin: 0;">
+
+  <div class="info divMg-5">
+    <!-- <p style="margin: 0;">
         <ion-icon name="person-outline"></ion-icon>กิจกรรมแปลงของท่าน
-      </p>
-      <ion-text color="secondary">
-        <div style="display: flex; justify-content: space-between;align-items: center;">
-          <ion-label name="landname" *ngIf="cpdata.landname_fm !== null" style="font-size: 20px; transition: all 1s;">{{
+      </p> -->
+    <ion-text class="txtBolder" color="primary">
+      <div style="display: flex; justify-content: space-between;align-items: center;">
+        <ion-label name="landname" *ngIf="cpdata.landname_fm !== null" style="font-size: 20px; transition: all 1s;">{{
             cpdata.landname_fm }}</ion-label>
-        </div>
-        <p style="margin-left: 5%; margin: 0;">หมายเลขแปลง: {{cpdata.intlandno}}</p>
-        <p style="margin-left: 5%; margin: 0;">{{ cpdata.CaneTypeName}} {{ cpdata.landvalue }} ไร่ โซน:
-          {{cpdata.supzone}}</p>
-      </ion-text>
-    </div>
+      </div>
+      <p style="margin-left: 5%; margin: 0;">แปลง: {{cpdata.intlandno}}</p>
+      <p style="margin-left: 5%; margin: 0;">{{ cpdata.CaneTypeName}} {{ cpdata.landvalue }} ไร่ โซน:
+        {{cpdata.supzone}}</p>
+    </ion-text>
   </div>
+
+  <div class="divMg-5">
+    <ion-grid>
+      <ion-row>
+        <ion-col class="el-center ion-text-cednter">
+          <div class="w3-panel w3-pale-green w3-bottombar w3-border-green w3-border">
+            <p>พท.เสียหาย {{ cpdata.wastedSpaceRai_fm }} ไร่ คงเหลือจริง {{ cpdata.landvalue-cpdata.wastedSpaceRai_fm }} ไร่ ตัดพันธุ์ {{ cpdata.Cutseed_fm }} ตัน สุญเสีย {{ cpdata.ton_lost_fm }} ตัน</p>
+          </div>
+          <!-- <ion-text>
+            <ion-icon class="txtRed" name="create-outline"></ion-icon>
+            พท.เสียหาย ไร่ คงเหลือจริง ไร่ ตัดพันธุ์ ตัน สุญเสีย ตัน</ion-text> -->
+        </ion-col>
+      </ion-row>
+      <ion-row style="margin-bottom: 5px;">
+        <ion-col class="ion-text-center borderDashData bgYellowSoft">
+          <ion-text class="txtBold">คงเหลืออ้อย
+            <p class="ion-text-center txtLarger txtRed">{{ cpdata.Assess_left_fm | number: '1.1-2' }} </p>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- <ion-item class="bgGreenSoft">
+
+  </ion-item> -->
 </ion-header>
 
 <ion-content [fullscreen]="true" *ngFor="let item of cpActivityData">
 
-  <ion-grid>
-    <ion-row style="border-bottom: 1px solid; font-size: 18px; font-weight: 900;">
-      <ion-col>
+  <ion-grid class="divMg-5">
+    <ion-row class="ion-text-center" style="border-bottom: 1px solid; font-size: 18px; font-weight: 900;">
+      <ion-col class="ion-text-left">
         #
       </ion-col>
       <ion-col>
-        <ion-icon name="person"></ion-icon> ท่าน
+        <ion-chip color="primary">
+          <ion-avatar>
+            <ion-icon name="person"></ion-icon>
+          </ion-avatar>
+          <ion-label>ท่าน</ion-label>
+        </ion-chip>
       </ion-col>
       <ion-col>
-        <ion-icon name="people"></ion-icon> นสส.
+        <ion-chip color="secondary">
+          <ion-avatar>
+            <ion-icon name="people"></ion-icon>
+          </ion-avatar>
+          <ion-label>นสส.</ion-label>
+        </ion-chip>
       </ion-col>
     </ion-row>
     <ion-row style="border-bottom: 1px solid #0003;">
       <ion-col>
         ประเมิน
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         {{ item.ton_fm }}
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         {{ item.Ton }}
       </ion-col>
     </ion-row>
@@ -52,11 +89,11 @@
       <ion-col>
         ใส่อินทรีย์
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-icon name="checkmark-circle" *ngIf="item.NaturalFertilizer_fm !== '0' && item.NaturalFertilizer_fm !== ''">
         </ion-icon>
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-icon name="checkmark-circle" *ngIf="item.NaturalFertilizer !== null"></ion-icon>
       </ion-col>
     </ion-row>
@@ -64,10 +101,10 @@
       <ion-col>
         ไดโลไมท์
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-icon name="checkmark-circle" *ngIf="item.Dolomite_fm === '1'"></ion-icon>
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-icon name="checkmark-circle" *ngIf="item.Dolomite === '1'"></ion-icon>
       </ion-col>
     </ion-row>
@@ -75,10 +112,10 @@
       <ion-col>
         ระเบิดดาน
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-icon name="checkmark-circle" *ngIf="item.hardSoilBlast_fm === '1'"></ion-icon>
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-icon name="checkmark-circle" *ngIf="item.hardSoilBlast === '1'"></ion-icon>
       </ion-col>
     </ion-row>
@@ -86,10 +123,10 @@
       <ion-col>
         เคมี 1
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-icon name="checkmark-circle" *ngIf="item.FertilizerRound1_fm === '1'"></ion-icon>
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-icon name="checkmark-circle" *ngIf="item.FertilizerRound1 === '1'"></ion-icon>
       </ion-col>
     </ion-row>
@@ -97,10 +134,10 @@
       <ion-col>
         เคมี 2
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-icon name="checkmark-circle" *ngIf="item.FertilizerRound2_fm === '1'"></ion-icon>
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-icon name="checkmark-circle" *ngIf="item.FertilizerRound2 === '1'"></ion-icon>
       </ion-col>
     </ion-row>
@@ -108,10 +145,10 @@
       <ion-col>
         เคมี 3
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-icon name="checkmark-circle" *ngIf="item.FertilizerRound3_fm === '1'"></ion-icon>
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-icon name="checkmark-circle" *ngIf="item.FertilizerRound3 === '1'"></ion-icon>
       </ion-col>
     </ion-row>
@@ -119,10 +156,10 @@
       <ion-col>
         ปุ๋ยน้ำ
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-icon name="checkmark-circle" *ngIf="item.liquidFertilizer_fm === '1'"></ion-icon>
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-icon name="checkmark-circle" *ngIf="item.liquidFertilizer === '1'"></ion-icon>
       </ion-col>
     </ion-row>
@@ -130,10 +167,10 @@
       <ion-col>
         แมลง
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-icon name="bug-outline" color="danger" *ngIf="item.Insect_fm === '1'"></ion-icon>
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-icon name="bug-outline" color="danger" *ngIf="item.Insect === '1'"></ion-icon>
       </ion-col>
     </ion-row>
@@ -141,10 +178,10 @@
       <ion-col>
         โรค
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-icon name="medical-outline" color="danger" *ngIf="item.Disease_fm === '1'"></ion-icon>
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-icon name="medical-outline" color="danger" *ngIf="item.Disease === '1'"></ion-icon>
       </ion-col>
     </ion-row>
@@ -152,10 +189,10 @@
       <ion-col>
         เปอร์เซ็นต์งอก
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         {{ item.GerminationPercent_fm }}
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center">
         {{ item.lastGerminationPercent }}
       </ion-col>
     </ion-row>
@@ -163,11 +200,19 @@
       <ion-col>
         ข้อมูล ณ วันที่
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center txtSmall">
         {{ item.update_date_fm | date: 'dd/MM/yyyy' }}
       </ion-col>
-      <ion-col>
+      <ion-col class="ion-text-center txtSmall">
         {{ item.lastupdate | date: 'dd/MM/yyyy' }}
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-text-right">
+      <ion-col>
+        <ion-button class="divMg-5" (click)="closeCurrentPage()" shape="round" fill="outline" color="danger">
+          <ion-icon name="close-circle-outline"></ion-icon>
+          ปิด
+        </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

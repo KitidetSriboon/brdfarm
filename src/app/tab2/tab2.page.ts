@@ -6,7 +6,7 @@ import { FirebaseService } from '../services/firebase.service';
 import { appdata } from '../data/data';
 import { GoogleMap } from '@capacitor/google-maps';
 import { Loader } from '@googlemaps/js-api-loader';
-import { NavigationExtras, Router ,RouterLinkWithHref } from '@angular/router';
+import { NavigationExtras, Router, RouterLinkWithHref } from '@angular/router';
 import {
   ModalController,
   ActionSheetController,
@@ -43,33 +43,43 @@ export class Tab2Page {
     private alertCtrl: AlertController,
     private router: Router,
 
-  ) {
-
-    this.yeardata = appdata.yearapp;
-    let fm_data: any = localStorage.getItem('fmdata')
-    fm_data = JSON.parse(fm_data)
-    let cp_data: any = localStorage.getItem('cpfmdata')
-    cp_data = JSON.parse(cp_data)
-    let map_data: any = localStorage.getItem('mapfm')
-    map_data = JSON.parse(map_data)
-
-    this.fmdata = fm_data;
-    this.cpFmdata = cp_data;
-    this.mapFbFm = map_data;
-
+  ) { 
+    console.log('tab2 constructor:')
+    this.loadFmdata();
   }
 
   ngOnInit() {
-    console.log('ngOnInit:')
+    console.log('tab2 ngOnInit:');
     // setTimeout(() => {
     //   this.draw();
     // }, 1000);
   }
 
   ngAfterViewInit(): void {
-    console.log('ngAfterViewInit:')
+    console.log('tab2 ngAfterViewInit:')
+  }
+
+  async loadFmdata() {
+
+    this.fmdata = []
+    this.cpFmdata = []
+    this.mapFbFm = []
+
+    console.log('tab2 LoadFmdata:')
     setTimeout(() => {
+      this.yeardata = appdata.yearapp;
+      let fm_data: any = localStorage.getItem('fmdata')
+      fm_data = JSON.parse(fm_data)
+      let cp_data: any = localStorage.getItem('cpfmdata')
+      cp_data = JSON.parse(cp_data)
+      let map_data: any = localStorage.getItem('mapfm')
+      map_data = JSON.parse(map_data)
+      this.fmdata = fm_data;
+      this.cpFmdata = cp_data;
+      this.mapFbFm = map_data;
+
       this.draw();
+
     }, 1000);
   }
 
@@ -174,7 +184,7 @@ export class Tab2Page {
 
     const actionSheet = await this.acsCtrl.create({
       header: `แปลง ${mapsql.CaneTypeName} พท.${mapsql.landvalue.toFixed(2)} ไร่`,
-      subHeader:  `${mapsql.fmname} กลุ่ม ${mapsql.groupCode}`,
+      subHeader: `${mapsql.fmname} กลุ่ม ${mapsql.groupCode}`,
       cssClass: 'acs-orange',
       buttons: [{
         text: 'บันทึกกิจกรรมแปลง',

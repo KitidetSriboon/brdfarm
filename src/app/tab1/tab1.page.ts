@@ -41,6 +41,8 @@ export class Tab1Page {
   mapfm?: any = [];
   frm_search: FormGroup;
   start: any = true;
+  pcFm: number = 0;
+  pcSupcode: number = 0;
 
   constructor(
     private menuCtrl: MenuController,
@@ -57,7 +59,7 @@ export class Tab1Page {
     let fmcode = localStorage.getItem('fmcode')
     if(fmcode) {
       this.fmcode = fmcode
-      console.log('fmcode:' ,fmcode)
+      // console.log('fmcode:' ,fmcode)
       this.getFmdata({fmcode: fmcode})
     }
 
@@ -79,11 +81,15 @@ export class Tab1Page {
     this.menuCtrl.open('moremenu');
   }
 
+  loadNewAlldata() {
+    this.getFmdata({fmcode: this.fmcode})
+  }
+
   // โหลดข้อมูลชาวไร่จาก api
   subFmdata!: Subscription;
   async getFmdata(f: any) {
 
-    console.log('form: ',f)
+    // console.log('form: ',f)
 
     this.presentLoading('...กำลังโหลดข้อมูล ทั่วไป แปลงอ้อย แผนที่แปลง...')
     localStorage.setItem('fmcode', f.fmcode)
@@ -92,8 +98,11 @@ export class Tab1Page {
       next: (res: any) => {
         this.fmdata = res.recordset
         localStorage.setItem('fmdata' ,JSON.stringify(this.fmdata))
-        this.fmimg = this.fmdata[0].pic_url
-        this.fmname = this.fmdata[0].fmname.trim()
+        const fmdt = this.fmdata[0]
+        this.fmimg = fmdt.pic_url
+        this.fmname = fmdt.fmname.trim()
+        this.pcFm = (parseFloat(fmdt.Assess_left_fm)*100)/parseFloat(fmdt.target_cane)
+        this.pcSupcode = (parseFloat(fmdt.Assess_left)*100)/parseFloat(fmdt.target_cane)
         // this.closeLoading()
       }, error(err) {
         alert('Error :' + err)
@@ -131,7 +140,7 @@ export class Tab1Page {
       .then((res: any) => {
         this.mapfm = res
         localStorage.setItem('mapfm' ,JSON.stringify(this.mapfm))
-        console.log('firebase res:', this.mapfm)
+        // console.log('firebase res:', this.mapfm)
         // this.closeLoading()  
       })
       .catch((err) => { console.error(err) })

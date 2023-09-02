@@ -83,7 +83,7 @@ export class BrdsqlService {
     const url = "https://asia-southeast2-brr-farmluck.cloudfunctions.net/app_smfbrr/push_p_farmer?itid="
       + f.itid + "&year=" + f.yearid 
       + "&tonm"+m+"=" + f.ton + "&wastedSpaceRai="
-      + f.wastedSpaceRai+"&Cutseed="+f.Cutseed+"&ton_lost="+f.ton_lost;
+      + f.wastedSpaceRai+"&Cutseed="+f.Cutseed+"&ton_lost="+f.ton_lost+"&ton_last=" + m;
     return this.http.get<any[]>(url)
   }
 

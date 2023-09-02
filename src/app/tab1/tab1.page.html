@@ -51,32 +51,31 @@
   <ion-content>
 
     <ion-accordion-group>
-      <ion-accordion value="first">
+      <ion-accordion value="data">
         <ion-item slot="header">
-          <ion-icon name="locate" slot="start"></ion-icon>
-          <ion-label>GPS</ion-label>
+          <ion-icon name="cloud-download" slot="start"></ion-icon>
+          <ion-label>ข้อมูล</ion-label>
         </ion-item>
         <div class="ion-padding" slot="content">
-          <ion-button fill="clear">
-            <ion-icon name="navigate-outline"></ion-icon>
-            <div>การอนุญาต</div>
-            <ion-icon name="shield-checkmark-outline"></ion-icon>
-            <ion-icon color="danger" name="close-circle-outline"></ion-icon>
-          </ion-button>
-          <ion-item>
-            <ion-label> gpsstatus </ion-label>
-          </ion-item>
-          <ion-button fill="clear">
-            <ion-icon name="play-outline"></ion-icon>
-            <div>เริ่มแทร็ค</div>
-          </ion-button>
-          <ion-button fill="clear">
-            <ion-icon name="stop-outline"></ion-icon>
-            <div>หยุดแทร็ค</div>
+          <ion-button (click)="loadNewAlldata()" fill="outline" expand="full">
+            <ion-icon name="refresh-outline" slot="end"></ion-icon>
+            <div>โหลดข้อมูลล่าสุด</div>
           </ion-button>
         </div>
       </ion-accordion>
-      <ion-accordion value="second">
+      <ion-accordion value="first">
+        <ion-item slot="header">
+          <ion-icon name="settings" slot="start"></ion-icon>
+          <ion-label>ตั้งค่า</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-button fill="clear">
+            <ion-icon name="user-outline"></ion-icon>
+            <ion-label>อยู่ระหว่างพัฒนา</ion-label>
+          </ion-button>
+        </div>
+      </ion-accordion>
+      <!-- <ion-accordion value="second">
         <ion-item slot="header">
           <ion-icon name="settings-outline" slot="start"></ion-icon>
           <ion-label>ตั้งค่า</ion-label>
@@ -85,7 +84,6 @@
           <ion-item lines="none" button>
             <ion-icon name="settings" slot="start"></ion-icon>
             <ion-label>Setting</ion-label>
-            <!-- <ion-button fill="clear" color="primary" (click)="routerSetting()">Setting</ion-button> -->
           </ion-item>
         </div>
       </ion-accordion>
@@ -96,11 +94,10 @@
         </ion-item>
         <div class="ion-padding" slot="content">
           <ion-item detail="true" lines="none" button>
-            <!-- <ion-icon name="chatbubbles" slot="start"></ion-icon> -->
             <ion-label>เงื่อนไขคิว</ion-label>
           </ion-item>
         </div>
-      </ion-accordion>
+      </ion-accordion> -->
     </ion-accordion-group>
 
   </ion-content>
@@ -130,24 +127,108 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-content *ngFor="let item of fmdata" style="--background:tranparent" id="con" 
-    class="animate__animated "
+  <ion-content *ngFor="let item of fmdata" style="--background:tranparent" id="con" class="animate__animated imgCane1"
     [ngClass]="{animate__fadeIn: start}">
 
     <div class="img-cov">
       <img src="{{ item.pic_url}}" class="img-dis" />
-      <ion-card-title>
+      <div class="ribbon">
+        <ion-text>{{ item.fmname }}</ion-text>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+      </div>
+      <!-- <ion-card-title>
         {{ item.fmname }}
-      </ion-card-title>
-      <ion-card-subtitle color="dark">
-        <ion-icon name="call-outline"></ion-icon> {{ item.TEL }}
+      </ion-card-title> -->
+      <ion-card-subtitle style="padding-top: 5px;">
+        <ion-icon name="call-outline"></ion-icon>
+        <ion-text class="txtWhite txtBolder">{{ item.TEL }}</ion-text>
       </ion-card-subtitle>
-      <ion-card-subtitle color="dark">
-        โซน {{ item.SUPZONE }} นสส. {{ item.SUPCODE }}
+      <ion-card-subtitle>
+        <ion-text class="txtWhite txtBolder">โซน {{ item.SUPZONE }} นสส. {{ item.SUPCODE }}</ion-text>
       </ion-card-subtitle>
     </div>
 
-    <ion-card>
+    <!-- ประเมินอ้อย -->
+    <ion-card class="boxWhiteShadow boxGreenPowerpointL bgGreenSoft divPadding-10" style="margin-bottom: 25px;">
+      <ion-grid [fixed]="true">
+        <ion-row class="ion-text-center">
+          <ion-col>
+            <ion-text class="txtLarge txtBolder">
+              <ion-icon name="flag-outline"></ion-icon> เป้าหมายปริมาณอ้อย
+            </ion-text>
+          </ion-col>
+        </ion-row>
+        <ion-grid class="divPadding-10">
+          <ion-row class="ion-text-center borderDashData w3-animate-zoom">
+            <ion-col>
+              <ion-text class="txtxxlarge txtBolder txtRed txtShadowB gfChonburi">
+                {{ item.target_cane | number: '1.0-0'}}</ion-text>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <ion-grid class="divPadding-10">
+          <ion-row>
+            <ion-col>
+              <div class="w3-light-grey paddingTB5 w3-large w3-center">
+                <div class="w3-container w3-padding w3-orange w3-round w3-center" [style.width.%]="pcFm">{{pcFm | number: '1.0-0'}}%</div>
+                <ion-icon name="person"></ion-icon> ท่านประเมิน {{ item.Assess_left_fm | number: '1.0-0' }}
+                <!-- <div class="arrow-right"></div> -->
+              </div>
+              <div class="w3-light-grey paddingTB5 w3-large w3-center">
+                <div class="w3-container w3-padding w3-amber w3-round w3-center" [style.width.%]="pcSupcode">{{pcSupcode | number: '1.0-0'}}%</div>
+                <ion-icon name="people"></ion-icon> นสส.ประเมิน {{ item.Assess_left | number: '1.0-0' }}
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <!-- <ion-row class="ion-text-center">
+          <ion-col>
+            <div class="wrap-circles">
+              <ion-text class="ion-text-center txtBolder txtRed txtLarge">
+                <ion-icon name="person"></ion-icon>
+                จากท่าน</ion-text>
+              <div class="circle per-25">
+                <div class="inner">25%</div>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col>
+            <div class="wrap-circles">
+              <ion-text class="ion-text-center txtBolder txtBlue txtLarge">
+                <ion-icon name="people"></ion-icon>
+                นสส.</ion-text>
+              <div class="circle per-50">
+                <div class="inner">50%</div>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row> -->
+        <!-- <ion-row>
+          <ion-col>
+            <div class="container">
+              <div class="progress-container">
+                <div class="progress" id="progress"> </div>
+                <div class="circle active">25%</div>
+                <div class="circle">50%</div>
+                <div class="circle">75%</div>
+                <div class="circle">100%</div>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row> -->
+        <ion-row class="ion-text-center">
+          <ion-col>
+            <ion-text class="txtSmall">*หักพื้นที่เสียหาย ตัดพันธุ์ สูญเสียแล้ว</ion-text>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+
+    <!-- ข้อมูลทั่วไป -->
+    <ion-card class="boxYellowShadow boxGreenPowerpointR bgGreenSoft">
       <ion-card-content>
         <div style="margin-top: 3%;">
           <ion-card-title style="margin-bottom: 3%;" color="dark">ข้อมูลทั่วไป</ion-card-title>

@@ -28,14 +28,18 @@ export class ShowActivityPage implements OnInit {
     this.itid = this.route.snapshot.paramMap.get('itid');
     console.log('itid in constructor :', this.itid)
 
-    let cpdata: any = []
-    cpdata = GlobalConstants.cpFmdata
-    cpdata = cpdata.filter((o: any) => o.itid === this.itid)
-    console.log('cpdata filter :', cpdata)
-    this.cpdata = cpdata[0];
+    let cp_data: any = []
+    cp_data = localStorage.getItem('cpfmdata')
+    cp_data = JSON.parse(cp_data)
+    cp_data = cp_data.filter((o: any) => o.itid === this.itid)
+    console.log('cpdata filter :', cp_data)
 
     setTimeout(() => {
-      this.getDataActivity()
+      this.cpdata = cp_data[0];
+      this.cpActivityData = cp_data
+      console.log('cpdata :', this.cpdata)
+      console.log('cpActivityData :', this.cpActivityData)
+      // this.getDataActivity()
     }, 1000);
 
   }
@@ -51,6 +55,10 @@ export class ShowActivityPage implements OnInit {
         console.log('cpActivityData :' ,this.cpActivityData)
       }
     });
+  }
+
+  closeCurrentPage() {
+    this.navCtrl.back();
   }
 
 }

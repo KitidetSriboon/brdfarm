@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-card class="borderDashData">
+<ion-card class="borderDashData ion-padding divMg-5">
   <ion-card-header class="el-center">
     <ion-chip>
       <ion-icon name="pin" color="primary"></ion-icon>
@@ -25,19 +25,20 @@
 
 <ion-content>
 
-  <ion-card class="borderDashForm">
+  <ion-card class="borderDashForm divMg-5">
 
     <form *ngIf="cpdata" [formGroup]="frm_addcpact" (ngSubmit)="submit(frm_addcpact.value)" novalidate>
 
       <ion-list>
         <ion-item class="ion-text-center">
-          <ion-input [(ngModel)]="cpdata.wastedSpaceRai_fm" formControlName="wastedSpaceRai" class="inputBGBW" label="พื้นที่เสียหาย(ไร่)" placeholder="เช่น 0.5"></ion-input>
+          <ion-input type="number" [(ngModel)]="cpdata.wastedSpaceRai_fm" formControlName="wastedSpaceRai" class="inputBGBW" label="พื้นที่เสียหาย(ไร่)" placeholder="เช่น 0.5"></ion-input>
         </ion-item>
         <ion-item class="ion-text-center">
-          <ion-input [(ngModel)]="cpdata.Cutseed_fm" formControlName="Cutseed" class="inputBGBW" label="ตัดพันธุ์(ตัน)" placeholder="เช่น 15"></ion-input>
+          <ion-input type="number" [(ngModel)]="cpdata.Cutseed_fm" formControlName="Cutseed" class="inputBGBW" label="ตัดพันธุ์(ตัน)" placeholder="เช่น 15"></ion-input>
         </ion-item>
         <ion-item class="ion-text-center">
-          <ion-input [(ngModel)]="cpdata.ton_lost_fm" formControlName="ton_lost" class="inputBGBW" label="สูญเสียจากตัด(ตัน)" placeholder="เช่น 5"></ion-input>
+          <!-- <ion-input label="Outline input" label-placement="floating" fill="outline" placeholder="Enter text"></ion-input> -->
+          <ion-input type="number" [(ngModel)]="cpdata.ton_lost_fm" formControlName="ton_lost" class="inputBGBW" label="สูญเสียจากตัด(ตัน)" placeholder="เช่น 5"></ion-input>
         </ion-item>
       </ion-list>
 
@@ -69,14 +70,14 @@
         </ion-item>
       </div>
 
-      <ion-grid>
+      <ion-grid style="margin-top: 10px;">
         <ion-row class="ion-text-center">
           <ion-col>
-            <ion-button shape="round" type="submit" [disabled]="!frm_addcpact.valid">
+            <ion-button class="divMg-5" shape="round" type="submit" [disabled]="!frm_addcpact.valid">
               <ion-icon name="save-outline"></ion-icon>
               ...บันทึกข้อมูล
             </ion-button>
-            <ion-button (click)="closeCurrentPage()" shape="round" fill="outline" color="danger">
+            <ion-button class="divMg-5" (click)="closeCurrentPage()" shape="round" fill="outline" color="danger">
               <ion-icon name="close-circle-outline"></ion-icon>
               ปิด
             </ion-button>
