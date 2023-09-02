@@ -66,7 +66,6 @@ export class Tab2Page {
     this.mapFbFm = []
 
     console.log('tab2 LoadFmdata:')
-    setTimeout(() => {
       this.yeardata = appdata.yearapp;
       let fm_data: any = localStorage.getItem('fmdata')
       fm_data = JSON.parse(fm_data)
@@ -78,9 +77,9 @@ export class Tab2Page {
       this.cpFmdata = cp_data;
       this.mapFbFm = map_data;
 
-      this.draw();
-
-    }, 1000);
+      setTimeout(() => {
+        this.draw();
+      }, 1000);
   }
 
   segmentChanged(event: any) {
@@ -98,12 +97,15 @@ export class Tab2Page {
 
   // แสดงแผนที่แปลงอ้อย
   draw() {
+
     const loader = new Loader({
       apiKey: environment.mapkey,
       version: 'weekly',
     });
 
     loader.load().then(() => {
+
+      this.presentToast('middle','..กำลังโหลดข้อมูล','reload');
 
       const mapfb = this.mapFbFm
       const cpfm = this.cpFmdata
@@ -166,6 +168,7 @@ export class Tab2Page {
           `;
           }
         }
+
         const infowindow = new google.maps.InfoWindow({
           content: contentString,
           maxWidth: 310,
@@ -254,6 +257,28 @@ export class Tab2Page {
     //   }
     // });
     // return await modal.present();
+  }
+
+  async presentLoading(msg: string) {
+    const loading = await this.loadingCtrl.create({
+      cssClass: 'load',
+      message: msg,
+    });
+    await loading.present();
+  }
+
+  async closeLoading() {
+    await this.loadingCtrl.dismiss();
+  }  
+
+  async presentToast(position: 'top' | 'middle' | 'bottom', msg: string, icon: string) {
+    const toast = await this.toastCtrl.create({
+      message: msg,
+      duration: 2000,
+      icon: icon,
+      position: position,
+    });
+    toast.present();
   }
 
 }

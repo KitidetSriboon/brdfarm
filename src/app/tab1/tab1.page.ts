@@ -118,7 +118,7 @@ export class Tab1Page {
   subMapFmdata!: Subscription;
   async getCpFmdata(fmcode: string) {
 
-    // this.fmdata = []
+    localStorage.removeItem('cpfmdata')
     this.subMapFmdata = await this.brdsql.getCpFm(this.yearCr, fmcode).subscribe({
       next: (res: any) => {
         this.cpfm = res.recordset
@@ -136,6 +136,7 @@ export class Tab1Page {
 
   // แผนที่แปลงอ้อยจาก firebase และข้อมูลแปลงจาก sql ของชาวไร่
   async getMapFm(fmcode: string) {
+    localStorage.removeItem('mapfm')
     await this.firebase.getMapByBNMCode(this.yearCr, fmcode)
       .then((res: any) => {
         this.mapfm = res
@@ -180,6 +181,22 @@ export class Tab1Page {
     });
     toast.present();
   }
+
+  defaultBar:boolean=false;
+  searchTerm: string = ""; 
+  hideDefaultBar(){
+    this.defaultBar =false;
+  }
+  
+  showDefaultBar(){
+    this.defaultBar =true;
+    this.searchTerm = "โควต้า 10 หลัก";
+  }
+
+  onSearchChange() {
+
+  }
+
 
   ngOnDestroy(): void {
     console.log('tab1 destroy')

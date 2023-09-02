@@ -106,6 +106,23 @@
 
 <div class="ion-page" id="main-content">
 
+  <!-- <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-icon name="menu" size="large"></ion-icon>
+      </ion-buttons>
+      <ion-searchbar *ngIf="defaultBar == true" placeholder="Suche im Wiki" mode="ios" (click)="hideDefaultBar()">
+        <ion-searchbar *ngIf="defaultBar == false" placeholder="Suche im Wiki" inputmode="text" type="text"
+          [(ngModel)]="searchTerm" mode="ios" (ionChange)="onSearchChange($event)" (ionCancel)="showDefaultBar()"
+          (ionBlur)="showDefaultBar()" showCancelButton="always" [debounce]="250" animated="true">
+        </ion-searchbar>
+      </ion-searchbar>
+      <ion-buttons slot="end">
+        <ion-icon name="search" size="large"></ion-icon>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header> -->
+
   <ion-header>
     <ion-toolbar color="primary">
       <ion-buttons slot="start">
@@ -118,12 +135,11 @@
       <ion-buttons slot="start">
         <ion-menu-button auto-hide="false"></ion-menu-button>
       </ion-buttons>
-      <!-- <ion-button fill="solid" slot="end">
-        <ion-icon name="reload-circle" slot="icon-only"></ion-icon>
-      </ion-button> -->
-      <ion-button fill="solid" slot="end" (click)="openUserMenu()">
-        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
-      </ion-button>
+      <ion-buttons slot="primary">
+        <ion-button (click)="openUserMenu()">
+          <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
@@ -139,16 +155,19 @@
         <i></i>
         <i></i>
       </div>
-      <!-- <ion-card-title>
-        {{ item.fmname }}
-      </ion-card-title> -->
-      <ion-card-subtitle style="padding-top: 5px;">
-        <ion-icon name="call-outline"></ion-icon>
-        <ion-text class="txtWhite txtBolder">{{ item.TEL }}</ion-text>
-      </ion-card-subtitle>
-      <ion-card-subtitle>
-        <ion-text class="txtWhite txtBolder">โซน {{ item.SUPZONE }} นสส. {{ item.SUPCODE }}</ion-text>
-      </ion-card-subtitle>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-icon name="call-outline txtWhite"></ion-icon>
+            <ion-text class="txtWhite">{{ item.TEL }}</ion-text>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-text class="txtWhite">โซน {{ item.SUPZONE }} นสส. {{ item.SUPCODE }}</ion-text>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </div>
 
     <!-- ประเมินอ้อย -->
@@ -162,9 +181,9 @@
           </ion-col>
         </ion-row>
         <ion-grid class="divPadding-10">
-          <ion-row class="ion-text-center borderDashData w3-animate-zoom">
+          <ion-row class="ion-text-center borderRainbow w3-animate-zoom animate__animated animate__bounce animate__slow">
             <ion-col>
-              <ion-text class="txtxxlarge txtBolder txtRed txtShadowB gfChonburi">
+              <ion-text class="txtxxlarge txtBolder txtWhite txtShadowB gfChonburi">
                 {{ item.target_cane | number: '1.0-0'}}</ion-text>
             </ion-col>
           </ion-row>
@@ -173,13 +192,30 @@
           <ion-row>
             <ion-col>
               <div class="w3-light-grey paddingTB5 w3-large w3-center">
-                <div class="w3-container w3-padding w3-orange w3-round w3-center" [style.width.%]="pcFm">{{pcFm | number: '1.0-0'}}%</div>
-                <ion-icon name="person"></ion-icon> ท่านประเมิน {{ item.Assess_left_fm | number: '1.0-0' }}
-                <!-- <div class="arrow-right"></div> -->
+                <div class="w3-container w3-padding w3-orange w3-round w3-center" [style.width.%]="pcFm">
+                  {{pcFm | number: '1.0-0'}}%
+                </div>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col class="ion-text-left w3-lime">
+                      <ion-icon name="person"></ion-icon> ท่านประเมิน <ion-icon name="chevron-forward-outline"></ion-icon>
+                    </ion-col>
+                    <ion-col class="ion-text-right w3-khaki">{{ item.Assess_left_fm | number: '1.0-0' }}</ion-col>
+                  </ion-row>
+                </ion-grid>
               </div>
               <div class="w3-light-grey paddingTB5 w3-large w3-center">
-                <div class="w3-container w3-padding w3-amber w3-round w3-center" [style.width.%]="pcSupcode">{{pcSupcode | number: '1.0-0'}}%</div>
-                <ion-icon name="people"></ion-icon> นสส.ประเมิน {{ item.Assess_left | number: '1.0-0' }}
+                <div class="w3-container w3-padding w3-amber w3-round w3-center" [style.width.%]="pcSupcode">
+                  {{pcSupcode | number: '1.0-0'}}%
+                </div>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col class="ion-text-left w3-lime">
+                      <ion-icon name="people"></ion-icon> นสส.ประเมิน <ion-icon name="chevron-forward-outline"></ion-icon>
+                    </ion-col>
+                    <ion-col class="ion-text-right w3-khaki">{{ item.Assess_left | number: '1.0-0' }}</ion-col>
+                  </ion-row>
+                </ion-grid>
               </div>
             </ion-col>
           </ion-row>
@@ -254,6 +290,11 @@
           <p class="pro-text">กรุงไทย : {{ item.BANKKTB }}</p>
         </div>
       </ion-card-content>
+    </ion-card>
+
+    <ion-card class="boxGreenPowerpointL bgGreenSoft " style="margin-top: 25px;margin-bottom: 25px">
+      <ion-card-content>...as soon</ion-card-content>
+      <i class="icon ion-refreshing"></i>
     </ion-card>
 
   </ion-content>

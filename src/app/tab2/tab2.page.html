@@ -1,9 +1,15 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
-    <ion-title>
+    <ion-title style="margin-left: 5px;">
       <ion-icon name="map-outline"></ion-icon>
       แผนที่และแปลงอ้อย
     </ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click) ="loadFmdata()">
+        <ion-icon slot="icon-only" name="reload"></ion-icon>
+        <!-- <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon> -->
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
