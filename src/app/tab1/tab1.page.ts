@@ -70,7 +70,6 @@ export class Tab1Page {
   }
 
   ngOnInit() {
-    // this.getFmdata(this.fmcode);
   }
 
   ngAfterViewInit() {
@@ -82,36 +81,50 @@ export class Tab1Page {
   }
 
   loadNewAlldata() {
-    this.getFmdata({fmcode: this.fmcode})
+    this.cpfm = [];
+    this.mapfm = [];
+    this.fmdata = [];
+    this.fmimg = ''
+    this.fmname = '';
+    this.pcFm = 0;
+    this.pcSupcode = 0;
+    let fmc = localStorage.getItem('fmcode')
+    this.getFmdata({fmcode: fmc})
   }
 
   // โหลดข้อมูลชาวไร่จาก api
   subFmdata!: Subscription;
   async getFmdata(f: any) {
 
-    // console.log('form: ',f)
-
-    this.presentLoading('...กำลังโหลดข้อมูล ทั่วไป แปลงอ้อย แผนที่แปลง...')
     localStorage.setItem('fmcode', f.fmcode)
-
     this.subFmdata = await this.brdsql.getFmdata(f.fmcode).subscribe({
       next: (res: any) => {
-        this.fmdata = res.recordset
-        localStorage.setItem('fmdata' ,JSON.stringify(this.fmdata))
-        const fmdt = this.fmdata[0]
-        this.fmimg = fmdt.pic_url
-        this.fmname = fmdt.fmname.trim()
-        this.pcFm = (parseFloat(fmdt.Assess_left_fm)*100)/parseFloat(fmdt.target_cane)
-        this.pcSupcode = (parseFloat(fmdt.Assess_left)*100)/parseFloat(fmdt.target_cane)
-        // this.closeLoading()
+        this.presentLoading('...กำลังโหลดข้อมูล ทั่วไป แปลงอ้อย แผนที่แปลง...')
+        // console.log('res:' ,res)
+        if(res.recordset.length == 0) {
+          this.presentAlert('!!แจ้งเตือน','ไม่พบข้อมูลชาวไร่','..ตรวจสอบเลขโควต้าถูกต้องหรือไม่')
+          localStorage.removeItem('fmdata')
+          localStorage.removeItem('cpfmdata')
+          localStorage.removeItem('mapfm')
+          // this.closeLoading();
+        } else {
+          this.fmdata = res.recordset
+          localStorage.setItem('fmdata' ,JSON.stringify(this.fmdata))
+          const fmdt = this.fmdata[0]
+          this.fmimg = fmdt.pic_url
+          this.fmname = fmdt.fmname.trim()
+          this.pcFm = (parseFloat(fmdt.Assess_left_fm)*100)/parseFloat(fmdt.target_cane)
+          this.pcSupcode = (parseFloat(fmdt.Assess_left)*100)/parseFloat(fmdt.target_cane)
+          // this.closeLoading();
+          this.getCpFmdata(f.fmcode)
+        }
       }, error(err) {
         alert('Error :' + err)
       }, complete() {
-
+        
       },
     })
     // this.closeLoading()
-    this.getCpFmdata(f.fmcode)
   }
 
   // โหลดข้อมูลแปลงอ้อยของชาวไร่จาก api
@@ -154,6 +167,7 @@ export class Tab1Page {
     const loading = await this.loadingCtrl.create({
       cssClass: 'load',
       message: msg,
+      duration: 1000,
     });
     await loading.present();
   }
@@ -168,7 +182,7 @@ export class Tab1Page {
       subHeader: s,
       message: m,
       buttons: ['OK'],
-      cssClass: 'custom-alert',
+      cssClass: 'my-custom-class',
     });
     await alert.present();
   }

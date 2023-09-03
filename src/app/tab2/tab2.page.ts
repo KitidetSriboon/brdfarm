@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { GlobalConstants } from '../global-constants';
 import { environment } from 'src/environments/environment';
-import { BrdsqlService } from '../services/brdsql.service';
-import { FirebaseService } from '../services/firebase.service';
 import { appdata } from '../data/data';
 import { GoogleMap } from '@capacitor/google-maps';
 import { Loader } from '@googlemaps/js-api-loader';
@@ -16,6 +14,10 @@ import {
   AlertController,
   AnimationController
 } from '@ionic/angular';
+
+import { BrdsqlService } from '../services/brdsql.service';
+import { FirebaseService } from '../services/firebase.service';
+import { GeolocationService } from '../services/geolocation.service';
 
 @Component({
   selector: 'app-tab2',
@@ -32,6 +34,7 @@ export class Tab2Page {
   fmcode?: string;
   dataP = false;
   mapP = true;
+  upos = { lat: 15.228581111646495, lng: 103.07182686761979 };
 
   constructor(
     private fbservice: FirebaseService,
@@ -42,6 +45,7 @@ export class Tab2Page {
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
     private router: Router,
+    public geosv: GeolocationService,
 
   ) { 
     console.log('tab2 constructor:')
@@ -50,9 +54,6 @@ export class Tab2Page {
 
   ngOnInit() {
     console.log('tab2 ngOnInit:');
-    // setTimeout(() => {
-    //   this.draw();
-    // }, 1000);
   }
 
   ngAfterViewInit(): void {
@@ -78,7 +79,10 @@ export class Tab2Page {
       this.mapFbFm = map_data;
 
       setTimeout(() => {
-        this.draw();
+        this.getUserLocation();
+        setTimeout(() => {
+          this.draw();
+        }, 1000)
       }, 1000);
   }
 
@@ -93,6 +97,15 @@ export class Tab2Page {
         this.draw();
       }, 1000);
     }
+  }
+
+  async getUserLocation() {
+    await this.geosv.getCurrentCoordinate().then((res:any) => {
+      console.log('res getlocation: ',res)
+      this.upos.lat = res.coords.latitude;
+      this.upos.lng = res.coords.longitude;
+      console.log('userPosition: ',this.upos.lat,this.upos.lng)
+    })
   }
 
   // แสดงแผนที่แปลงอ้อย
@@ -110,7 +123,8 @@ export class Tab2Page {
       const mapfb = this.mapFbFm
       const cpfm = this.cpFmdata
 
-      for (let i = 0; i < mapfb.length; i++) { }
+      // for (let i = 0; i < mapfb.length; i++) { }
+      // 1. create map
       const map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
         center: { lat: mapfb[0].coordinatesCenter.lat, lng: mapfb[0].coordinatesCenter.lng },
         zoom: 16,
@@ -124,6 +138,35 @@ export class Tab2Page {
         },
         mapTypeId: 'roadmap',
       });
+
+      // 2. Create marker
+      let label: string = "<ion-icon name='person-outline' color='danger'></ion-icon> <ion-label color='primary'> คุณอยู่ที่นี่ </ion-label>"
+      const marker = new google.maps.Marker({
+        position: this.upos,
+        map,
+        label: "",
+        icon: 'assets/icon/fm64.png',
+        animation: google.maps.Animation.BOUNCE,
+      });
+
+      // 3. Create circle
+      const circle = new google.maps.Circle({
+        center: this.upos,
+        map,
+        strokeWeight: 2,
+        strokeColor: '#FF992C',
+        fillColor: '#F5F8B4',
+        fillOpacity: 0.35,
+        radius: 100,  // รัศมีเป็นเมตร
+      })
+
+      // 4. Create InfoWindow.
+      let infoWindow = new google.maps.InfoWindow({
+        content: label,
+        position: this.upos,
+      });
+      infoWindow.open(map);
+
       for (let i = 0; i < mapfb.length; i++) {
         const marker = new google.maps.Marker({
           position: { lat: mapfb[i].coordinatesCenter.lat, lng: mapfb[i].coordinatesCenter.lng },

@@ -49,7 +49,7 @@ export class AddActivityPage implements OnInit {
     cp_data = cp_data.filter((o: any) => o.itid === this.itid)
     console.log('cpdata filter :', cp_data)
     this.cpdata = cp_data[0];
-    this.perTon = this.cpdata.ton_fm
+    this.perTon = this.cpdata.ton_last_fm
 
     this.frm_addcpact = fb.group({
       itid: ['',[Validators.required]],

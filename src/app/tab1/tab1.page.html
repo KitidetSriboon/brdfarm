@@ -36,9 +36,6 @@
 <ion-menu side="end" menuId="moremenu" content-id="main-content">
   <ion-header>
     <ion-toolbar color="secondary">
-      <!-- <ion-title>
-        เมนู
-      </ion-title> -->
       <ion-item color="secondary" line="non" class="divPadding-5">
         <ion-avatar slot="start">
           <img alt="fmimg" src="{{fmimg}}" />
@@ -75,29 +72,6 @@
           </ion-button>
         </div>
       </ion-accordion>
-      <!-- <ion-accordion value="second">
-        <ion-item slot="header">
-          <ion-icon name="settings-outline" slot="start"></ion-icon>
-          <ion-label>ตั้งค่า</ion-label>
-        </ion-item>
-        <div class="ion-padding" slot="content">
-          <ion-item lines="none" button>
-            <ion-icon name="settings" slot="start"></ion-icon>
-            <ion-label>Setting</ion-label>
-          </ion-item>
-        </div>
-      </ion-accordion>
-      <ion-accordion value="third">
-        <ion-item slot="header">
-          <ion-icon name="chatbubbles-outline" slot="start"></ion-icon>
-          <ion-label>คำถาม</ion-label>
-        </ion-item>
-        <div class="ion-padding" slot="content">
-          <ion-item detail="true" lines="none" button>
-            <ion-label>เงื่อนไขคิว</ion-label>
-          </ion-item>
-        </div>
-      </ion-accordion> -->
     </ion-accordion-group>
 
   </ion-content>
@@ -106,28 +80,11 @@
 
 <div class="ion-page" id="main-content">
 
-  <!-- <ion-header>
-    <ion-toolbar color="primary">
-      <ion-buttons slot="start">
-        <ion-icon name="menu" size="large"></ion-icon>
-      </ion-buttons>
-      <ion-searchbar *ngIf="defaultBar == true" placeholder="Suche im Wiki" mode="ios" (click)="hideDefaultBar()">
-        <ion-searchbar *ngIf="defaultBar == false" placeholder="Suche im Wiki" inputmode="text" type="text"
-          [(ngModel)]="searchTerm" mode="ios" (ionChange)="onSearchChange($event)" (ionCancel)="showDefaultBar()"
-          (ionBlur)="showDefaultBar()" showCancelButton="always" [debounce]="250" animated="true">
-        </ion-searchbar>
-      </ion-searchbar>
-      <ion-buttons slot="end">
-        <ion-icon name="search" size="large"></ion-icon>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header> -->
-
   <ion-header>
     <ion-toolbar color="primary">
-      <ion-buttons slot="start">
+      <!-- <ion-buttons slot="start">
         <ion-menu-button menuId="main"></ion-menu-button>
-      </ion-buttons>
+      </ion-buttons> -->
       <ion-title>
         {{ appName }}
         <ion-text class="txtSmall">v.{{ appVersion }}</ion-text>
@@ -192,7 +149,8 @@
           <ion-row>
             <ion-col>
               <div class="w3-light-grey paddingTB5 w3-large w3-center">
-                <div class="w3-container w3-padding w3-orange w3-round w3-center" [style.width.%]="pcFm">
+                <div class="w3-container w3-padding-small w3-blue w3-round w3-center txtSmall"
+                [style.width.%]="pcFm" style="margin-bottom: 3px;">
                   {{pcFm | number: '1.0-0'}}%
                 </div>
                 <ion-grid>
@@ -200,12 +158,15 @@
                     <ion-col class="ion-text-left w3-lime">
                       <ion-icon name="person"></ion-icon> ท่านประเมิน <ion-icon name="chevron-forward-outline"></ion-icon>
                     </ion-col>
-                    <ion-col class="ion-text-right w3-khaki">{{ item.Assess_left_fm | number: '1.0-0' }}</ion-col>
+                    <ion-col class="ion-text-right w3-khaki">
+                      {{ item.Assess_left_fm | number: '1.0-0' }}
+                    </ion-col>
                   </ion-row>
                 </ion-grid>
               </div>
               <div class="w3-light-grey paddingTB5 w3-large w3-center">
-                <div class="w3-container w3-padding w3-amber w3-round w3-center" [style.width.%]="pcSupcode">
+                <div class="w3-container w3-padding-small w3-light-blue w3-round w3-center txtSmall" 
+                  [style.width.%]="pcSupcode" style="margin-bottom: 3px;">
                   {{pcSupcode | number: '1.0-0'}}%
                 </div>
                 <ion-grid>
