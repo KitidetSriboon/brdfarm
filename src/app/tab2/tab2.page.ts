@@ -12,11 +12,12 @@ import {
   LoadingController,
   IonAccordionGroup,
   AlertController,
-  AnimationController
+  AnimationController,
+  MenuController,
 } from '@ionic/angular';
 
-import { BrdsqlService } from '../services/brdsql.service';
-import { FirebaseService } from '../services/firebase.service';
+// import { BrdsqlService } from '../services/brdsql.service';
+// import { FirebaseService } from '../services/firebase.service';
 import { GeolocationService } from '../services/geolocation.service';
 
 @Component({
@@ -34,11 +35,11 @@ export class Tab2Page {
   fmcode?: string;
   dataP = false;
   mapP = true;
-  upos = { lat: 15.228581111646495, lng: 103.07182686761979 };
+  upos = { lat: 15.228581111646495, lng: 103.07182686761979 };  // พิกัด BRR
 
   constructor(
-    private fbservice: FirebaseService,
-    private brdservice: BrdsqlService,
+    // private fbservice: FirebaseService,
+    // private brdservice: BrdsqlService,
     private acsCtrl: ActionSheetController,
     private mdCtrl: ModalController,
     private toastCtrl: ToastController,
@@ -46,8 +47,9 @@ export class Tab2Page {
     private alertCtrl: AlertController,
     private router: Router,
     public geosv: GeolocationService,
+    private menuCtrl: MenuController,
 
-  ) { 
+  ) {
     console.log('tab2 constructor:')
     this.loadFmdata();
   }
@@ -60,6 +62,23 @@ export class Tab2Page {
     console.log('tab2 ngAfterViewInit:')
   }
 
+  openFirstMenu() {
+    // Open the menu by menu-id
+    this.menuCtrl.enable(true, 'first-menu');
+    this.menuCtrl.open('first-menu');
+  }
+
+  openSecondMenu() {
+    // Open the menu by menu-id
+    this.menuCtrl.enable(true, 'second-menu');
+    this.menuCtrl.open('second-menu');
+  }
+
+  openEndMenu() {
+    // Open the menu by side
+    this.menuCtrl.open('end');
+  }
+
   async loadFmdata() {
 
     this.fmdata = []
@@ -67,23 +86,23 @@ export class Tab2Page {
     this.mapFbFm = []
 
     console.log('tab2 LoadFmdata:')
-      this.yeardata = appdata.yearapp;
-      let fm_data: any = localStorage.getItem('fmdata')
-      fm_data = JSON.parse(fm_data)
-      let cp_data: any = localStorage.getItem('cpfmdata')
-      cp_data = JSON.parse(cp_data)
-      let map_data: any = localStorage.getItem('mapfm')
-      map_data = JSON.parse(map_data)
-      this.fmdata = fm_data;
-      this.cpFmdata = cp_data;
-      this.mapFbFm = map_data;
+    this.yeardata = appdata.yearapp;
+    let fm_data: any = localStorage.getItem('fmdata')
+    fm_data = JSON.parse(fm_data)
+    let cp_data: any = localStorage.getItem('cpfmdata')
+    cp_data = JSON.parse(cp_data)
+    let map_data: any = localStorage.getItem('mapfm')
+    map_data = JSON.parse(map_data)
+    this.fmdata = fm_data;
+    this.cpFmdata = cp_data;
+    this.mapFbFm = map_data;
 
+    setTimeout(() => {
+      this.getUserLocation();
       setTimeout(() => {
-        this.getUserLocation();
-        setTimeout(() => {
-          this.draw();
-        }, 1000)
-      }, 1000);
+        this.draw();
+      }, 1000)
+    }, 1000);
   }
 
   segmentChanged(event: any) {
@@ -100,11 +119,11 @@ export class Tab2Page {
   }
 
   async getUserLocation() {
-    await this.geosv.getCurrentCoordinate().then((res:any) => {
-      console.log('res getlocation: ',res)
+    await this.geosv.getCurrentCoordinate().then((res: any) => {
+      console.log('res getlocation: ', res)
       this.upos.lat = res.coords.latitude;
       this.upos.lng = res.coords.longitude;
-      console.log('userPosition: ',this.upos.lat,this.upos.lng)
+      console.log('userPosition: ', this.upos.lat, this.upos.lng)
     })
   }
 
@@ -118,7 +137,7 @@ export class Tab2Page {
 
     loader.load().then(() => {
 
-      this.presentToast('middle','..กำลังโหลดข้อมูล','reload');
+      this.presentToast('middle', '..กำลังโหลดข้อมูล', 'reload');
 
       const mapfb = this.mapFbFm
       const cpfm = this.cpFmdata
@@ -167,6 +186,7 @@ export class Tab2Page {
       });
       infoWindow.open(map);
 
+      // 5. create marker
       for (let i = 0; i < mapfb.length; i++) {
         const marker = new google.maps.Marker({
           position: { lat: mapfb[i].coordinatesCenter.lat, lng: mapfb[i].coordinatesCenter.lng },
@@ -180,16 +200,55 @@ export class Tab2Page {
           //   shouldFocus: false,
           // });
         });
+
+        // 6. create polygon
+        let fillColor = "#7FB5FF"
+        const ckfmton = mapfb[i].fmdata
+        if (ckfmton !== undefined) {
+          console.log('ck fmdata:', ckfmton)
+          let tonfm = ckfmton.ton_fm
+          if (tonfm == 0) {
+            fillColor = "#E5F708"
+          } else if (tonfm > 0) {
+            fillColor = "#09FD0C"
+          } else {
+            fillColor = "#7FB5FF"
+          }
+        }
+
+        // if(ckfmton.ton_fm) {
+        //   console.log('ckTonFm:', ckfmton);
+        //   if (ckfmton.ton_fm == 0) {
+        //     fillColor = "#E5F708"
+        //   } else if (ckfmton.ton_fm > 0) {
+        //     fillColor = "#09FD0C"
+        //   } else {
+        //     fillColor = "#7FB5FF"
+        //   }
+        // }
+
+        // if(!ckTonFm  || ckTonFm == 0) {
+        //   mapfillcolor = '#fb8657'
+        // }
+        // switch (mapfb[i].fmdata.ton_fm) {
+        //   case value:
+
+        //     break;
+
+        //   default:
+        //     break;
+        // }
         const triangleCoords = mapfb[i].coordinates;
         const bermudaTriangle = new google.maps.Polygon({
           paths: triangleCoords,
           strokeColor: '#7FB5FF',
           strokeOpacity: 0.8,
           strokeWeight: 2,
-          fillColor: '#7FB5FF',
+          fillColor: fillColor,
           fillOpacity: 0.35,
         });
         bermudaTriangle.setMap(map);
+
         let contentString = ``;
         for (let j = 0; j < cpfm.length; j++) {
           if (cpfm[j].intlandno === cpfm[i].landno) {
@@ -220,6 +279,10 @@ export class Tab2Page {
     });
   }
 
+  openMapMenu() {
+    this.menuCtrl.open('moremenu');
+  }
+
   async presentActionSheet(keypara: string) {
     console.log('key :', keypara)
     let mapsql: any = []
@@ -230,7 +293,7 @@ export class Tab2Page {
 
     const actionSheet = await this.acsCtrl.create({
       header: `แปลง ${mapsql.CaneTypeName} พท.${mapsql.landvalue.toFixed(2)} ไร่`,
-      subHeader: `${mapsql.fmname} กลุ่ม ${mapsql.groupCode}`,
+      subHeader: `กลุ่ม ${mapsql.groupCode} ท่านประเมิน ${mapsql.ton_last_fm} ตัน/ไร่ `,
       cssClass: 'acs-orange',
       buttons: [{
         text: 'บันทึกกิจกรรมแปลง',
@@ -312,7 +375,7 @@ export class Tab2Page {
 
   async closeLoading() {
     await this.loadingCtrl.dismiss();
-  }  
+  }
 
   async presentToast(position: 'top' | 'middle' | 'bottom', msg: string, icon: string) {
     const toast = await this.toastCtrl.create({

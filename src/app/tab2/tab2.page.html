@@ -1,44 +1,111 @@
-<ion-header [translucent]="true">
-  <ion-toolbar color="primary">
-    <ion-title style="margin-left: 5px;">
-      <ion-icon name="map-outline"></ion-icon>
-      แผนที่และแปลงอ้อย
-    </ion-title>
-    <ion-buttons slot="primary">
-      <ion-button (click) ="loadFmdata()">
-        <ion-icon slot="icon-only" name="reload"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-
-  <ion-segment value="map" class="bgWhite" (ionChange)="segmentChanged($event)">
-    <ion-segment-button value="map">
-      <ion-chip class="bgOrangeSoft">
-        <ion-icon name="map" color="primary"></ion-icon>
-        <ion-label class="txtBold">แผนที่</ion-label>
-      </ion-chip>
-      <!-- <ion-label class="txtLarge"><ion-icon name="map-outline"></ion-icon> แผนที่</ion-label> -->
-    </ion-segment-button>
-    <ion-segment-button value="cpdata"  [disabled]="true">
-      <ion-chip class="bgOrangeSoft">
-        <ion-icon name="list" color="primary"></ion-icon>
-        <ion-label class="txtBold">แปลงอ้อย</ion-label>
-      </ion-chip>
-      <!-- <ion-label class="txtLarge "><ion-icon name="list-outline"></ion-icon> แปลงอ้อย</ion-label> -->
-    </ion-segment-button>
-  </ion-segment>
-
-  <ion-content *ngIf="mapP && mapFbFm" class="animate__animated animate__faster" [ngClass]="{animate__slideInRight: !dataP}">
-    <!-- <ion-text>map segment</ion-text> -->
-    <div id="map" style="width: 100%;  height: 100%;"></div>
+<ion-menu menuId="first-menu" contentId="map-content">
+  <ion-header>
+    <ion-toolbar color="secondary">
+      <ion-item color="secondary" line="non" class="divPadding-5">
+        <ion-icon name="locate"></ion-icon>
+        <ion-label> แผนที่และแปลงอ้อย </ion-label>
+      </ion-item>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ion-accordion-group>
+      <ion-accordion value="map">
+        <ion-item slot="header">
+          <ion-icon name="map" slot="start"></ion-icon>
+          <ion-label>แผนที่</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-button (click)="loadFmdata()" fill="clear" expand="full">
+            <ion-icon name="documents-outline" slot="start"></ion-icon>
+            <ion-label>โหลดใหม่</ion-label>
+          </ion-button>
+        </div>
+      </ion-accordion>
+      <ion-accordion value="caneplot">
+        <ion-item slot="header">
+          <ion-icon name="list" slot="start"></ion-icon>
+          <ion-label>แปลงอ้อย</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-button fill="clear" expand="full">
+            <ion-icon name="documents-outline" slot="start"></ion-icon>
+            <ion-label>แปลงยังไม่บันทึกกิจกรรม</ion-label>
+          </ion-button>
+          <ion-button fill="clear" expand="full">
+            <ion-icon name="thumbs-down-outline" slot="start"></ion-icon>
+            <ion-label>แปลงยังไม่ประเมิน</ion-label>
+          </ion-button>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
   </ion-content>
+</ion-menu>
 
-  <ion-content *ngIf="dataP && cpFmdata" class="animate__animated animate__faster" [ngClass]="{animate__slideInRight: !dataP}">
-    <ion-text>Data segment</ion-text>
+<ion-menu menuId="second-menu" contentId="map-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Second Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">This is the second menu content.</ion-content>
+</ion-menu>
+
+<ion-menu menuI="end" side="end" contentId="map-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>End Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">This is the end menu content.</ion-content>
+</ion-menu>
+
+<div class="ion-page" id="map-content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title style="margin-left: 5px;">
+        <ion-icon name="map-outline"></ion-icon>
+        แผนที่และแปลงอ้อย
+      </ion-title>
+      <ion-buttons slot="primary">
+        <ion-button (click)="openFirstMenu()">
+          <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+
+    <ion-segment value="map" class="bgWhite" (ionChange)="segmentChanged($event)">
+      <ion-segment-button value="map">
+        <ion-chip class="bgOrangeSoft">
+          <ion-icon name="map" color="primary"></ion-icon>
+          <ion-label class="txtBold">แผนที่</ion-label>
+        </ion-chip>
+      </ion-segment-button>
+      <ion-segment-button value="cpdata" [disabled]="true">
+        <ion-chip class="bgOrangeSoft">
+          <ion-icon name="list" color="primary"></ion-icon>
+          <ion-label class="txtBold">แปลงอ้อย</ion-label>
+        </ion-chip>
+        <!-- <ion-label class="txtLarge "><ion-icon name="list-outline"></ion-icon> แปลงอ้อย</ion-label> -->
+      </ion-segment-button>
+    </ion-segment>
+
+    <ion-content *ngIf="mapP && mapFbFm" class="animate__animated animate__faster"
+      [ngClass]="{animate__slideInRight: !dataP}">
+      <!-- <ion-text>map segment</ion-text> -->
+      <div id="map" style="width: 100%;  height: 100%;"></div>
+    </ion-content>
+
+    <ion-content *ngIf="dataP && cpFmdata" class="animate__animated animate__faster"
+      [ngClass]="{animate__slideInRight: !dataP}">
+      <ion-text>Data segment</ion-text>
+    </ion-content>
+
+    <!-- <p>Tap a button below to open a specific menu.</p>
+    <ion-button expand="block" (click)="openFirstMenu()">Open First Menu</ion-button>
+    <ion-button expand="block" (click)="openSecondMenu()">Open Second Menu</ion-button>
+    <ion-button expand="block" (click)="openEndMenu()">Open End Menu</ion-button> -->
+
   </ion-content>
-
-  <!-- <app-explore-container name="Tab 2 page"></app-explore-container> -->
-</ion-content>
+</div>

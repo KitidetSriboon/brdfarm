@@ -47,7 +47,7 @@
           <ion-text class="txtRed">ตัน {{ perTon }}</ion-text> /ไร่
         </ion-text>
         <ion-item>
-          <ion-range class="paddingLR10 inputBGBW" formControlName="ton" 
+          <ion-range style="margin-top: 20px;" class="inputBGBW" formControlName="ton" 
           [min]="0" [max]="35" [pin]="true" [ticks]="true" [snaps]="true"
           [(ngModel)]="cpdata.ton_last_fm"
           (ionChange)="newTon($event,frm_addcpact.value)">

@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 import { BrdsqlService } from 'src/app/services/brdsql.service';
+import { FirebaseService } from 'src/app/services/firebase.service';
 import { GlobalConstants } from 'src/app/global-constants';
 
 
@@ -35,6 +36,7 @@ export class AddActivityPage implements OnInit {
     private navCtrl: NavController,
     private fb: FormBuilder,
     private brdsql: BrdsqlService,
+    private firebase: FirebaseService,
     private modalCtrl: ModalController,
     private alCtrl: AlertController,
 
@@ -115,6 +117,15 @@ export class AddActivityPage implements OnInit {
 
   async saveData(f:any) {
     console.log('form to brdservice :' ,f)
+    
+    // updat firebase database
+    this.firebase.updateFmAS(this.yearCr, this.itid, f)
+    .then(res => {})
+    .finally(() => {})
+    .catch(e => { console.log('error ', e)
+    })
+
+    // update sql server
     await this.brdsql.updateFmActivity(f).subscribe({
       next: (res: any) => {
         console.log('res :' ,res)
