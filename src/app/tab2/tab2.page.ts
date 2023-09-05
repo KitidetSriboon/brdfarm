@@ -50,16 +50,16 @@ export class Tab2Page {
     private menuCtrl: MenuController,
 
   ) {
-    console.log('tab2 constructor:')
-    this.loadFmdata();
+    // console.log('tab2 constructor:')
+    this.loadNewFmdata();
   }
 
   ngOnInit() {
-    console.log('tab2 ngOnInit:');
+    // console.log('tab2 ngOnInit:');
   }
 
   ngAfterViewInit(): void {
-    console.log('tab2 ngAfterViewInit:')
+    // console.log('tab2 ngAfterViewInit:')
   }
 
   openFirstMenu() {
@@ -76,16 +76,17 @@ export class Tab2Page {
 
   openEndMenu() {
     // Open the menu by side
-    this.menuCtrl.open('end');
+    this.menuCtrl.enable(true, 'third-menu');
+    this.menuCtrl.open('third-menu');
   }
 
-  async loadFmdata() {
+  async loadNewFmdata() {
 
     this.fmdata = []
     this.cpFmdata = []
     this.mapFbFm = []
 
-    console.log('tab2 LoadFmdata:')
+    // console.log('tab2 LoadFmdata:')
     this.yeardata = appdata.yearapp;
     let fm_data: any = localStorage.getItem('fmdata')
     fm_data = JSON.parse(fm_data)
@@ -120,10 +121,10 @@ export class Tab2Page {
 
   async getUserLocation() {
     await this.geosv.getCurrentCoordinate().then((res: any) => {
-      console.log('res getlocation: ', res)
+      // console.log('res getlocation: ', res)
       this.upos.lat = res.coords.latitude;
       this.upos.lng = res.coords.longitude;
-      console.log('userPosition: ', this.upos.lat, this.upos.lng)
+      // console.log('userPosition: ', this.upos.lat, this.upos.lng)
     })
   }
 
@@ -202,42 +203,20 @@ export class Tab2Page {
         });
 
         // 6. create polygon
-        let fillColor = "#7FB5FF"
+        let fillColor = "#fff314"
         const ckfmton = mapfb[i].fmdata
         if (ckfmton !== undefined) {
-          console.log('ck fmdata:', ckfmton)
+          // console.log('ck fmdata:', ckfmton)
           let tonfm = ckfmton.ton_fm
           if (tonfm == 0) {
-            fillColor = "#E5F708"
+            fillColor = "#fff314"
           } else if (tonfm > 0) {
             fillColor = "#09FD0C"
           } else {
-            fillColor = "#7FB5FF"
+            fillColor = "#fff314"
           }
         }
 
-        // if(ckfmton.ton_fm) {
-        //   console.log('ckTonFm:', ckfmton);
-        //   if (ckfmton.ton_fm == 0) {
-        //     fillColor = "#E5F708"
-        //   } else if (ckfmton.ton_fm > 0) {
-        //     fillColor = "#09FD0C"
-        //   } else {
-        //     fillColor = "#7FB5FF"
-        //   }
-        // }
-
-        // if(!ckTonFm  || ckTonFm == 0) {
-        //   mapfillcolor = '#fb8657'
-        // }
-        // switch (mapfb[i].fmdata.ton_fm) {
-        //   case value:
-
-        //     break;
-
-        //   default:
-        //     break;
-        // }
         const triangleCoords = mapfb[i].coordinates;
         const bermudaTriangle = new google.maps.Polygon({
           paths: triangleCoords,
@@ -284,11 +263,11 @@ export class Tab2Page {
   }
 
   async presentActionSheet(keypara: string) {
-    console.log('key :', keypara)
+    // console.log('key :', keypara)
     let mapsql: any = []
     mapsql = this.cpFmdata
     mapsql = mapsql.filter((o: any) => o.itid === keypara)
-    console.log('mapsql filter :', mapsql)
+    // console.log('mapsql filter :', mapsql)
     mapsql = mapsql[0]
 
     const actionSheet = await this.acsCtrl.create({

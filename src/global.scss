@@ -574,6 +574,14 @@ button.alert-button.alert-button-confirm {
     color: rgb(2, 255, 129);
 }
 
+.bgcpOK {
+    --background-color: #09FD0C;
+}
+
+.bgcpNon {
+    --background-color: #fff314;
+}
+
 // +++++++++++++++++ border ++++++++++++++++++++++++
 .borderDashData {
     border-style: dashed;

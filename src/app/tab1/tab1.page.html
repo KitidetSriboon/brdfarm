@@ -16,7 +16,7 @@
   </ion-header>
   <ion-content class="ion-padding">
 
-    <form [formGroup]="frm_search" (ngSubmit)="getFmdata(frm_search.value)" novalidate>
+    <!-- <form [formGroup]="frm_search" (ngSubmit)="getFmdata(frm_search.value)" novalidate>
 
       <ion-searchbar class="appsearchbar" formControlName="fmcode" search-icon="people-outline" [(ngModel)]="fmcode"
         placeholder="โควต้า 10 หลัก">
@@ -26,7 +26,7 @@
         ตกลง
       </ion-button>
 
-    </form>
+    </form> -->
 
   </ion-content>
 
@@ -46,6 +46,18 @@
   </ion-header>
 
   <ion-content>
+
+    <form [formGroup]="frm_search" (ngSubmit)="getFmdata(frm_search.value)" novalidate>
+
+      <ion-searchbar class="appsearchbar" formControlName="fmcode" search-icon="people-outline" [(ngModel)]="fmcode"
+        placeholder="โควต้า 10 หลัก">
+      </ion-searchbar>
+      <ion-button expand="full" shape="round" type="submit" [disabled]="!frm_search.valid">
+        <ion-icon name="search-outline"></ion-icon>
+        ตกลง
+      </ion-button>
+
+    </form>
 
     <ion-accordion-group>
       <ion-accordion value="data">
@@ -89,9 +101,9 @@
         {{ appName }}
         <ion-text class="txtSmall">v.{{ appVersion }}</ion-text>
       </ion-title>
-      <ion-buttons slot="start">
+      <!-- <ion-buttons slot="start">
         <ion-menu-button auto-hide="false"></ion-menu-button>
-      </ion-buttons>
+      </ion-buttons> -->
       <ion-buttons slot="primary">
         <ion-button (click)="openUserMenu()">
           <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>

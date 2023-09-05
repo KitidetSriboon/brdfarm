@@ -77,6 +77,7 @@ export class Tab1Page {
   }
 
   openUserMenu() {
+    this.menuCtrl.enable(true, 'moremenu');
     this.menuCtrl.open('moremenu');
   }
 
