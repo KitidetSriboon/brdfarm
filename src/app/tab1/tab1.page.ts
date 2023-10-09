@@ -33,6 +33,8 @@ export class Tab1Page {
   appName?: string = GlobalConstants.appname
   appVersion?: string = GlobalConstants.appversion
   appUpdate?: string = GlobalConstants.lastupdate
+  yearActive?: any = [];
+  yearDesc?: string = GlobalConstants.yearLabel
   fmdata?: any = [];
   cpfm?: any = [];
   fmcode?: string = '';
@@ -57,19 +59,20 @@ export class Tab1Page {
   ) {
 
     let fmcode = localStorage.getItem('fmcode')
-    if(fmcode) {
+    if (fmcode) {
       this.fmcode = fmcode
       // console.log('fmcode:' ,fmcode)
-      this.getFmdata({fmcode: fmcode})
+      this.getFmdata({ fmcode: fmcode })
     }
 
     this.frm_search = fb.group({
-      fmcode: ['',[Validators.minLength(10),Validators.maxLength(10),Validators.required]] ,
+      fmcode: ['', [Validators.minLength(10), Validators.maxLength(10), Validators.required]],
     })
 
   }
 
   ngOnInit() {
+    this.yearID();
   }
 
   ngAfterViewInit() {
@@ -81,6 +84,27 @@ export class Tab1Page {
     this.menuCtrl.open('moremenu');
   }
 
+  // ตั้งค่าปีที่ใช้งาน จาก api
+  async yearID() {
+    await this.brdsql.yearId().subscribe({
+      next: (res: any) => {
+        let x = JSON.stringify(res.recordset)
+        localStorage.setItem('yearID', x)
+        this.yearActive = res.recordset.filter((o: any) => o.setActive === 'Y')
+        this.yearActive = this.yearActive[0]
+        GlobalConstants._yearid = res.recordset
+        GlobalConstants.yearCr = this.yearActive.yearCr
+        GlobalConstants.yearTh = this.yearActive.yearTh
+        GlobalConstants.yearLabel = this.yearActive.yearDesc
+        localStorage.setItem('yearActive', JSON.stringify(this.yearActive))
+        this.yearCr = GlobalConstants.yearCr
+        this.yearTh = GlobalConstants.yearTh
+        this.yearDesc = GlobalConstants.yearLabel
+        console.log('yearCr: ', this.yearCr)
+      }
+    })
+  }
+
   loadNewAlldata() {
     this.cpfm = [];
     this.mapfm = [];
@@ -90,7 +114,7 @@ export class Tab1Page {
     this.pcFm = 0;
     this.pcSupcode = 0;
     let fmc = localStorage.getItem('fmcode')
-    this.getFmdata({fmcode: fmc})
+    this.getFmdata({ fmcode: fmc })
   }
 
   // โหลดข้อมูลชาวไร่จาก api
@@ -102,27 +126,27 @@ export class Tab1Page {
       next: (res: any) => {
         this.presentLoading('...กำลังโหลดข้อมูล ทั่วไป แปลงอ้อย แผนที่แปลง...')
         // console.log('res:' ,res)
-        if(res.recordset.length == 0) {
-          this.presentAlert('!!แจ้งเตือน','ไม่พบข้อมูลชาวไร่','..ตรวจสอบเลขโควต้าถูกต้องหรือไม่')
+        if (res.recordset.length == 0) {
+          this.presentAlert('!!แจ้งเตือน', 'ไม่พบข้อมูลชาวไร่', '..ตรวจสอบเลขโควต้าถูกต้องหรือไม่')
           localStorage.removeItem('fmdata')
           localStorage.removeItem('cpfmdata')
           localStorage.removeItem('mapfm')
           // this.closeLoading();
         } else {
           this.fmdata = res.recordset
-          localStorage.setItem('fmdata' ,JSON.stringify(this.fmdata))
+          localStorage.setItem('fmdata', JSON.stringify(this.fmdata))
           const fmdt = this.fmdata[0]
           this.fmimg = fmdt.pic_url
           this.fmname = fmdt.fmname.trim()
-          this.pcFm = (parseFloat(fmdt.Assess_left_fm)*100)/parseFloat(fmdt.target_cane)
-          this.pcSupcode = (parseFloat(fmdt.Assess_left)*100)/parseFloat(fmdt.target_cane)
+          this.pcFm = (parseFloat(fmdt.Assess_left_fm) * 100) / parseFloat(fmdt.target_cane)
+          this.pcSupcode = (parseFloat(fmdt.Assess_left) * 100) / parseFloat(fmdt.target_cane)
           // this.closeLoading();
           this.getCpFmdata(f.fmcode)
         }
       }, error(err) {
         alert('Error :' + err)
       }, complete() {
-        
+
       },
     })
     // this.closeLoading()
@@ -136,7 +160,7 @@ export class Tab1Page {
     this.subMapFmdata = await this.brdsql.getCpFm(this.yearCr, fmcode).subscribe({
       next: (res: any) => {
         this.cpfm = res.recordset
-        localStorage.setItem('cpfmdata' ,JSON.stringify(this.cpfm))
+        localStorage.setItem('cpfmdata', JSON.stringify(this.cpfm))
         // this.closeLoading()
       }, error(err) {
         alert('Error :' + err)
@@ -154,13 +178,13 @@ export class Tab1Page {
     await this.firebase.getMapByBNMCode(this.yearCr, fmcode)
       .then((res: any) => {
         this.mapfm = res
-        localStorage.setItem('mapfm' ,JSON.stringify(this.mapfm))
+        localStorage.setItem('mapfm', JSON.stringify(this.mapfm))
         // console.log('firebase res:', this.mapfm)
         // this.closeLoading()  
       })
       .catch((err) => { console.error(err) })
       .finally(() => {
-        this.closeLoading()  
+        this.closeLoading()
       })
   }
 
@@ -197,14 +221,14 @@ export class Tab1Page {
     toast.present();
   }
 
-  defaultBar:boolean=false;
-  searchTerm: string = ""; 
-  hideDefaultBar(){
-    this.defaultBar =false;
+  defaultBar: boolean = false;
+  searchTerm: string = "";
+  hideDefaultBar() {
+    this.defaultBar = false;
   }
-  
-  showDefaultBar(){
-    this.defaultBar =true;
+
+  showDefaultBar() {
+    this.defaultBar = true;
     this.searchTerm = "โควต้า 10 หลัก";
   }
 

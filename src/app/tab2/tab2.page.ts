@@ -16,8 +16,8 @@ import {
   MenuController,
 } from '@ionic/angular';
 
-// import { BrdsqlService } from '../services/brdsql.service';
-// import { FirebaseService } from '../services/firebase.service';
+import { BrdsqlService } from '../services/brdsql.service';
+import { FirebaseService } from '../services/firebase.service';
 import { GeolocationService } from '../services/geolocation.service';
 
 @Component({
@@ -28,6 +28,7 @@ import { GeolocationService } from '../services/geolocation.service';
 export class Tab2Page {
 
   yearCr?: string = GlobalConstants.yearCr;
+  yearTh?: string = GlobalConstants.yearTh;
   yeardata?: any = [];
   cpFmdata?: any = [];
   mapFbFm?: any = [];
@@ -38,8 +39,8 @@ export class Tab2Page {
   upos = { lat: 15.228581111646495, lng: 103.07182686761979 };  // พิกัด BRR
 
   constructor(
-    // private fbservice: FirebaseService,
-    // private brdservice: BrdsqlService,
+    private fbservice: FirebaseService,
+    private brdservice: BrdsqlService,
     private acsCtrl: ActionSheetController,
     private mdCtrl: ModalController,
     private toastCtrl: ToastController,
@@ -121,7 +122,6 @@ export class Tab2Page {
 
   async getUserLocation() {
     await this.geosv.getCurrentCoordinate().then((res: any) => {
-      // console.log('res getlocation: ', res)
       this.upos.lat = res.coords.latitude;
       this.upos.lng = res.coords.longitude;
       // console.log('userPosition: ', this.upos.lat, this.upos.lng)
@@ -166,19 +166,19 @@ export class Tab2Page {
         map,
         label: "",
         icon: 'assets/icon/fm64.png',
-        animation: google.maps.Animation.BOUNCE,
+        // animation: google.maps.Animation.BOUNCE,
       });
 
       // 3. Create circle
-      const circle = new google.maps.Circle({
-        center: this.upos,
-        map,
-        strokeWeight: 2,
-        strokeColor: '#FF992C',
-        fillColor: '#F5F8B4',
-        fillOpacity: 0.35,
-        radius: 100,  // รัศมีเป็นเมตร
-      })
+      // const circle = new google.maps.Circle({
+      //   center: this.upos,
+      //   map,
+      //   strokeWeight: 2,
+      //   strokeColor: '#FF992C',
+      //   fillColor: '#F5F8B4',
+      //   fillOpacity: 0.35,
+      //   radius: 100,  // รัศมีเป็นเมตร
+      // })
 
       // 4. Create InfoWindow.
       let infoWindow = new google.maps.InfoWindow({

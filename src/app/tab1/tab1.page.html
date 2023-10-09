@@ -84,6 +84,21 @@
           </ion-button>
         </div>
       </ion-accordion>
+      <ion-accordion value="app">
+        <ion-item slot="header">
+          <ion-icon name="logo-angular"></ion-icon>
+          <ion-label>เกี่ยวกับ</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-button fill="clear">
+            <p>
+              <ion-label>BrdFarm เวอร์ชั่น {{ appVersion }}</ion-label>
+              <br>
+              <ion-label>อัพเดต {{ appUpdate }}</ion-label>
+            </p>
+          </ion-button>
+        </div>
+      </ion-accordion>
     </ion-accordion-group>
 
   </ion-content>
@@ -98,8 +113,12 @@
         <ion-menu-button menuId="main"></ion-menu-button>
       </ion-buttons> -->
       <ion-title>
-        {{ appName }}
-        <ion-text class="txtSmall">v.{{ appVersion }}</ion-text>
+        <ion-item color="primary">
+          <ion-avatar slot="start">
+            <img alt="brdFarm" src="assets/icon/brdfarm-01.png" />
+          </ion-avatar>
+          <ion-label class="txtSmall"> {{ appName }} {{ yearDesc }} </ion-label>
+        </ion-item>
       </ion-title>
       <!-- <ion-buttons slot="start">
         <ion-menu-button auto-hide="false"></ion-menu-button>
@@ -150,7 +169,8 @@
           </ion-col>
         </ion-row>
         <ion-grid class="divPadding-10">
-          <ion-row class="ion-text-center borderRainbow w3-animate-zoom animate__animated animate__bounce animate__slow">
+          <ion-row
+            class="ion-text-center borderRainbow w3-animate-zoom animate__animated animate__bounce animate__slow">
             <ion-col>
               <ion-text class="txtxxlarge txtBolder txtWhite txtShadowB gfChonburi">
                 {{ item.target_cane | number: '1.0-0'}}</ion-text>
@@ -161,14 +181,15 @@
           <ion-row>
             <ion-col>
               <div class="w3-light-grey paddingTB5 w3-large w3-center">
-                <div class="w3-container w3-padding-small w3-blue w3-round w3-center txtSmall"
-                [style.width.%]="pcFm" style="margin-bottom: 3px;">
+                <div class="w3-container w3-padding-small w3-blue w3-round w3-center txtSmall" [style.width.%]="pcFm"
+                  style="margin-bottom: 3px;">
                   {{pcFm | number: '1.0-0'}}%
                 </div>
                 <ion-grid>
                   <ion-row>
                     <ion-col class="ion-text-left w3-lime">
-                      <ion-icon name="person"></ion-icon> ท่านประเมิน <ion-icon name="chevron-forward-outline"></ion-icon>
+                      <ion-icon name="person"></ion-icon> ท่านประเมิน <ion-icon name="chevron-forward-outline">
+                      </ion-icon>
                     </ion-col>
                     <ion-col class="ion-text-right w3-khaki">
                       {{ item.Assess_left_fm | number: '1.0-0' }}
@@ -177,14 +198,15 @@
                 </ion-grid>
               </div>
               <div class="w3-light-grey paddingTB5 w3-large w3-center">
-                <div class="w3-container w3-padding-small w3-light-blue w3-round w3-center txtSmall" 
+                <div class="w3-container w3-padding-small w3-light-blue w3-round w3-center txtSmall"
                   [style.width.%]="pcSupcode" style="margin-bottom: 3px;">
                   {{pcSupcode | number: '1.0-0'}}%
                 </div>
                 <ion-grid>
                   <ion-row>
                     <ion-col class="ion-text-left w3-lime">
-                      <ion-icon name="people"></ion-icon> นสส.ประเมิน <ion-icon name="chevron-forward-outline"></ion-icon>
+                      <ion-icon name="people"></ion-icon> นสส.ประเมิน <ion-icon name="chevron-forward-outline">
+                      </ion-icon>
                     </ion-col>
                     <ion-col class="ion-text-right w3-khaki">{{ item.Assess_left | number: '1.0-0' }}</ion-col>
                   </ion-row>

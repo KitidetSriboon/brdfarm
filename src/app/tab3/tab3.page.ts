@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-tab3',
@@ -7,6 +9,14 @@ import { Component } from '@angular/core';
 })
 export class Tab3Page {
 
-  constructor() {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private navCtrl: NavController,
+  ) { }
+
+  openFortest() {
+    this.router.navigate(['/for-test']);
+  }
 
 }
