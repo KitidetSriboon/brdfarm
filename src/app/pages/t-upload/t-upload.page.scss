@@ -1,0 +1,23 @@
+  .img-con {
+      width: 100%;
+
+      .up-img {
+          font-size: 16px;
+      }
+  }
+
+  .dis-img {
+      width: 100%;
+      height: 100%;
+      width: 100%;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border-radius: 5px;
+      background: #ede8e8;
+
+      img {
+          border-radius: 10px;
+      }
+  }

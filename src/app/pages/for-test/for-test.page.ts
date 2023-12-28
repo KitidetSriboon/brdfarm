@@ -6,6 +6,9 @@ import { GlobalConstants } from 'src/app/global-constants';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from 'src/environments/environment';
+// import { Subscription } from 'rxjs';
+// import { filter } from 'rxjs/operators';
+// import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-for-test',
@@ -18,6 +21,7 @@ export class ForTestPage implements OnInit {
   upos = { lat: 15.228581111646495, lng: 103.07182686761979 };  // พิกัด BRR
   polygon: any;
   markerList?: any = [];
+  marker?: any = []
   triangleCoords?: any = [];
   center = { lat: 15.228581111646495, lng: 103.07182686761979 }
   loader = new Loader({
@@ -25,6 +29,18 @@ export class ForTestPage implements OnInit {
     version: 'weekly',
     // libraries: ["places"],
   });
+  measureMethod?: string = "mark";   // วิธีการวัดแปลง
+  mesureStatus?: string = "stop"  // สถานะการวัดแปลง wait start stop
+  areacal?= 0;
+
+  isTracking = false;
+  currentMapTrack = null;
+  trackedRoute = [];
+  previousTracks = [];
+  latLng?: any;
+  // positionSubscription?: Subscription;
+  watch?: any
+  // map = new google.maps.Map(document.getElementById('map') as HTMLElement);
 
   constructor(
     private route: ActivatedRoute,
@@ -33,13 +49,22 @@ export class ForTestPage implements OnInit {
     private firebase: FirebaseService,
     private geosv: GeolocationService,
     private toastCtrl: ToastController,
+    // private plt: Platform,
+    // private geolocation: Geolocation,
+    // private storage: Storage,
   ) { }
 
   ngOnInit() {
   }
 
   ngAfterViewInit() {
-    this.getGeolocation()
+    // this.getGeolocation()
+  }
+
+  ionViewWillEnter() {
+    this.getGeolocation();
+    // this.startTracking();
+    // this.measurePlot()
   }
 
   goBack() {
@@ -57,25 +82,78 @@ export class ForTestPage implements OnInit {
       console.log('error :', e)
     }).finally(() => {
       console.log('finally getGeolocation')
-      this.loadmap()
-      // this.testMap()
+      // this.loadmap()
+      this.measurePlot()
     })
+  }
+
+  // get user location now
+  async getlocation() {
+    this.presentToast('middle', 'กำลังเรียกพิกัดของคุณ...', 'locate')
+    this.geosv.getCurrentCoordinate().then((res: any) => {
+      this.upos.lat = res.coords.latitude
+      this.upos.lng = res.coords.longitude
+    }).catch((e: any) => {
+      console.log('error :', e)
+    }).finally(() => {
+      // console.log('finally getGeolocation')
+      // this.loadmap()
+      // this.measurePlot()
+    })
+  }
+
+  // watch position
+  async startTracking() {
+    this.isTracking = true
+    await this.geosv.watchPosition().then((res: any) => {
+      console.log('res watch ', res)
+      if (res) {
+        this.upos.lat = res.coords.latitude
+        this.upos.lng = res.coords.longitude
+        // let x = new google.maps.LatLng(res.coords.latitude, res.coords.latitude);
+        console.log('x', this.upos)
+        // this.latLng.push(x)
+        // console.log('position change: ' + this.latLng);
+        this.updateMarker();
+      }
+    })
+  }
+
+  updateMarker() {
+    this.marker = this.upos
+    console.log('marker now ', this.marker)
+    // this.getGeolocation();
+    // this.marker = new google.maps.Marker({
+    //   position: this.latLng,
+    //   title: "คุณ!"
+    // });
+    // marker.setMap(this.map);
+  }
+
+  // // stop watch position
+  async stopTracking() {
+    this.isTracking = false
+    this.geosv.clearWatch()
   }
 
   // แสดงแผนที่แปลงอ้อย
   async loadmap() {
+
+    console.log('markerlist before', this.markerList)
 
     await this.loader.load().then(() => {
 
       let upos = this.upos
       // let maxZoomService: google.maps.MaxZoomService;
       let markerlist = this.markerList
+      let areax = this.areacal
+      console.log('areax loader ', areax)
       let triangleCoords = this.triangleCoords
+      let mesureStatus = this.mesureStatus
       const labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
       let labelIndex = 0;
       let markers: google.maps.Marker[] = [];
       let bermudaTriangle: google.maps.Polygon
-      // maxZoomService = new google.maps.MaxZoomService();
 
       // 1. create map
       const map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
@@ -92,131 +170,205 @@ export class ForTestPage implements OnInit {
       });
       infoWindow.open(map);
 
-      map.addListener("click", (mapsMouseEvent: any) => {
-        let x: any;
-        x = JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2)
-        x = JSON.parse(x)
-        // console.log('JSON.parse(x)', x)
+      map.addListener("click", (event: google.maps.MapMouseEvent) => {
+        // console.log('event.latlng ', event.latLng!)
+        addMarker1(event.latLng!, event);
+      });
 
-        // let myLatLng: any = x;
-        let lat = x.lat;
-        let lng = x.lng;
-        markerlist.push({ lat: lat, lng: lng })
-        console.log('markerlist', markerlist)
-        const marker = new google.maps.Marker({
-          position: { lat, lng },
-          map,
-          label: labels[labelIndex++ % labels.length],
-          // zIndex: i,
-        });
-
-      })
-
-      // map.addListener("click", (event: google.maps.MapMouseEvent) => {
-      //   console.log('event.latlng ', event.latLng!)
-      //   addMarker(event.latLng!);
-      // });
+      // map.addListener("dblclick", deleteMarkers)
 
       // Adds a marker at the center of the map.
       // addMarker(upos);
 
+      // add event listeners for the buttons
+      // document
+      //   .getElementById("show-markers")!
+      //   .addEventListener("click", showMarkers);
+      // document
+      //   .getElementById("hide-markers")!
+      //   .addEventListener("click", hideMarkers);
+      document
+        .getElementById("delete-markers")!
+        .addEventListener("click", deleteMarkers1);
+      document
+        .getElementById("show-polygon")!
+        .addEventListener("click", showPolygon1);
+
       // Adds a marker to the map and push to the array.
-      function addMarker(position: google.maps.LatLng | google.maps.LatLngLiteral) {
-        console.log('addMarker')
-        console.log('position lat', position.lat)
+      function addMarker1(position: google.maps.LatLng | google.maps.LatLngLiteral, e: any) {
         const marker = new google.maps.Marker({
           position,
           map,
           label: labels[labelIndex++ % labels.length],
         });
-
-        console.log('markers ', markers)
         markers.push(marker);
+        let x = JSON.stringify(e.latLng.toJSON(), null, 2)
+        x = JSON.parse(x)
+        markerlist.push(x)
+      }
 
-        triangleCoords.push(position)
-        console.log('triangleCoords ', triangleCoords)
-        if (triangleCoords.length > 2) {
+      // แสดงขอบเขตแปลงที่วัด และคำนวณพื้นที่
+
+      function showPolygon1(markerlist: any) {
+        if (markerlist.length > 2) {
+          mesureStatus = 'stop'
           bermudaTriangle = new google.maps.Polygon({
-            paths: triangleCoords,
-            editable: true,
+            paths: markerlist,
+            // editable: true,
             strokeColor: '#7FB5FF',
             strokeOpacity: 0.8,
             strokeWeight: 2,
-            fillColor: '#FC5951',
+            fillColor: '#FEA49F',
             fillOpacity: 0.35,
           });
-          // คำนวณพื้นที่จาก ตรม. เป็นไร่
-          let area = google.maps.geometry.spherical.computeArea(bermudaTriangle.getPath()) / 1600
-          console.log('area: ', area)
-          console.log('area rai: ', area.toFixed(2) + ' ไร่')
           bermudaTriangle.setMap(map);
+          setTimeout(() => {
+            mesureStatus = 'stop'
+            let area = google.maps.geometry.spherical.computeArea(bermudaTriangle.getPath())
+            console.log('area: ', area)
+            area = area / 1600
+            areax = area
+            console.log('area rai : ', areax)
+            alert('area rai:' + areax.toFixed(2))
+            // return area;
+          }, 500);
+        } else {
+          alert('กรุณาปักหมุดอย่างน้อย 3 ตำแหน่ง ก่อน')
         }
       }
 
-      // add event listeners for the buttons
+      // Sets the map on all markers in the array.
+      function setMapOnAll1(map: google.maps.Map | null) {
+        for (let i = 0; i < markers.length; i++) {
+          markers[i].setMap(map);
+        }
+      }
+
+      // Removes the markers from the map, but keeps them in the array.
+      function hideMarkers1(): void {
+        console.log('hideMarkers')
+        setMapOnAll1(null);
+        // bermudaTriangle.setMap(null);
+      }
+
+      // Shows any markers currently in the array.
+      function showMarkers1(): void {
+        console.log('showMarkers')
+        setMapOnAll1(map);
+      }
+
+      // Deletes all markers in the array by removing references to them.
+      function deleteMarkers1(): void {
+        console.log('deleteMarkers')
+        hideMarkers1();
+        markers = [];
+        markerlist = [];
+        // triangleCoords = [];
+        bermudaTriangle.setMap(null);
+        console.log('marker..', markers, markerlist)
+      }
+    });
+
+  }
+
+  // วัดแปลงแบบ เดินมาร์คจุด
+  async measurePlot() {
+
+    // this.startTracking()
+
+    await this.loader.load().then(() => {
+
+      let upos = this.upos
+      let markerlist = this.markerList
+      const labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      let labelIndex = 0;
+      let mesureStatus = this.mesureStatus
+      let markers: google.maps.Marker[] = [];
+      let bermudaTriangle: google.maps.Polygon
+      let areax = this.areacal
+      let nowposition = this.marker
+      console.log('nowposition on loader', nowposition)
+
+      // 1. create map
+      const map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
+        center: upos,
+        zoom: 16,
+        mapTypeId: 'roadmap',
+      });
+
+      // Create the initial InfoWindow.
+      let infoWindow = new google.maps.InfoWindow({
+        content: "คุณอยู่ที่นี่",
+        position: upos,
+      });
+      infoWindow.open(map);
+
+      document
+        .getElementById("addMarker")!
+        .addEventListener("click", addMarker);
       document
         .getElementById("show-polygon")!
         .addEventListener("click", showPolygon);
       document
-        .getElementById("show-markers")!
-        .addEventListener("click", showMarkers);
-      document
-        .getElementById("hide-markers")!
-        .addEventListener("click", hideMarkers);
-      document
         .getElementById("delete-markers")!
         .addEventListener("click", deleteMarkers);
 
-      // แสดงขอบเขตแปลงที่วัด และคำนวณพื้นที่
-      function showPolygon() {
-        let plg = markerlist
-        console.log('markerlist :', plg)
-
-        bermudaTriangle = new google.maps.Polygon({
-          paths: plg,
-          // editable: true,
-          strokeColor: '#7FB5FF',
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: '#FC5951',
-          fillOpacity: 0.35,
+      // Adds a marker to the map and push to the array.
+      function addMarker() {
+        console.log('addMarker on measurePlot')
+        console.log('nowposition addmarker', nowposition)
+        const marker = new google.maps.Marker({
+          position: upos,
+          map,
+          label: labels[labelIndex++ % labels.length],
         });
-        bermudaTriangle.setMap(map);
-        // calarea(bermudaTriangle)
-        setTimeout(() => {
-          let area = google.maps.geometry.spherical.computeArea(bermudaTriangle.getPath())
-          console.log('area: ', area)
-          area = area / 1600
-          console.log('area rai : ', area)
-        }, 500);
-
+        // let x = JSON.stringify(e.latLng.toJSON(), null, 2)
+        // x = JSON.parse(x)
+        markerlist.push(upos)
+        console.log('markerlist ', markerlist)
       }
 
-      function calarea(polygon: any) {
-        console.log('polygon : ', polygon)
-        // คำนวณพื้นที่จาก ตรม. เป็นไร่
-        // var area = google.maps.geometry.spherical.computeArea(selectedShape.getPath());
-        let area = google.maps.geometry.spherical.computeArea(polygon.getPath())
-        console.log('area: ', area)
-        // area = area  / 1600
-        // console.log('area rai: ', area.toFixed(2) + ' ไร่')
+      // แสดงขอบเขตแปลงที่วัด และคำนวณพื้นที่
+      function showPolygon() {
+        if (markerlist.length > 2) {
+          mesureStatus = 'stop'
+          bermudaTriangle = new google.maps.Polygon({
+            paths: markerlist,
+            // editable: true,
+            strokeColor: '#7FB5FF',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FEA49F',
+            fillOpacity: 0.35,
+          });
+          bermudaTriangle.setMap(map);
+          setTimeout(() => {
+            mesureStatus = 'stop'
+            let area = google.maps.geometry.spherical.computeArea(bermudaTriangle.getPath())
+            console.log('area: ', area)
+            area = area / 1600
+            areax = area
+            console.log('area rai : ', areax)
+            alert('area rai:' + areax.toFixed(2))
+            // return area;
+          }, 500);
+        } else {
+          alert('กรุณาปักหมุดอย่างน้อย 3 ตำแหน่ง ก่อน')
+        }
       }
 
       // Sets the map on all markers in the array.
       function setMapOnAll(map: google.maps.Map | null) {
-        for (let i = 0; i < markers.length; i++) {
-          markers[i].setMap(map);
+        for (let i = 0; i < markerlist.length; i++) {
+          markerlist[i].setMap(map);
         }
-        // for (let i = 0; i < markerlist.length; i++) {
-        //   markerlist[i].setMap(map);
-        // }
       }
 
       // Removes the markers from the map, but keeps them in the array.
       function hideMarkers(): void {
         console.log('hideMarkers')
         setMapOnAll(null);
-        bermudaTriangle.setMap(null);
+        // bermudaTriangle.setMap(null);
       }
 
       // Shows any markers currently in the array.
@@ -231,14 +383,53 @@ export class ForTestPage implements OnInit {
         hideMarkers();
         markers = [];
         markerlist = [];
-        triangleCoords = [];
+        // triangleCoords = [];
         bermudaTriangle.setMap(null);
+        console.log('marker..', markers, markerlist)
       }
 
     });
+
+    // Configure the click listener.
+    // map.addListener("click", (mapsMouseEvent: any) => {
+    //   // Close the current InfoWindow.
+    //   infoWindow.close();
+
+    //   // Create a new InfoWindow.
+    //   infoWindow = new google.maps.InfoWindow({
+    //     position: mapsMouseEvent.latLng,
+    //   });
+    //   infoWindow.setContent(
+    //     JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2)
+    //   );
+    //   infoWindow.open(map);
+    // });
+
   }
 
-  // test from web
+  async presentToast(position: 'top' | 'middle' | 'bottom', msg: string, icon: string) {
+    const toast = await this.toastCtrl.create({
+      message: msg,
+      duration: 2000,
+      icon: icon,
+    });
+    toast.present();
+  }
+
+  msMethod(t: string) {
+    this.measureMethod = t;
+  }
+
+  setmesure(s: string) {
+    this.mesureStatus = s
+  }
+
+  showMarkerList() {
+    console.log('markerList', this.markerList)
+    console.log('areacal ', this.areacal)
+  }
+
+  // test from web with drawing tool
   testMap() {
 
     let upos = this.upos
@@ -394,17 +585,5 @@ export class ForTestPage implements OnInit {
     }
     google.maps.event.addDomListener(window, 'load', initialize);
   }
-
-  async presentToast(position: 'top' | 'middle' | 'bottom', msg: string, icon: string) {
-    const toast = await this.toastCtrl.create({
-      message: msg,
-      duration: 2000,
-      icon: icon,
-    });
-    toast.present();
-  }
-
-
-
 
 }

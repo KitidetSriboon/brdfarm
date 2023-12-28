@@ -8,13 +8,16 @@ import { CpcPageRoutingModule } from './cpc-routing.module';
 
 import { CpcPage } from './cpc.page';
 
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    CpcPageRoutingModule
+    CpcPageRoutingModule,
   ],
-  declarations: [CpcPage]
+  declarations: [CpcPage],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class CpcPageModule {}
+export class CpcPageModule { }

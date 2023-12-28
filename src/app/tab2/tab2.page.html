@@ -8,7 +8,25 @@
     </ion-toolbar>
   </ion-header>
   <ion-content class="ion-padding">
+    <ion-select (ionChange)="selectyear($event)" label="เลือกปี" placeholder="">
+      <ion-select-option value="" disabled>++เลือกปี++</ion-select-option>
+      <ion-select-option *ngFor="let i of yeardata" value="{{i.yearCr}}">{{ i.yearDesc }}
+      </ion-select-option>
+    </ion-select>
     <ion-accordion-group>
+      <!-- <ion-accordion value="year">
+        <ion-item slot="header">
+          <ion-icon name="calendar-number-outline" slot="start"></ion-icon>
+          <ion-label>ปีการผลิต</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-select (ionChange)="selectyear($event)" label="เลือกปี" placeholder="">
+            <ion-select-option value="" disabled>++เลือกปี++</ion-select-option>
+            <ion-select-option *ngFor="let i of yeardata" value="{{i.yearCr}}">{{ i.yearDesc }}
+            </ion-select-option>
+          </ion-select>
+        </div>
+      </ion-accordion> -->
       <ion-accordion value="map">
         <ion-item slot="header">
           <ion-icon name="map" slot="start"></ion-icon>
@@ -47,12 +65,14 @@
             <ion-row class="ion-text-center">
               <ion-text color="success">
                 <ion-icon name="thumbs-up-outline"></ion-icon>
-                แปลงประเมินแล้ว</ion-text>
+                แปลงประเมินแล้ว
+              </ion-text>
             </ion-row>
             <ion-row class="ion-text-center">
               <ion-text color="warning">
                 <ion-icon name="thumbs-down-outline"></ion-icon>
-                แปลงยังไม่ประเมิน</ion-text>
+                แปลงยังไม่ประเมิน
+              </ion-text>
             </ion-row>
           </ion-grid>
           <!-- <ion-button fill="clear" expand="full">
@@ -115,12 +135,14 @@
             <ion-row class="ion-text-center">
               <ion-text color="success">
                 <ion-icon name="thumbs-up-outline"></ion-icon>
-                แปลงประเมินแล้ว</ion-text>
+                แปลงประเมินแล้ว
+              </ion-text>
             </ion-row>
             <ion-row class="ion-text-center">
               <ion-text color="warning">
                 <ion-icon name="thumbs-down-outline"></ion-icon>
-                แปลงยังไม่ประเมิน</ion-text>
+                แปลงยังไม่ประเมิน
+              </ion-text>
             </ion-row>
           </ion-grid>
           <!-- <ion-button fill="clear" expand="full">
@@ -183,12 +205,14 @@
             <ion-row class="ion-text-center">
               <ion-text color="success">
                 <ion-icon name="thumbs-up-outline"></ion-icon>
-                แปลงประเมินแล้ว</ion-text>
+                แปลงประเมินแล้ว
+              </ion-text>
             </ion-row>
             <ion-row class="ion-text-center">
               <ion-text color="warning">
                 <ion-icon name="thumbs-down-outline"></ion-icon>
-                แปลงยังไม่ประเมิน</ion-text>
+                แปลงยังไม่ประเมิน
+              </ion-text>
             </ion-row>
           </ion-grid>
           <!-- <ion-button fill="clear" expand="full">
@@ -210,7 +234,7 @@
     <ion-toolbar color="primary">
       <ion-title style="margin-left: 5px;">
         <ion-icon name="map-outline"></ion-icon>
-        แผนที่และแปลงอ้อย
+        แปลงอ้อย {{ yearDesc }}
       </ion-title>
       <ion-buttons slot="end">
         <ion-button (click)="openFirstMenu()">
@@ -245,7 +269,10 @@
 
     <ion-content *ngIf="mapP && mapFbFm" class="animate__animated animate__faster"
       [ngClass]="{animate__slideInRight: !dataP}">
-      <!-- <ion-text>map segment</ion-text> -->
+      <div *ngIf="mapFbFm.length == 0" class="w3-panel w3-yellow w3-card-4">
+        <h3>!!ไม่พบข้อมูล</h3>
+        <p>แผนที่แปลงอ้อยในปีที่เลือก..</p>
+      </div>
       <div id="map" style="width: 100%;  height: 100%;"></div>
     </ion-content>
 

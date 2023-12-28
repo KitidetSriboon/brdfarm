@@ -1,0 +1,43 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>t-upload</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-card color="warning" *ngIf="fmdata">
+    <ion-card-header>
+      <ion-card-title>{{ fmdata.fmcode_b1 }} : {{ fmdata.fmname }}</ion-card-title>
+      <!-- <ion-card-subtitle>{{ fmdata.fmcode_b1 }} </ion-card-subtitle> -->
+    </ion-card-header>
+    <ion-card-content>
+      <div class="img-con">
+        <div class="dis-img">
+          <ion-img [src]="img" *ngIf="img !== 'undefined' && img !== null && img !== 'null'"
+            style="width: 100%; height: 255px px; object-fit: cover;">
+          </ion-img>
+          <ion-icon name="image-outline" *ngIf="img === 'undefined' || !img || img === 'null'"
+            style="margin: 8%; font-size: 100px;"></ion-icon>
+        </div>
+        <ion-item>
+          <ion-button slot="start" class="up-img" (click)="takePicture()">
+            <ion-icon name="camera-outline"></ion-icon> เลือกภาพ
+          </ion-button>
+          <ion-button slot="end" [disabled]="!filePath" class="up-img" (click)="upload()">
+            <ion-icon name="cloud-upload-outline"></ion-icon> อัพโหลด
+          </ion-button>
+        </ion-item>
+        <ion-progress-bar value="{{ percentage / 100 }}" color="success"></ion-progress-bar>
+        <ion-item>
+          <ion-label>ไฟล์ภาพ</ion-label>
+          <ion-input readonly [(ngModel)]="picurl"></ion-input>
+        </ion-item>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

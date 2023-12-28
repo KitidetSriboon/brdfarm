@@ -1,13 +1,38 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>test</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">test</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-accordion-group>
+    <ion-accordion value="first">
+      <ion-item slot="header" color="primary">
+        <ion-icon name="logo-angular"></ion-icon>
+        <ion-label>First Accordion</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">First Content</div>
+    </ion-accordion>
+    <ion-accordion value="second">
+      <ion-item slot="header" color="success">
+        <ion-label>Second Accordion</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">Second Content</div>
+    </ion-accordion>
+    <ion-accordion value="third">
+      <ion-item slot="header" color="warning">
+        <ion-label>Third Accordion</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">Third Content</div>
+    </ion-accordion>
+    <ion-accordion value="four">
+      <ion-item slot="header" color="medium">
+        <ion-label>four Accordion</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">four Content</div>
+    </ion-accordion>
+  </ion-accordion-group>
 </ion-content>

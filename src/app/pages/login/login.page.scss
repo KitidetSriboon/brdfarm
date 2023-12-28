@@ -1,0 +1,27 @@
+ion-content {
+    --padding-top: 40%;
+    --padding-start: 5%;
+    --padding-end: 5%;
+    --background: url('../../../assets/images/brdfarm-splash.png') 0 0/100% 70% no-repeat;
+}
+
+.input-group {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.errors {
+    font-size: small;
+    color: #fff;
+    background: var(--ion-color-danger);
+    padding-left: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.logo {
+    border-color: white;
+    border-width: 10px;
+}

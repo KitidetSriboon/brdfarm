@@ -1,0 +1,27 @@
+ion-content {
+    --background: #0081ca;
+    // vertical-align: middle;
+    align-items: center;
+    position: relative;
+}
+
+ion-slides {
+    height: 100%;
+    --bullet-background-active: #fff;
+    --bullet-background: #000;
+    // margin-top: 100px;
+}
+
+.logo {
+    height: 100%;
+    width: 50%;
+    border: 5px solid transparent;
+    // margin-top: 50px;
+    // background-color: powderblue;
+}
+
+.center {
+    height: 20px;
+    position: relative;
+    border: 3px solid green;
+}

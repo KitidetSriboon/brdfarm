@@ -407,6 +407,10 @@ ion-tab-bar {
     color: green;
 }
 
+.txtGray {
+    color: gray;
+}
+
 .txtBold {
     font-weight: bold;
 }
@@ -617,6 +621,14 @@ button.alert-button.alert-button-confirm {
 }
 
 /* ++++++++++ div element ++++++++++++++++++*/
+.divPadding-2 {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 2px;
+    padding-right: 2px;
+    border-radius: 5px 5px 5px 5px;
+}
+
 .divPadding-5 {
     padding-top: 5px;
     padding-bottom: 5px;
@@ -652,6 +664,30 @@ button.alert-button.alert-button-confirm {
     // display: flex;
     // --border-width: 10px;
     // --border-style: dashed;
+}
+
+.input1 {
+    background-color: black;
+    color: greenyellow;
+    font-weight: bolder;
+    font-size: large;
+    text-align: center;
+}
+
+.input2 {
+    background-color: black;
+    color: red;
+    font-weight: bolder;
+    font-size: large;
+    text-align: center;
+}
+
+.input3 {
+    background-color: black;
+    color: red;
+    font-weight: bolder;
+    font-size: large;
+    text-align: center;
 }
 
 // +++++++++++++++ ภาพชาวไร่หน้าแรก +++++++++++++++++
@@ -959,14 +995,16 @@ button.alert-button.alert-button-confirm {
 
 .boxGreenPowerpointR {
     border-radius: 5px 20px 5px;
+    margin-left: 5px;
+    margin-right: 5px;
     // background: #BADA55;
 }
 
 .boxGreenPowerpointL {
-    border-radius: 50px 0px 50px;
+    border-radius: 20px 0px 20px;
     // background: #BADA55;
-    // padding-top: 50px;
-    // padding-bottom: 50px;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 // ++++++++++++++++ Progress bar ++++++++++++++++++++++++++++
@@ -1231,4 +1269,58 @@ button.alert-button.alert-button-confirm {
     // font-family: "Courier New", Courier, monospace;
     /* Set the font-size to 25 pixels */
     // font-size: 18px;
+}
+
+// +++++++++++++++++++++++ ICON +++++++++++++++++++++++++++
+// .icon-animated-vertical {
+//     display: inline-block;
+//     -moz-animation: vertical 2s 5 ease 2s;
+//     -webkit-animation: vertical 2s 5 ease 2s;
+//     -o-animation: vertical 2s 5 ease 2s;
+//     -ms-animation: vertical 2s 5 ease 2s;
+//     animation: vertical 2s 5 ease 2s
+// }
+
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    12.5% {
+        transform: translateX(-6px) rotateY(-5deg)
+    }
+
+    37.5% {
+        transform: translateX(5px) rotateY(4deg)
+    }
+
+    62.5% {
+        transform: translateX(-3px) rotateY(-2deg)
+    }
+
+    87.5% {
+        transform: translateX(2px) rotateY(1deg)
+    }
+
+    100% {
+        transform: translateX(0)
+    }
+}
+
+.shake {
+    -webkit-animation: shake 400ms ease-in-out;
+    animation: shake 400ms ease-in-out;
+}
+
+.icon-animated-vertical {
+    display: inline-block;
+    animation: vertical 2s 5 ease 2s
+}
+
+.icon-shake {
+    /* Start the shake animation and make the animation last for 0.5 seconds */
+    animation: shake 0.5s;
+
+    /* When the animation is finished, start again */
+    animation-iteration-count: infinite;
 }

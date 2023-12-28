@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar color="primary" style="padding-top: 25px;padding-bottom: 25px">
+    <ion-title class="w3-center">
+      <img class="logo" src="assets/icon/brdfarm-01.png" />
+      <ion-text class="w3-large">BRD Farm</ion-text>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="login()" [formGroup]="credentials">
+    <div class="input-group">
+      <ion-item>
+        <ion-label position="fixed">
+          <ion-icon name="person-circle-outline"></ion-icon> ชื่อผู้ใช้งาน
+        </ion-label>
+        <ion-input name="username" formControlName="username" placeholder="ชื่อผู้ใช้" ngModel required>
+        </ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="fixed">
+          <ion-icon name="key-outline"></ion-icon> รหัสผ่าน
+        </ion-label>
+        <ion-input type="password" name="password" formControlName="password" placeholder="รหัสผ่าน" ngModel requied>
+        </ion-input>
+      </ion-item>
+
+      <!-- <ion-item>
+        <ion-input label="Outline input" label-placement="floating" helperText="Enter a valid email" fill="outline"
+          placeholder="Enter text"></ion-input>
+         <ion-input type="email" placeholder="Email" formControlName="email"></ion-input>
+      </ion-item> -->
+      <!-- <div *ngIf="(email.dirty || email.touched) && email.errors" class="errors">
+        <span *ngIf="email.errors?.required">Email is required</span>
+        <span *ngIf="email.errors?.email">Email is invalid</span>
+      </div> -->
+      <!--<ion-item>
+        <ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
+      </ion-item>
+       <div *ngIf="(password.dirty || password.touched) && password.errors" class="errors">
+        <span *ngIf="password.errors?.required">Password is required</span>
+        <span *ngIf="password.errors?.minlength">Password needs to be 6 characters</span>
+      </div> -->
+    </div>
+
+    <ion-button type="submit" expand="block" [disabled]="!credentials.valid">
+      <ion-icon name="log-in-outline"></ion-icon>
+      เข้าสู่ระบบ
+    </ion-button>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <div class="w3-panel w3-leftbar w3-border-white txtWhite txtSmall">
+            <ion-text>ต้องเชื่อมต่ออินเตอร์เน็ต</ion-text>
+            <br>
+            <ion-text>ชื่อผู้ใช้งาน/รหัสผ่าน
+              ขอได้ที่เขตส่งเสริมของท่าน</ion-text>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <!-- <ion-button type="button" expand="block" color="tertiary">
+      <ion-icon name="logo-google" slot="start"></ion-icon>
+      Sign in with Google
+    </ion-button>
+    <ion-button type="button" expand="block" color="tertiary">
+      <ion-icon name="logo-apple" slot="start"></ion-icon>
+      Sign in with Apple
+    </ion-button> -->
+
+  </form>
+</ion-content>
+<ion-footer>
+  <ion-text class="w3-display-bottomright txtSmall txtGray">
+    <ion-icon name="people-outline"></ion-icon> itBRD
+  </ion-text>
+</ion-footer>

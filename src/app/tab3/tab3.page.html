@@ -9,9 +9,10 @@
 
 <ion-content [fullscreen]="true">
 
-  <ion-toolbar>
+  <ion-toolbar class="divMargin5">
     <ion-segment [scrollable]="true" value="all">
-      <ion-segment-button [routerLink]="['/for-test']" value="map">
+      <!-- <ion-segment-button [routerLink]="['/for-test']" value="map"> -->
+      <ion-segment-button value="map">
         <ion-icon name="map-outline"></ion-icon>
         <ion-label>วัดแปลง</ion-label>
       </ion-segment-button>
@@ -23,20 +24,56 @@
         <ion-icon name="bus-outline"></ion-icon>
         <ion-label>ปัจจัย</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="factor">
-        <ion-icon name="bus-outline"></ion-icon>
-        <ion-label>...</ion-label>
+      <ion-segment-button value="upload">
+        <!-- <ion-segment-button [routerLink]="['/t-upload']" value="upload"></ion-segment-button> -->
+        <ion-icon name="cloud-upload-outline"></ion-icon>
+        <ion-label>Upload</ion-label>
       </ion-segment-button>
       <ion-segment-button value="factor">
-        <ion-icon name="bus-outline"></ion-icon>
-        <ion-label>...</ion-label>
+        <ion-icon name="id-card-outline"></ion-icon>
+        <ion-label>Member</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="factor">
-        <ion-icon name="bus-outline"></ion-icon>
-        <ion-label>...</ion-label>
+      <ion-segment-button value="test">
+        <!-- <ion-segment-button [routerLink]="['/test']" value="test"></ion-segment-button> -->
+        <ion-icon name="logo-angular"></ion-icon>
+        <ion-label>Test</ion-label>
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
+
+  <ion-card>
+    <ion-card-cntent>
+      <swiper-container [pagination]="true" navigation="true">
+        <swiper-slide class="swiperslide">
+          <ion-grid>
+            <ion-row class="w3-center">
+              <ion-col class="divPadding-2 ">
+                <img src="../../assets/images/brdfarm-splash.png" alt="Lights">
+              </ion-col>
+              <ion-col class="divPadding-2 ">
+                <img src="../../assets/images/brdfarm-splash.png" alt="Lights">
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col class="divPadding-2 ">
+                <img src="../../assets/images/brdfarm-splash.png" alt="Lights">
+              </ion-col>
+              <ion-col class="divPadding-2 ">
+                <img src="../../assets/images/brdfarm-splash.png" alt="Lights">
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </swiper-slide>
+        <swiper-slide class="swiperslide">
+          <img src="../../assets/images/brdfarm-splash.png" alt="Lights">
+        </swiper-slide>
+        <swiper-slide class="swiperslide">
+          <img src="../../assets/images/brdfarm-splash.png" alt="Lights">
+        </swiper-slide>
+      </swiper-container>
+    </ion-card-cntent>
+  </ion-card>
+
 
   <div class="w3-display-container">
     <img src="../../assets/images/brdfarm-splash.png" alt="Lights">
@@ -54,45 +91,5 @@
     <!-- <div class="w3-display-topmiddle w3-container">Top Middle</div>
     <div class="w3-display-bottommiddle w3-container">Bottom Middle</div> -->
   </div>
-
-  <fieldset>
-    <legend>Test</legend>
-    <ion-input label="Solid input" label-placement="floating" fill="solid" placeholder="Enter text"></ion-input>
-    <br />
-    <ion-input label="Outline input" label-placement="floating" fill="outline" placeholder="Enter text"></ion-input>
-    <ion-list>
-      <ion-item>
-        <ion-select label="Default label" placeholder="Favorite Fruit">
-          <ion-select-option value="apple">Apple</ion-select-option>
-          <ion-select-option value="banana">Banana</ion-select-option>
-          <ion-select-option value="orange">Orange</ion-select-option>
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-select label="Fixed label" label-placement="fixed" placeholder="Favorite fruit">
-          <ion-select-option value="apple">Apple</ion-select-option>
-          <ion-select-option value="banana">Banana</ion-select-option>
-          <ion-select-option value="orange">Orange</ion-select-option>
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-select label="Stacked label" label-placement="stacked">
-          <ion-select-option value="apple">Apple</ion-select-option>
-          <ion-select-option value="banana">Banana</ion-select-option>
-          <ion-select-option value="orange">Orange</ion-select-option>
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-select label="Floating label" label-placement="floating">
-          <ion-select-option value="apple">Apple</ion-select-option>
-          <ion-select-option value="banana">Banana</ion-select-option>
-          <ion-select-option value="orange">Orange</ion-select-option>
-        </ion-select>
-      </ion-item>
-    </ion-list>
-  </fieldset>
 
 </ion-content>

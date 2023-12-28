@@ -47,7 +47,7 @@
 
   <ion-content>
 
-    <form [formGroup]="frm_search" (ngSubmit)="getFmdata(frm_search.value)" novalidate>
+    <!-- <form [formGroup]="frm_search" (ngSubmit)="getFmdata(frm_search.value)" novalidate>
 
       <ion-searchbar class="appsearchbar" formControlName="fmcode" search-icon="people-outline" [(ngModel)]="fmcode"
         placeholder="โควต้า 10 หลัก">
@@ -57,7 +57,15 @@
         ตกลง
       </ion-button>
 
-    </form>
+    </form> -->
+
+    <ion-item>
+      <ion-select (ionChange)="selectyear($event)" label="เลือกปี" placeholder="">
+        <ion-select-option value="" disabled>++เลือกปี++</ion-select-option>
+        <ion-select-option *ngFor="let i of yearData" value="{{i.yearCr}}">{{ i.yearDesc }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
 
     <ion-accordion-group>
       <ion-accordion value="data">
@@ -97,9 +105,23 @@
               <ion-label>อัพเดต {{ appUpdate }}</ion-label>
             </p>
           </ion-button>
+          <ion-item slot="header" color="secondary" class="w3-center">
+            <ion-label>การอัพเดตแอพเวอร์ชั่น {{ appVersion }}</ion-label>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <p class="txtSmall" *ngFor="let i of versionDetail">{{ i.subject }}</p>
+          </div>
         </div>
       </ion-accordion>
     </ion-accordion-group>
+    <ion-row>
+      <ion-col class="w3-center">
+        <ion-button (click)="logout()" fill="outline" shape="round">
+          <ion-icon name="log-out-outline"></ion-icon>
+          ออกจากระบบ
+        </ion-button>
+      </ion-col>
+    </ion-row>
 
   </ion-content>
 
@@ -113,12 +135,17 @@
         <ion-menu-button menuId="main"></ion-menu-button>
       </ion-buttons> -->
       <ion-title>
-        <ion-item color="primary">
+        <ion-icon name="bar-chart"></ion-icon>
+        <!-- <ion-avatar slot="start">
+          <img alt="brdFarm" src="assets/icon/brdfarm-01.png" />
+        </ion-avatar> -->
+        สรุปภาพรวม {{ yearDesc }}
+        <!-- <ion-item color="primary">
           <ion-avatar slot="start">
             <img alt="brdFarm" src="assets/icon/brdfarm-01.png" />
           </ion-avatar>
-          <ion-label class="txtSmall"> {{ appName }} {{ yearDesc }} </ion-label>
-        </ion-item>
+          <ion-label> {{ appName }} {{ yearDesc }} </ion-label>
+        </ion-item> -->
       </ion-title>
       <!-- <ion-buttons slot="start">
         <ion-menu-button auto-hide="false"></ion-menu-button>
@@ -131,7 +158,7 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-content *ngFor="let item of fmdata" style="--background:tranparent" id="con" class="animate__animated imgCane1"
+  <ion-content *ngFor="let item of fmdata" style="--background:tranparent;" id="con" class="animate__animated imgCane1"
     [ngClass]="{animate__fadeIn: start}">
 
     <div class="img-cov">
@@ -158,108 +185,262 @@
       </ion-grid>
     </div>
 
+    <!-- ข้อมูลด้าน พื้นที่ปลูกอ้อยปีปัจจุบัน -->
+    <ion-card class=" boxGreenPowerpointR bgGreenSoft divPadding-10" style="margin-bottom: 25px;">
+      <ion-card-content>
+        <!-- <div style="margin-top: 3%;"> -->
+        <ion-card-title style="margin-bottom: 3%;" color="dark">พื้นที่ปลูกอ้อย(ไร่)</ion-card-title>
+        <!-- สรุปประเภทอ้อบ -->
+        <div class="w3-panel w3-card-4 w3-pale-green" style="padding-top: 10px;padding-bottom: 10px">
+          <h5>
+            <ion-icon name="pie-chart-outline"></ion-icon> ประเภทอ้อย
+          </h5>
+          <ion-grid style="margin-top: 5px;">
+            <ion-row>
+              <ion-col>
+                <canvas #doughnutCanvas style="position: relative; height:10vh; width:30vw"></canvas>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+
+        <ion-accordion-group style="margin-top: 2px;">
+          <ion-accordion value="first">
+            <ion-item slot="header">
+              <ion-label class="txtLarger">
+                <ion-icon name="list-outline"></ion-icon>
+                พื้นที่รวม {{ sumcpFm.sumarea | number: '1.1-2'}} ไร่
+              </ion-label>
+            </ion-item>
+            <div slot="content">
+              <ion-item [button]="true" lines="full">
+                <ion-icon name="chevron-forward-outline" slot="start" color="primary"></ion-icon>
+                <ion-label>ปลายฝน</ion-label>
+                <ion-label class="w3-display-right">{{ sumcpFm.sumer | number: '1.1-2' }}</ion-label>
+              </ion-item>
+              <ion-item [button]="true">
+                <ion-icon color="warning" slot="start" name="chevron-forward-outline"></ion-icon>
+                <ion-label>อ้อยตอ</ion-label>
+                <ion-label class="w3-display-right">{{ sumcpFm.sumst | number: '1.1-2' }}</ion-label>
+              </ion-item>
+              <ion-item [button]="true">
+                <ion-icon color="success" slot="start" name="chevron-forward-outline"></ion-icon>
+                <ion-label>ต้นฝน</ion-label>
+                <ion-label class="w3-display-right">{{ sumcpFm.sumsr | number: '1.1-2' }}</ion-label>
+              </ion-item>
+              <ion-item [button]="true">
+                <ion-icon color="danger" slot="start" name="chevron-forward-outline"></ion-icon>
+                <ion-label>เสียหาย</ion-label>
+                <ion-label class="w3-display-right">{{ sumcpFm.sumcl | number: '1.1-2' }}</ion-label>
+              </ion-item>
+              <ion-item [button]="true">
+                <ion-icon color="medium" slot="start" name="chevron-forward-outline"></ion-icon>
+                <ion-label>แปลงไถเตรียม</ion-label>
+                <ion-label class="w3-display-right">
+                  {{ sumcpFm.sumERforearm+sumcpFm.sumSRforearm+sumcpFm.sumSTforearm | number: '1.1-2' }}</ion-label>
+              </ion-item>
+              <ion-text class="txtSmall w3-right">*ยืนยันปลูกเสร็จแล้ว</ion-text>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
+
+        <!-- <ion-list>
+          <ion-item class="txtxlarge txtBold" [button]="true" lines="full">
+            <ion-label>พื้นที่รวม</ion-label>
+            <ion-label class="w3-display-right">
+              {{ sumcpFm.sumarea | number: '1.1-2'}}
+            </ion-label>
+          </ion-item>
+        </ion-list> -->
+        <!-- </div> -->
+      </ion-card-content>
+    </ion-card>
+
     <!-- ประเมินอ้อย -->
-    <ion-card class="boxWhiteShadow boxGreenPowerpointL bgGreenSoft divPadding-10" style="margin-bottom: 25px;">
-      <ion-grid [fixed]="true">
-        <ion-row class="ion-text-center">
-          <ion-col>
-            <ion-text class="txtLarge txtBolder">
-              <ion-icon name="flag-outline"></ion-icon> เป้าหมายปริมาณอ้อย
-            </ion-text>
-          </ion-col>
-        </ion-row>
-        <ion-grid class="divPadding-10">
-          <ion-row
-            class="ion-text-center borderRainbow w3-animate-zoom animate__animated animate__bounce animate__slow">
+    <ion-card class=" boxGreenPowerpointL bgGreenSoft divPadding-10" style="margin-bottom: 25px;">
+      <ion-card-content>
+        <ion-grid [fixed]="true">
+          <ion-row class="ion-text-center">
             <ion-col>
-              <ion-text class="txtxxlarge txtBolder txtWhite txtShadowB gfChonburi">
-                {{ item.target_cane | number: '1.0-0'}}</ion-text>
+              <ion-text class="txtLarge txtBolder">
+                <ion-icon name="flag-outline"></ion-icon> เป้าหมายปริมาณอ้อย
+              </ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-grid class="divPadding-10">
+            <ion-row
+              class="ion-text-center borderRainbow w3-animate-zoom animate__animated animate__bounce animate__slow">
+              <ion-col>
+                <ion-text class="txtxxlarge txtBolder txtWhite txtShadowB gfChonburi">
+                  {{ item.target_cane | number: '1.0-0'}}</ion-text>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <ion-grid class="divPadding-10">
+            <ion-row>
+              <ion-col>
+                <div class="w3-light-grey paddingTB5 w3-large w3-center">
+                  <div class="w3-container w3-padding-small w3-blue w3-round w3-center txtSmall" [style.width.%]="pcFm"
+                    style="margin-bottom: 3px;">
+                    {{pcFm | number: '1.0-0'}}%
+                  </div>
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col size="7" class="ion-text-left w3-lime">
+                        <ion-icon name="person"></ion-icon> ท่านประเมิน <ion-icon name="chevron-forward-outline">
+                        </ion-icon>
+                      </ion-col>
+                      <ion-col size="5" class="ion-text-right w3-khaki">
+                        {{ item.Assess_left_fm | number: '1.0-0' }}
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </div>
+                <div class="w3-light-grey paddingTB5 w3-large w3-center">
+                  <div class="w3-container w3-padding-small w3-light-blue w3-round w3-center txtSmall"
+                    [style.width.%]="pcSupcode" style="margin-bottom: 3px;">
+                    {{pcSupcode | number: '1.0-0'}}%
+                  </div>
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col size="7" class="ion-text-left w3-lime">
+                        <ion-icon name="people"></ion-icon> นสส.ประเมิน <ion-icon name="chevron-forward-outline">
+                        </ion-icon>
+                      </ion-col>
+                      <ion-col size="5" class="ion-text-right w3-khaki">{{ assessCane | number: '1.0-0' }}</ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <ion-row class="ion-text-center">
+            <ion-col>
+              <ion-text class="txtSmall">*หักพื้นที่เสียหาย ตัดพันธุ์ สูญเสียแล้ว</ion-text>
             </ion-col>
           </ion-row>
         </ion-grid>
-        <ion-grid class="divPadding-10">
+      </ion-card-content>
+    </ion-card>
+
+    <!-- อ้อยเข้าหีบ -->
+    <ion-card class=" boxGreenPowerpointL bgGreenSoft divPadding-10" style="margin-bottom: 25px;">
+      <ion-card-content>
+        <ion-grid [fixed]="true">
+          <ion-row class="ion-text-center">
+            <ion-col>
+              <ion-text class="txtLarge txtBolder">
+                <ion-icon name="bus-outline"></ion-icon> อ้อยเข้าหีบ
+              </ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row class="ion-text-center w3-animate-zoom animate__animated animate__bounce animate__slow">
+            <ion-col>
+              <ion-text class="txtxxlarge txtBolder txtRed gfChonburi">
+                {{ cpcSummaryFm.wgt_net | number: '1.1-2'}}</ion-text>
+            </ion-col>
+          </ion-row>
           <ion-row>
             <ion-col>
               <div class="w3-light-grey paddingTB5 w3-large w3-center">
-                <div class="w3-container w3-padding-small w3-blue w3-round w3-center txtSmall" [style.width.%]="pcFm"
-                  style="margin-bottom: 3px;">
-                  {{pcFm | number: '1.0-0'}}%
-                </div>
-                <ion-grid>
-                  <ion-row>
-                    <ion-col class="ion-text-left w3-lime">
-                      <ion-icon name="person"></ion-icon> ท่านประเมิน <ion-icon name="chevron-forward-outline">
-                      </ion-icon>
-                    </ion-col>
-                    <ion-col class="ion-text-right w3-khaki">
-                      {{ item.Assess_left_fm | number: '1.0-0' }}
-                    </ion-col>
-                  </ion-row>
-                </ion-grid>
-              </div>
-              <div class="w3-light-grey paddingTB5 w3-large w3-center">
                 <div class="w3-container w3-padding-small w3-light-blue w3-round w3-center txtSmall"
-                  [style.width.%]="pcSupcode" style="margin-bottom: 3px;">
-                  {{pcSupcode | number: '1.0-0'}}%
+                  [style.width.%]="cpcSummaryFm.pccanein" style="margin-bottom: 3px;">
+                  {{ cpcSummaryFm.pccanein | number: '1.0-0'}}%
                 </div>
-                <ion-grid>
-                  <ion-row>
-                    <ion-col class="ion-text-left w3-lime">
-                      <ion-icon name="people"></ion-icon> นสส.ประเมิน <ion-icon name="chevron-forward-outline">
-                      </ion-icon>
-                    </ion-col>
-                    <ion-col class="ion-text-right w3-khaki">{{ item.Assess_left | number: '1.0-0' }}</ion-col>
-                  </ion-row>
-                </ion-grid>
               </div>
             </ion-col>
           </ion-row>
+          <ion-row class="ion-text-center">
+            <ion-col>
+              <ion-text class="txtSmall">**ข้อมูล ณ {{ cpcSummaryFm.dataDate }}</ion-text>
+            </ion-col>
+          </ion-row>
         </ion-grid>
-        <!-- <ion-row class="ion-text-center">
-          <ion-col>
-            <div class="wrap-circles">
-              <ion-text class="ion-text-center txtBolder txtRed txtLarge">
-                <ion-icon name="person"></ion-icon>
-                จากท่าน</ion-text>
-              <div class="circle per-25">
-                <div class="inner">25%</div>
-              </div>
-            </div>
-          </ion-col>
-          <ion-col>
-            <div class="wrap-circles">
-              <ion-text class="ion-text-center txtBolder txtBlue txtLarge">
-                <ion-icon name="people"></ion-icon>
-                นสส.</ion-text>
-              <div class="circle per-50">
-                <div class="inner">50%</div>
-              </div>
-            </div>
-          </ion-col>
-        </ion-row> -->
-        <!-- <ion-row>
-          <ion-col>
-            <div class="container">
-              <div class="progress-container">
-                <div class="progress" id="progress"> </div>
-                <div class="circle active">25%</div>
-                <div class="circle">50%</div>
-                <div class="circle">75%</div>
-                <div class="circle">100%</div>
-              </div>
-            </div>
-          </ion-col>
-        </ion-row> -->
-        <ion-row class="ion-text-center">
-          <ion-col>
-            <ion-text class="txtSmall">*หักพื้นที่เสียหาย ตัดพันธุ์ สูญเสียแล้ว</ion-text>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+
+        <ion-list>
+          <ion-item [button]="true" lines="full">
+            <ion-icon color="primary" slot="start" name="battery-full" size="large"></ion-icon>
+            <ion-label>ประเมิน</ion-label>
+            <ion-label class="w3-display-right">{{ cpcSummaryFm.assess | number: '1.1-2' }}</ion-label>
+          </ion-item>
+          <ion-item [button]="true" lines="full">
+            <ion-icon color="warning" slot="start" name="battery-half" size="large"></ion-icon>
+            <ion-label>เข้าหีบ</ion-label>
+            <ion-label class="w3-display-right">{{ cpcSummaryFm.wgt_net | number: '1.1-2' }}</ion-label>
+          </ion-item>
+          <ion-item [button]="true">
+            <ion-icon color="danger" slot="start" name="battery-dead" size="large"></ion-icon>
+            <ion-label>คงเหลือ</ion-label>
+            <ion-label class="w3-display-right">{{ cpcSummaryFm.caneleft | number: '1.1-2' }}</ion-label>
+          </ion-item>
+          <ion-item [button]="true">
+            <ion-icon color="success" slot="start" name="flask" size="large"></ion-icon>
+            <ion-label>ซีซีเอส</ion-label>
+            <ion-label class="w3-display-right">{{ cpcSummaryFm.ccs | number: '1.1-2' }}</ion-label>
+          </ion-item>
+          <ion-item [button]="true">
+            <ion-icon color="success" slot="start" name="checkmark" size="large"></ion-icon>
+            <ion-label>ตัดเสร็จ(แปลง)</ion-label>
+            <ion-label class="w3-display-right">{{ cpcSummaryFm.cntCuted }}</ion-label>
+          </ion-item>
+          <ion-item [button]="true">
+            <ion-icon color="danger" slot="start" name="heart" size="large"></ion-icon>
+            <ion-label>ผลผลิต</ion-label>
+            <ion-label class="w3-display-right">{{ cpcSummaryFm.yieldCuted | number: '1.1-2' }}</ion-label>
+          </ion-item>
+          <ion-text class="txtSmall w3-right">*ประเมิน หัก ตัดพันธุ์ สูญเสียแล้ว</ion-text>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- ข้อมูลด้านสินเชื่อ -->
+    <ion-card class="boxGreenPowerpointR bgGreenSoft divPadding-10" style="margin-bottom: 25px;">
+      <ion-card-content>
+        <div style="margin-top: 3%;">
+          <ion-card-title style="margin-bottom: 3%;" color="dark">ข้อมูลด้านสินเชื่อ</ion-card-title>
+          <ion-list>
+            <ion-item [button]="true" lines="full">
+              <ion-icon color="primary" slot="start" name="battery-full" size="large"></ion-icon>
+              <ion-label>วงเงินได้รับ</ion-label>
+              <ion-label class="w3-display-right">{{ sumcpFm.credit_approve | number: '1.1-2' }}</ion-label>
+            </ion-item>
+            <ion-item lines="full">
+              <ion-grid>
+                <ion-row>
+                  <ion-col size="6" class="txtSmall ion-text-left">
+                    <ion-text>วงเงิน {{ sumcpFm.credit_amount | number: '1.1-2' }}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="6" class="txtSmall ion-text-right">
+                    <ion-text>ปัจจัย {{ sumcpFm.manure_amount | number: '1.1-2' }}</ion-text>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-item>
+            <ion-item [button]="true">
+              <ion-icon color="warning" slot="start" name="battery-half" size="large"></ion-icon>
+              <ion-label>วงเงินใช้ไป</ion-label>
+              <ion-label class="w3-display-right">0</ion-label>
+            </ion-item>
+            <ion-item [button]="true">
+              <ion-icon color="danger" slot="start" name="battery-dead" size="large"></ion-icon>
+              <ion-label>วงเงินคงเหลือ</ion-label>
+              <ion-label class="w3-display-right">0</ion-label>
+            </ion-item>
+            <ion-item [button]="true">
+              <ion-icon color="primary" slot="start" name="bus"></ion-icon>
+              <ion-label>หลักทรัพย์ประเมิน</ion-label>
+              <ion-label class="w3-display-right">{{ crFm.sumRealty | number: '1.1-2' }}</ion-label>
+              <!-- <ion-label slot="end">{{ crFm.guaranter | number: '1.1-2' }}</ion-label> -->
+            </ion-item>
+            <ion-text class="txtSmall w3-right">*กรุณาเช็คกับฝ่ายสินเชื่ออีกครั้ง</ion-text>
+          </ion-list>
+        </div>
+      </ion-card-content>
     </ion-card>
 
     <!-- ข้อมูลทั่วไป -->
-    <ion-card class="boxYellowShadow boxGreenPowerpointR bgGreenSoft">
+    <ion-card class=" boxGreenPowerpointR bgGreenSoft">
       <ion-card-content>
         <div style="margin-top: 3%;">
           <ion-card-title style="margin-bottom: 3%;" color="dark">ข้อมูลทั่วไป</ion-card-title>
@@ -267,13 +448,19 @@
             <ion-icon name="location-outline" color="dark"></ion-icon> ทีอยู
           </h4>
           <p class="pro-text" color="dark">
-            {{ item.HOMENO }}หมู่ {{ item.MOO }}ต. {{item.district}} อ.{{ item.county}} จ.{{ item.province }}{{ item.zip
+            {{ item.HOMENO }} หมู่ {{ item.MOO }} ต. {{item.district}} อ.{{ item.county}} จ.{{ item.province }} {{ item.zip
             }}
+          </p>
+          <h3 class="head-pro">
+            <ion-icon name="call-outline"></ion-icon> โทรศัพท์
+          </h3>
+          <p class="pro-text" color="dark">
+            {{ item.TEL }}
           </p>
           <h3 class="head-pro">
             <ion-icon name="person-outline"></ion-icon> สมาชิก
           </h3>
-          <p class="pro-text">โรงงาน : {{ item.FMCODE_B1 }}</p>
+          <p class="pro-text">โรงงาน : {{ item.fmcode_b1 }}</p>
           <p class="pro-text">สมาคม : {{ item.AssoID }}</p>
           <p class="pro-text">สอน. : {{ item.CARDFARMER }}</p>
           <p class="pro-text">กลุ่ม : {{ item.GROUPCODE }}</p>
@@ -286,6 +473,20 @@
         </div>
       </ion-card-content>
     </ion-card>
+
+    <!-- Chart ประวัติพื้นที่ปลูก -->
+    <div class="w3-panel w3-card-4 w3-pale-green" style="padding-top: 10px;padding-bottom: 10px">
+      <h5>
+        <ion-icon name="pie-chart-outline"></ion-icon> ประวัติพื้นที่ปลูก
+      </h5>
+      <ion-grid style="margin-top: 5px;">
+        <ion-row>
+          <ion-col>
+            <canvas #barCanvas style="position: relative; height:10vh; width:30vw"></canvas>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
 
     <ion-card class="boxGreenPowerpointL bgGreenSoft " style="margin-top: 25px;margin-bottom: 25px">
       <ion-card-content>...as soon</ion-card-content>

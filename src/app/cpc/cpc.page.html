@@ -2,15 +2,287 @@
   <ion-toolbar color="primary">
     <ion-title>
       <ion-icon name="bus-outline"></ion-icon>
-      เปิดหีบ
+      เปิดหีบ {{ yearDesc }}
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
 
-  <div class="bg-itbrdDev w3-opacity">
-    <div class="w3-display-topleft">
+  <!-- สรุปอ้อยเข้าหีบ -->
+  <ion-card class="divMg-5 w3-sand">
+    <ion-card-header>
+      <ion-row class="ion-text-center">
+        <ion-col>
+          <ion-button color="danger" shape="round" fill="outline" expland="full" size="large">
+            <ion-icon slot="bus" name="star"></ion-icon>
+            อ้อยเข้าหีบ {{ cpcSummaryFm.wgt_net | number: '1.1-2'}} ตัน
+          </ion-button>
+          <!-- <ion-text class="txtxxlarge txtBolder txtRed gfChonburi">
+            {{ cpcSummaryFm.wgt_net | number: '1.1-2'}}</ion-text> -->
+        </ion-col>
+      </ion-row>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="w3-sand w3-border-blue" style="margin-top: 5px;">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <div class="w3-light-grey paddingTB5 w3-large w3-center">
+                <div class="w3-container w3-padding-small w3-light-blue w3-round w3-center txtSmall"
+                  [style.width.%]="cpcSummaryFm.pccanein" style="margin-bottom: 1px;">
+                  {{ cpcSummaryFm.pccanein | number: '1.0-0'}} %
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col class="w3-left-align">
+              อ้อยเข้า/ประเมิน
+            </ion-col>
+            <ion-col class="w3-right-align txtLarge">
+              {{ cpcSummaryFm.wgt_net | number: '1.1-2'}}
+              <ion-text class="txtSmall">{{ cpcSummaryFm.assess | number: '1.1-2'}}</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-progress-bar [value]="cpcSummaryFm.pccanein/100"></ion-progress-bar>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- รายละเอียดอ้อยเข้าหีบ -->
+  <ion-accordion-group style="margin-top: 2px;">
+    <ion-accordion value="first">
+      <ion-item slot="header">
+        <ion-label>
+          <ion-icon name="list-outline"></ion-icon>
+          รายการส่งอ้อย
+        </ion-label>
+      </ion-item>
+      <div slot="content">
+        <div class="w3-responsive">
+          <table id="tb_cpcdetail" class="w3-table-all w3-hoverable">
+            <thead>
+              <tr class="ion-text-nowrap">
+                <th>#</th>
+                <th>วันที่</th>
+                <th>ใบชั่ง</th>
+                <th>แปลง</th>
+                <th>รถบรรทุก</th>
+                <th>น้ำหนัก</th>
+                <th>ซีซีเอส</th>
+                <th>น้ำมัน</th>
+                <th>ค่าอ้อย</th>
+              </tr>
+            </thead>
+            <tr [ngClass]="i.reportdateTH === 'X++รวม' ? 'ion-text-nowrap txtBold w3-topbar w3-bottombar w3-border-gray
+              ' : 'ion-text-nowrap txtSmall'" *ngFor="let i of cpcDetail;index as id" class="ion-text-nowrap">
+              <td>{{ id+1 }}</td>
+              <td>{{ i.reportdateTH }}</td>
+              <td>
+                <!-- <ion-label *ngIf="i.reportdateTH === 'X++รวม'" [ngClass]="i.reportdateTH === 'X++รวม' ? 'txtBlue' : ''"
+                  (click)="exportexcel('tb1')">
+                  <ion-icon slot="start" name="cloud-download"></ion-icon>
+                  ดาวน์โหลด
+                </ion-label> -->
+                {{ i.truck_q }}
+              </td>
+              <td>{{ i.plotDesc }}</td>
+              <td>{{ i.regtruck }}</td>
+              <td>{{ i.wgt_net }}</td>
+              <td>{{ i.ccs_value }}</td>
+              <td>{{ i.oil_litre }}</td>
+              <td>{{ i.cane_amt | number: '1.1-2' }}</td>
+            </tr>
+          </table>
+        </div>
+        <ion-grid style="margin-top: 5px;">
+          <ion-row>
+            <ion-col class="w3-center">
+              <ion-button shape="round" fill="clear" (click)="exportToExcelTable('tb1')">
+                <ion-icon slot="start" name="cloud-download"></ion-icon>
+                ดาวน์โหลด
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+
+  <!-- รายละเอียดแปลงอ้อยเข้าหีบ -->
+  <ion-accordion-group style="margin-top: 2px;">
+    <ion-accordion value="first">
+      <ion-item slot="header">
+        <ion-label>
+          <ion-icon name="list-outline"></ion-icon>
+          รายการแปลงอ้อยเข้าหีบ
+        </ion-label>
+      </ion-item>
+      <div slot="content">
+        <div class="w3-responsive">
+          <table id="tb_cpcpc" class="w3-table-all w3-hoverable">
+            <tr class="ion-text-nowrap">
+              <th>ผลผลิต</th>
+              <th>แปลง</th>
+              <th>อ้อย</th>
+              <th>พันธุ์</th>
+              <th>ประเมิน</th>
+              <th>อ้อยเข้า</th>
+              <th>คงเหลือ</th>
+              <th>ซีซีเอส</th>
+              <th>การตัด</th>
+            </tr>
+            <tr *ngFor="let i of cpcpc"
+              [ngClass]="i.cutstatus ==='F' ? 'w3-pale-green ion-text-nowrap txtSmall' : 'ion-text-nowrap txtSmall'">
+              <td><span class="w3-badge w3-pale-red">{{ i.yieldEnd | number: '1.1-2' }}</span></td>
+              <td>{{ i.intlandno }}</td>
+              <td>{{ i.CaneTypeName }} พท. {{ i.landvalue }} ไร่</td>
+              <td>{{ i.seedname }}</td>
+              <td>{{ i.Assess_left | number: '1.1-2'  }}</td>
+              <td>{{ i.canein | number: '1.1-2' }}</td>
+              <td>{{ i.caneleft | number: '1.1-2' }}</td>
+              <td>{{ i.ccs }}</td>
+              <td>{{ i.cutstatusDesc }}</td>
+            </tr>
+            <tr class="ion-text-nowrap">
+              <td colspan="9"></td>
+            </tr>
+          </table>
+        </div>
+        <ion-grid style="margin-top: 5px;">
+          <ion-row>
+            <ion-col class="w3-center">
+              <ion-button shape="round" fill="clear" (click)="exportToExcelTable('tb2')">
+                <ion-icon slot="start" name="cloud-download"></ion-icon>
+                ดาวน์โหลด
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+
+  <!-- แปลงตัดเสร็จ -->
+  <div class="w3-panel w3-card-4 w3-sand" style="padding-top: 10px;padding-bottom: 10px">
+    <h5>
+      <ion-icon name="checkmark-outline"></ion-icon> แปลงตัดเสร็จ (ไร่)
+    </h5>
+    <ion-grid style="margin-top: 5px;">
+      <ion-row>
+        <ion-col class="w3-left-align">
+          ตัดเสร็จ / ทั้งหมด
+        </ion-col>
+        <ion-col class="w3-right-align txtLarge">
+          {{ cpcSummaryFm.areaCuted | number: '1.1-2'}} /
+          <ion-text class="txtSmall">{{ cpcSummaryFm.area | number: '1.1-2'}}</ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-progress-bar [value]="((cpcSummaryFm.areaCuted*100)/cpcSummaryFm.area)/100"></ion-progress-bar>
+        </ion-col>
+      </ion-row>
+      <ion-row class="w3-center" style="margin-top: 15px;">
+        <h5>
+          <ion-icon name="checkmark-outline"></ion-icon> ผลผลิต (ตัน)
+        </h5>
+      </ion-row>
+      <ion-row class="w3-center">
+        <ion-col>อ้อยใหม่
+          <span class="w3-badge w3-xxlarge w3-green w3-padding">{{ cpcSummaryFm.yieldCutedER}}</span>
+        </ion-col>
+        <ion-col>อ้อยตอ
+          <span class="w3-badge w3-xxlarge w3-yellow w3-padding">{{ cpcSummaryFm.yieldCutedST}}</span>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- สรุปอ้อยเข้า ซีซีเอส ในแต่ละวัน -->
+  <div class="w3-panel w3-card-4 w3-sand" style="padding-top: 10px;padding-bottom: 10px">
+    <h5>
+      <ion-icon name="pie-chart-outline"></ion-icon> อ้อยเข้าประจำวัน
+    </h5>
+    <ion-grid style="margin-top: 5px;">
+      <ion-row>
+        <ion-col>
+          <canvas #lineCanvas style="position: relative; height:20vh; width:40vw"></canvas>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- ซีซีเอส -->
+  <div class="w3-panel w3-card-4 w3-sand" style="padding-top: 10px;padding-bottom: 10px">
+    <h5>
+      <ion-icon name="pie-chart-outline"></ion-icon> ซีซีเอสท่าน
+    </h5>
+    <ion-grid style="margin-top: 5px;">
+      <ion-row>
+        <ion-col>
+          <canvas #lineCanvas_ccs style="position: relative; height:20vh; width:40vw"></canvas>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- ซีซีเอส BRR -->
+  <div class="w3-panel w3-card-4 w3-sand" style="padding-top: 10px;padding-bottom: 10px">
+    <h5>
+      <ion-icon name="pie-chart-outline"></ion-icon> ซีซีเอส BRR
+    </h5>
+    <ion-grid style="margin-top: 5px;">
+      <ion-row>
+        <ion-col>
+          <canvas #lineCanvas_ccsbrr style="position: relative; height:20vh; width:40vw"></canvas>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- สรุปประเภทอ้อบ -->
+  <div class="w3-panel w3-card-4 w3-sand" style="padding-top: 10px;padding-bottom: 10px">
+    <h5>
+      <ion-icon name="pie-chart-outline"></ion-icon> อยู่ระหว่างพัฒนา..
+    </h5>
+    <ion-grid style="margin-top: 5px;">
+      <ion-row>
+        <ion-col>
+          <!-- <canvas #doughnutCanvas style="position: relative; height:20vh; width:40vw"></canvas> -->
+        </ion-col>
+      </ion-row>
+      <!-- <ion-row class="w3-center" style="margin-top: 15px;">
+        <canvas #lineCanvas style="position: relative; height:20vh; width:40vw"></canvas>
+      </ion-row> -->
+    </ion-grid>
+  </div>
+
+  <!-- gauge -->
+  <div class="w3-panel w3-card-4 w3-sand" style="padding-top: 10px;padding-bottom: 10px">
+    <h5>
+      <ion-icon name="pie-chart-outline"></ion-icon> อยู่ระหว่างพัฒนา..
+    </h5>
+    <ion-grid style="margin-top: 5px;">
+      <ion-row>
+        <ion-col>
+          <ngx-gauge [type]="gaugeType" [value]="gaugeValue" [label]="gaugeLabel" [append]="gaugeAppendText">
+          </ngx-gauge>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+
+
+
+  <!--<div class="bg-itbrdDev w3-opacity">
+
+     <div class="w3-display-topleft">
       <p>brdFarm app</p>
     </div>
     <div class="w3-display-middle ion-text-center">
@@ -21,8 +293,8 @@
     <div class="w3-display-bottomleft animate__animated animate__bounce animate__slow">
       <ion-label>...itBRD...</ion-label>
       <ion-spinner name="lines" color="danger"></ion-spinner>
-      <!-- <p>...itBRD</p> -->
+      <p>...itBRD</p>
     </div>
-  </div>
+  </div> -->
 
 </ion-content>

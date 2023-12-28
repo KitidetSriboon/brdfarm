@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { GlobalConstants } from '../global-constants';
 import { environment } from 'src/environments/environment';
-import { appdata } from '../data/data';
 import { GoogleMap } from '@capacitor/google-maps';
 import { Loader } from '@googlemaps/js-api-loader';
 import { NavigationExtras, Router, RouterLinkWithHref } from '@angular/router';
@@ -19,6 +18,8 @@ import {
 import { BrdsqlService } from '../services/brdsql.service';
 import { FirebaseService } from '../services/firebase.service';
 import { GeolocationService } from '../services/geolocation.service';
+import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-tab2',
@@ -29,18 +30,23 @@ export class Tab2Page {
 
   yearCr?: string = GlobalConstants.yearCr;
   yearTh?: string = GlobalConstants.yearTh;
+  yearDesc?: string = GlobalConstants.yearLabel
   yeardata?: any = [];
   cpFmdata?: any = [];
   mapFbFm?: any = [];
   fmdata?: any = []
-  fmcode?: string;
+  fmcode?: string = '';
   dataP = false;
   mapP = true;
   upos = { lat: 15.228581111646495, lng: 103.07182686761979 };  // พิกัด BRR
+  loader = new Loader({
+    apiKey: environment.mapkey,
+    version: 'weekly',
+  });
 
   constructor(
     private fbservice: FirebaseService,
-    private brdservice: BrdsqlService,
+    private brdsql: BrdsqlService,
     private acsCtrl: ActionSheetController,
     private mdCtrl: ModalController,
     private toastCtrl: ToastController,
@@ -52,15 +58,87 @@ export class Tab2Page {
 
   ) {
     // console.log('tab2 constructor:')
-    this.loadNewFmdata();
+    let fm = localStorage.getItem('fmcode')
+    if (fm) {
+      this.fmcode = fm
+      this.loadNewFmdata();
+    }
   }
 
   ngOnInit() {
     // console.log('tab2 ngOnInit:');
   }
 
+  ionViewWillEnter() {
+    console.log('tab2 ionViewWillEnter:');
+    let x = this.mapFbFm
+    if (x.legth == 0) {
+      this.draw();
+    }
+  }
+
+  ionViewWillLeave() {
+    console.log('tab2 ionViewWillLeave:');
+  }
+
   ngAfterViewInit(): void {
     // console.log('tab2 ngAfterViewInit:')
+  }
+
+  selectyear(e: any) {
+    console.log('select event', e.target.value)
+    let x: any = localStorage.getItem('yearID')
+    if (x) {
+      x = JSON.parse(x)
+      x = x.filter((o: any) => o.yearCr == e.target.value)
+      console.log('year filter', x)
+      this.yearCr = x[0].yearCr
+      this.yearTh = x[0].yearTh
+      this.yearDesc = x[0].yearDesc
+      if (this.fmcode) {
+        let fm = this.fmcode
+        this.getMapFm(fm)
+          .finally(() => {
+            console.log('finally get cp and map farmer to draw map..')
+            this.draw();
+            this.getCpFmdata(fm)
+          })
+      }
+    }
+  }
+
+  // โหลดข้อมูลแปลงอ้อยของชาวไร่จาก api
+  subMapFmdata!: Subscription;
+  async getCpFmdata(fmcode: string) {
+    localStorage.removeItem('cpfmdata')
+    this.subMapFmdata = await this.brdsql.getCpFm(this.yearCr, fmcode).subscribe({
+      next: (res: any) => {
+        console.log('getCpFm res ', res)
+        this.cpFmdata = res.recordset
+        localStorage.setItem('cpfmdata', JSON.stringify(this.cpFmdata))
+        // this.closeLoading()
+      }, error(err) {
+        alert('Error :' + err)
+      }, complete() {
+
+      },
+    })
+  }
+
+  // แผนที่แปลงอ้อยจาก firebase และข้อมูลแปลงจาก sql ของชาวไร่
+  async getMapFm(fmcode: string) {
+    localStorage.removeItem('mapfm')
+    await this.fbservice.getMapByBNMCode(this.yearCr, fmcode)
+      .then((res: any) => {
+        this.mapFbFm = res
+        localStorage.setItem('mapfm', JSON.stringify(this.mapFbFm))
+        // console.log('firebase res:', this.mapfm)
+        // this.closeLoading()  
+      })
+      .catch((err) => { console.error(err) })
+      .finally(() => {
+        // this.closeLoading()
+      })
   }
 
   openFirstMenu() {
@@ -88,7 +166,11 @@ export class Tab2Page {
     this.mapFbFm = []
 
     // console.log('tab2 LoadFmdata:')
-    this.yeardata = appdata.yearapp;
+    let yx = localStorage.getItem('yearID')
+    if (yx) {
+      yx = JSON.parse(yx)
+      this.yeardata = yx;
+    }
     let fm_data: any = localStorage.getItem('fmdata')
     fm_data = JSON.parse(fm_data)
     let cp_data: any = localStorage.getItem('cpfmdata')
@@ -131,113 +213,139 @@ export class Tab2Page {
   // แสดงแผนที่แปลงอ้อย
   draw() {
 
-    const loader = new Loader({
-      apiKey: environment.mapkey,
-      version: 'weekly',
-    });
+    let mapfb = this.mapFbFm
+    let cpfm = this.cpFmdata
+    let upos = this.upos
 
-    loader.load().then(() => {
+    // console.log('mapfb', mapfb)
 
-      this.presentToast('middle', '..กำลังโหลดข้อมูล', 'reload');
-
-      const mapfb = this.mapFbFm
-      const cpfm = this.cpFmdata
-
-      // for (let i = 0; i < mapfb.length; i++) { }
-      // 1. create map
-      const map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
-        center: { lat: mapfb[0].coordinatesCenter.lat, lng: mapfb[0].coordinatesCenter.lng },
-        zoom: 16,
-        restriction: {
-          latLngBounds: {
-            north: 30,
-            south: 5,
-            east: 120,
-            west: 90
+    if (mapfb.length === 0) {
+      this.presentToast('middle', '!!ไม่พบข้อมูล แผนที่แปลงอ้อยในปีที่เลือก..', 'warning')
+      this.loader.load().then(() => {
+        // 1. create map
+        const map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
+          center: upos,
+          zoom: 16,
+          restriction: {
+            latLngBounds: {
+              north: 30,
+              south: 5,
+              east: 120,
+              west: 90
+            },
           },
-        },
-        mapTypeId: 'roadmap',
-      });
+          mapTypeId: 'roadmap',
+        });
 
-      // 2. Create marker
-      let label: string = "<ion-icon name='person-outline' color='danger'></ion-icon> <ion-label color='primary'> คุณอยู่ที่นี่ </ion-label>"
-      const marker = new google.maps.Marker({
-        position: this.upos,
-        map,
-        label: "",
-        icon: 'assets/icon/fm64.png',
-        // animation: google.maps.Animation.BOUNCE,
-      });
-
-      // 3. Create circle
-      // const circle = new google.maps.Circle({
-      //   center: this.upos,
-      //   map,
-      //   strokeWeight: 2,
-      //   strokeColor: '#FF992C',
-      //   fillColor: '#F5F8B4',
-      //   fillOpacity: 0.35,
-      //   radius: 100,  // รัศมีเป็นเมตร
-      // })
-
-      // 4. Create InfoWindow.
-      let infoWindow = new google.maps.InfoWindow({
-        content: label,
-        position: this.upos,
-      });
-      infoWindow.open(map);
-
-      // 5. create marker
-      for (let i = 0; i < mapfb.length; i++) {
+        // 2. Create marker
+        let label: string = "<ion-icon name='person-outline' color='danger'></ion-icon> <ion-label color='primary'> คุณอยู่ที่นี่ </ion-label>"
         const marker = new google.maps.Marker({
-          position: { lat: mapfb[i].coordinatesCenter.lat, lng: mapfb[i].coordinatesCenter.lng },
+          position: upos,
           map,
+          label: "",
+          icon: 'assets/icon/fm64.png',
         });
-        marker.addListener('click', () => {
-          this.presentActionSheet(mapfb[i].key)
-          // infowindow.open({
-          //   anchor: marker,
-          //   map,
-          //   shouldFocus: false,
-          // });
+      });
+    } else {
+      this.loader.load().then(() => {
+
+        this.presentToast('middle', '..กำลังโหลดแผนที่แปลงอ้อย', 'reload');
+
+        // for (let i = 0; i < mapfb.length; i++) { }
+        // 1. create map
+        const map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
+          center: { lat: mapfb[0].coordinatesCenter.lat, lng: mapfb[0].coordinatesCenter.lng },
+          zoom: 16,
+          restriction: {
+            latLngBounds: {
+              north: 30,
+              south: 5,
+              east: 120,
+              west: 90
+            },
+          },
+          mapTypeId: 'roadmap',
         });
 
-        // 6. create polygon
-        let fillColor = "#fff314"
-        const ckfmton = mapfb[i].fmdata
-        if (ckfmton !== undefined) {
-          // console.log('ck fmdata:', ckfmton)
-          let tonfm = ckfmton.ton_fm
-          if (tonfm == 0) {
-            fillColor = "#fff314"
-          } else if (tonfm > 0) {
-            fillColor = "#09FD0C"
-          } else {
-            fillColor = "#fff314"
-          }
-        }
-
-        const triangleCoords = mapfb[i].coordinates;
-        const bermudaTriangle = new google.maps.Polygon({
-          paths: triangleCoords,
-          strokeColor: '#7FB5FF',
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: fillColor,
-          fillOpacity: 0.35,
+        // 2. Create marker
+        let label: string = "<ion-icon name='person-outline' color='danger'></ion-icon> <ion-label color='primary'> คุณอยู่ที่นี่ </ion-label>"
+        const marker = new google.maps.Marker({
+          position: this.upos,
+          map,
+          label: "",
+          icon: 'assets/icon/fm64.png',
+          // animation: google.maps.Animation.BOUNCE,
         });
-        bermudaTriangle.setMap(map);
 
-        let contentString = ``;
-        for (let j = 0; j < cpfm.length; j++) {
-          if (cpfm[j].intlandno === cpfm[i].landno) {
-            let landname = '';
-            if (cpfm[j].landname_fm !== null) {
-              landname = cpfm[j].landname_fm;
+        // 3. Create circle
+        // const circle = new google.maps.Circle({
+        //   center: this.upos,
+        //   map,
+        //   strokeWeight: 2,
+        //   strokeColor: '#FF992C',
+        //   fillColor: '#F5F8B4',
+        //   fillOpacity: 0.35,
+        //   radius: 100,  // รัศมีเป็นเมตร
+        // })
+
+        // 4. Create InfoWindow.
+        let infoWindow = new google.maps.InfoWindow({
+          content: label,
+          position: this.upos,
+        });
+        infoWindow.open(map);
+
+        // 5. create marker
+        for (let i = 0; i < mapfb.length; i++) {
+          const marker = new google.maps.Marker({
+            position: { lat: mapfb[i].coordinatesCenter.lat, lng: mapfb[i].coordinatesCenter.lng },
+            map,
+          });
+          marker.addListener('click', () => {
+            this.presentActionSheet(mapfb[i].key)
+            // infowindow.open({
+            //   anchor: marker,
+            //   map,
+            //   shouldFocus: false,
+            // });
+          });
+
+          // 6. create polygon
+          let fillColor = "#fff314"
+          const ckfmton = mapfb[i].fmdata
+          if (ckfmton !== undefined) {
+            // console.log('ck fmdata:', ckfmton)
+            let tonfm = ckfmton.ton_fm
+            if (tonfm == 0) {
+              fillColor = "#fff314"
+            } else if (tonfm > 0) {
+              fillColor = "#09FD0C"
             } else {
-              landname = 'ว่าง';
+              fillColor = "#fff314"
             }
-            contentString = `
+          }
+
+          const triangleCoords = mapfb[i].coordinates;
+          const bermudaTriangle = new google.maps.Polygon({
+            paths: triangleCoords,
+            strokeColor: '#7FB5FF',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: fillColor,
+            fillOpacity: 0.35,
+          });
+          bermudaTriangle.setMap(map);
+
+          let contentString = ``;
+          for (let j = 0; j < cpfm.length; j++) {
+            if (cpfm[j].intlandno === cpfm[i].landno) {
+              let landname = '';
+              if (cpfm[j].landname_fm !== null) {
+                landname = cpfm[j].landname_fm;
+              } else {
+                landname = 'ว่าง';
+              }
+              contentString = `
             <h3 style="color: #000;">ข้อมูลแปลง</h3>
             <h6 style="color: #000;">ชื่อแปลง : ${landname}</h6>
             <h6 style="color: #000;">หมายเลขแปลง : </h6>
@@ -247,15 +355,16 @@ export class Tab2Page {
             <h6 style="color: #000;">พื้นที่แปลง : ${cpfm[j].landvalue} ไร่</h6>
             <h6 style="color: #000;">โซน : ${cpfm[j].supzone}</h6>
           `;
+            }
           }
-        }
 
-        const infowindow = new google.maps.InfoWindow({
-          content: contentString,
-          maxWidth: 310,
-        });
-      }
-    });
+          const infowindow = new google.maps.InfoWindow({
+            content: contentString,
+            maxWidth: 310,
+          });
+        }
+      });
+    }
   }
 
   openMapMenu() {
@@ -278,8 +387,6 @@ export class Tab2Page {
         text: 'บันทึกกิจกรรมแปลง',
         icon: 'calendar-clear-outline',
         handler: () => {
-          // console.log(this.list);
-          // this.presentModal(mapsql);
           this.openAddActivityPage(mapsql.itid)
         }
       }, {
@@ -290,13 +397,21 @@ export class Tab2Page {
           this.openShowActivityPage(mapsql.itid);
         }
       },
-      //  {
-      //   text: 'แผนที่',
-      //   icon: 'map-outline',
-      //   handler: () => {
-      //     this.mapModal(keypara);
-      //   }
-      // }, 
+      {
+        text: 'ขอเกี้ยว',
+        icon: 'wallet-outline',
+        handler: () => {
+          this.openFinancePage(mapsql.itid);
+        }
+      },
+      {
+        text: 'ขอปัจจัยฯ',
+        icon: 'leaf-outline',
+        handler: () => {
+          Swal.fire('อยู่ระหว่างพัฒนา');
+          // this.openFactorPage(mapsql.itid);
+        }
+      },
       {
         text: 'ยกเลิก',
         icon: 'close',
@@ -329,6 +444,26 @@ export class Tab2Page {
       }
     };
     this.router.navigate(['/show-activity', itid], navigationExtras);
+  }
+
+  // เปิดหน้า ขอเกี้ยว
+  async openFinancePage(itid: string) {
+    let navigationExtras: NavigationExtras = {
+      queryParams: {
+        special: itid
+      }
+    };
+    this.router.navigate(['/finance', itid], navigationExtras);
+  }
+
+  // เปิดหน้า ขอปัจจัย
+  async openFactorPage(itid: string) {
+    let navigationExtras: NavigationExtras = {
+      queryParams: {
+        special: itid
+      }
+    };
+    this.router.navigate(['/factor', itid], navigationExtras);
   }
 
   // แสดงข้อมูลกิจกรรมแปลง

@@ -9,6 +9,9 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 })
 export class FirebaseService {
 
+  private basePath = '/audit';
+  private profilePath = '/auditPic/profile';
+
   constructor(
     private http: HttpClient,
     private firebase: AngularFireDatabase,
@@ -97,18 +100,18 @@ export class FirebaseService {
 
     const today = new Date();
     const yyyy = today.getFullYear();
-    let mm:any = today.getMonth() + 1; // Months start at 0!
-    let mm1:any = today.getMonth() + 1; // Months start at 0!
-    let dd:any = today.getDate();
+    let mm: any = today.getMonth() + 1; // Months start at 0!
+    let mm1: any = today.getMonth() + 1; // Months start at 0!
+    let dd: any = today.getDate();
     if (dd < 10) dd = '0' + dd;
     if (mm < 10) mm = '0' + mm;
-    let timex = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds() 
+    let timex = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds()
     const formattedToday = yyyy + '-' + mm + '-' + dd + ' ' + timex;
-    console.log('data to fb:', formattedToday )
+    console.log('data to fb:', formattedToday)
 
     return new Promise((res, rej) => {
       const local = this.firebase.list('inst1/tx/' + year + '/areas/' + key + '/');
-      local.update('fmdata', { ton_fm: f.ton ,ton_last: mm1 ,lastupdate_fm: formattedToday });
+      local.update('fmdata', { ton_fm: f.ton, ton_last: mm1, lastupdate_fm: formattedToday });
       res(local)
     }).catch((e) => { console.log('firebase error:', e) })
 
@@ -122,6 +125,14 @@ export class FirebaseService {
       res(local)
     }).catch((e) => { console.log('firebase error:', e) })
 
+  }
+
+  // อัพโหลดรูปไปที่ Firebase storage
+  pushFileToStorage(fileUpload: any, fmcode: any, name: any): Observable<number | undefined> {
+    const filePath = `${this.basePath}/${fmcode}/${name}`;
+    const uploadTask = this.fbstorage.upload(filePath, fileUpload);
+    uploadTask.snapshotChanges().pipe().subscribe();
+    return uploadTask.percentageChanges();
   }
 
 }
