@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { LoginPageRoutingModule } from './login-routing.module';
 
 import { LoginPage } from './login.page';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { LoginPage } from './login.page';
     IonicModule,
     LoginPageRoutingModule
   ],
-  declarations: [LoginPage]
+  declarations: [LoginPage],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class LoginPageModule { }

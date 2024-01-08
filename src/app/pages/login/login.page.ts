@@ -8,7 +8,10 @@ import { AlertService } from 'src/app/services/alert.service';
 import { BrdsqlService } from 'src/app/services/brdsql.service';
 import { Storage } from '@capacitor/storage';
 import { BehaviorSubject } from 'rxjs';
+import { Swiper } from 'swiper/types';
+import { register } from 'swiper/element';
 
+register();
 const TOKEN_KEY = 'my-token';
 
 @Component({
@@ -20,6 +23,7 @@ export class LoginPage implements OnInit {
   credentials!: FormGroup;
   isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   token = '';
+  public swiper!: Swiper;
 
   constructor(
     private fb: FormBuilder,

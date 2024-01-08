@@ -1,8 +1,8 @@
 ion-content {
-    --padding-top: 40%;
+    --padding-top: 30%;
     --padding-start: 5%;
     --padding-end: 5%;
-    --background: url('../../../assets/images/brdfarm-splash.png') 0 0/100% 70% no-repeat;
+    --background: url('../../../assets/images/canerain.png') 0 0/100% 70% no-repeat;
 }
 
 .input-group {
@@ -24,4 +24,18 @@ ion-content {
 .logo {
     border-color: white;
     border-width: 10px;
+}
+
+.container {
+    height: 200px;
+    position: relative;
+    border: 3px solid green;
+}
+
+.vertical-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
 }

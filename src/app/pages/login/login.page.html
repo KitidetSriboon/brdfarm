@@ -5,24 +5,43 @@
       <ion-text class="w3-large">BRD Farm</ion-text>
     </ion-title>
   </ion-toolbar>
+  <img class="logo" src="assets/images/bsf.png" />
 </ion-header>
 
-<ion-content>
+<ion-content class="w3-sand">
   <form (ngSubmit)="login()" [formGroup]="credentials">
+
     <div class="input-group">
       <ion-item>
-        <ion-label position="fixed">
-          <ion-icon name="person-circle-outline"></ion-icon> ชื่อผู้ใช้งาน
-        </ion-label>
-        <ion-input name="username" formControlName="username" placeholder="ชื่อผู้ใช้" ngModel required>
-        </ion-input>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6" style="align-self: center;">
+              <ion-label position="fixed">
+                <ion-icon name="person-circle-outline" class="w3-text-blue"></ion-icon> ผู้ใช้งาน
+              </ion-label>
+            </ion-col>
+            <ion-col size="6">
+              <ion-input name="username" formControlName="username" placeholder="ชื่อผู้ใช้" ngModel required>
+              </ion-input>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </ion-item>
       <ion-item>
-        <ion-label position="fixed">
-          <ion-icon name="key-outline"></ion-icon> รหัสผ่าน
-        </ion-label>
-        <ion-input type="password" name="password" formControlName="password" placeholder="รหัสผ่าน" ngModel requied>
-        </ion-input>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6" style="align-self: center;">
+              <ion-label position="fixed">
+                <ion-icon name="key-outline" class="w3-text-blue"></ion-icon> รหัสผ่าน
+              </ion-label>
+            </ion-col>
+            <ion-col size="6">
+              <ion-input type="password" name="password" formControlName="password" placeholder="รหัสผ่าน" ngModel
+                requied>
+              </ion-input>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </ion-item>
 
       <!-- <ion-item>
@@ -72,6 +91,38 @@
   </form>
 </ion-content>
 <ion-footer>
+  <!-- <ion-card>
+    <ion-card-content>
+      <swiper-container [pagination]="true" navigation="true">
+        <swiper-slide class="swiperslide">
+          <ion-grid>
+            <ion-row class="w3-center">
+              <ion-col class="divPadding-2 ">
+                <img class="logo" src="assets/images/canerain.png" />
+              </ion-col>
+              <ion-col class="divPadding-2 ">
+                <img src="../../assets/images/brdfarm-splash.png" alt="Lights">
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col class="divPadding-2 ">
+                <img src="../../assets/images/brdfarm-splash.png" alt="Lights">
+              </ion-col>
+              <ion-col class="divPadding-2 ">
+                <img src="../../assets/images/brdfarm-splash.png" alt="Lights">
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </swiper-slide>
+        <swiper-slide class="swiperslide">
+          <img src="../../assets/images/brdfarm-splash.png" alt="Lights">
+        </swiper-slide>
+        <swiper-slide class="swiperslide">
+          <img src="../../assets/images/brdfarm-splash.png" alt="Lights">
+        </swiper-slide>
+      </swiper-container>
+    </ion-card-content>
+  </ion-card> -->
   <ion-text class="w3-display-bottomright txtSmall txtGray">
     <ion-icon name="people-outline"></ion-icon> itBRD
   </ion-text>
