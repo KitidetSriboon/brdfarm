@@ -10,6 +10,9 @@ export class BrdsqlService {
 
   baseSelectUrl = "https://asia-southeast2-brr-farmluck.cloudfunctions.net/dbcps/select_s_f_w?"
   brr_funcUrl = "https://asia-southeast2-brr-farmluck.cloudfunctions.net/dbbrr/"
+  baseUrlUpdate = "https://asia-southeast2-brr-farmluck.cloudfunctions.net/dbcps/update_t_s_w?"
+  baseUrlInsert = "https://asia-southeast2-brr-farmluck.cloudfunctions.net/dbcps/insert_t_c_v?"
+  baseUrlExe = "https://asia-southeast2-brr-farmluck.cloudfunctions.net/dbcps/exec_f_v?"
 
   httpHeader = {
     headers: new HttpHeaders({ 'content-type': 'application/json' }),
@@ -118,6 +121,15 @@ export class BrdsqlService {
     };
   }
 
+  // ข้อมูลการบันทึกกิจกรรมแปลงของชาวไร่จาก itid
+  cpActivityFm(itid: string): Observable<any[]> {
+    const url = this.baseSelectUrl
+      + "s=*&"
+      + "f=dbIntech.dbo.v_p_farmer&"
+      + "w=itid='" + itid + "'"
+    return this.http.get<any[]>(url)
+  }
+
   // บันทึก กิจกรรมแปลงของชาวไร่
   updateFmActivity(f: any): Observable<any[]> {
     const d = new Date()
@@ -127,7 +139,11 @@ export class BrdsqlService {
     // function pad(s) { return (s < 10) ? '0' + s : s; }
     // let d = new Date();
     // let newd = [pad(d.getMonth() + 1), pad(d.getDate()), d.getFullYear()].join('/')
-    const url = "https://asia-southeast2-brr-farmluck.cloudfunctions.net/app_smfbrr/push_p_farmer?itid="
+    const url = this.baseUrlUpdate
+      + "t=dbIntech.dbo.p_farmer&"
+      + "s=&"
+      + "w=itid='" + f.itid + "'"
+      //"https://asia-southeast2-brr-farmluck.cloudfunctions.net/app_smfbrr/push_p_farmer?itid="
       + f.itid + "&year=" + f.yearid
       + "&tonm" + m + "=" + f.ton + "&wastedSpaceRai="
       + f.wastedSpaceRai + "&Cutseed=" + f.Cutseed + "&ton_lost=" + f.ton_lost + "&ton_last=" + m;

@@ -1,13 +1,13 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>บันทึกกิจกรรมแปลง</ion-title>
+    <ion-title>บันทึกกิจกรรมแปลง {{ cpdata.year_th }}</ion-title>
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-card class="borderDashData ion-padding divMg-5">
+<ion-card class="ion-padding divMg-5">
   <ion-card-header class="el-center">
     <ion-chip>
       <ion-icon name="pin" color="primary"></ion-icon>
@@ -25,33 +25,106 @@
 
 <ion-content>
 
-  <ion-card class="borderDashForm divMg-5">
+  <ion-card class="divMg-5">
 
-    <form *ngIf="cpdata" [formGroup]="frm_addcpact" (ngSubmit)="submit(frm_addcpact.value)" novalidate>
-
+    <form *ngIf="frm_insert" [formGroup]="frm_addcpact" (ngSubmit)="test(frm_addcpact.value)" novalidate>
+      <ion-title>เพิ่มข้อมูล</ion-title>
       <ion-list>
+        <ion-item [color]="cl_groundlevel" class="w3-round-large divMg-5">
+          <ion-toggle (ionChange)="ck_groundlevel($event)" justify="space-between" formControlName="groundlevel"
+            [(ngModel)]="groundlevel">
+            1.ระดับพื้นที่ <ion-text class="txtBlue" id="click-trigger">?</ion-text>
+          </ion-toggle>
+          <ion-popover trigger="click-trigger" triggerAction="click">
+            <ng-template>
+              <ion-content>
+                <div class="w3-panel w3-leftbar w3-light-grey">
+                  <p class="txtSmall">
+                    <i>"ราบเรียบ ไม่มีแอ่งน้ำขังภายในแปลง"</i></p>
+                  <!-- <p>ระดับพื้นที่ ไม่ทำ/ทำ</p> -->
+                </div>
+              </ion-content>
+            </ng-template>
+          </ion-popover>
+        </ion-item>
+        <ion-item [color]="cl_hardSoilBlast" class="w3-round-large divMg-5">
+          <ion-toggle [checked]="change" (ionChange)="ck_hardSoilBlast($event)" justify="space-between"
+            formControlName="hardSoilBlast" [(ngModel)]="cpdata.hardSoilBlast">
+            2.ระเบิดดินดาน <ion-text class="txtBlue" id="click-hardSoilBlast">?</ion-text>
+          </ion-toggle>
+          <ion-popover trigger="click-hardSoilBlast" triggerAction="click">
+            <ng-template>
+              <ion-content>
+                <div class="w3-panel w3-leftbar w3-light-grey">
+                  <p class="txtSmall">
+                    <i>"ระเบิดดินดาน ไม่ทำ/ทำ"</i></p>
+                  <!-- <p>ระดับพื้นที่ ไม่ทำ/ทำ</p> -->
+                </div>
+              </ion-content>
+            </ng-template>
+          </ion-popover>
+        </ion-item>
+        <ion-item [color]="cl_seedclear" class="w3-round-large divMg-5">
+          <ion-toggle [checked]="change" (ionChange)="ck_seedclear($event)" justify="space-between"
+            formControlName="seedclear" [(ngModel)]="cpdata.seedclear">
+            3.การคัดพันธุ์ <ion-text class="txtBlue" id="click-seedclear">?</ion-text>
+          </ion-toggle>
+          <ion-popover trigger="click-seedclear" triggerAction="click">
+            <ng-template>
+              <ion-content>
+                <div class="w3-panel w3-leftbar w3-light-grey">
+                  <p class="txtSmall">
+                    <i>"คัดอ้อยพันธุ์ สะอาด ไม่คัด/คัด"</i></p>
+                  <!-- <p>ระดับพื้นที่ ไม่ทำ/ทำ</p> -->
+                </div>
+              </ion-content>
+            </ng-template>
+          </ion-popover>
+        </ion-item>
+        <ion-item [color]="cl_groove" class="w3-round-large divMg-5">
+          <ion-toggle [checked]="change" (ionChange)="ck_seedclear($event)" justify="space-between"
+            formControlName="seedclear" [(ngModel)]="cpdata.seedclear">
+            4.ระยะร่อง <ion-text class="txtBlue" id="click-groove">?</ion-text>
+          </ion-toggle>
+          <ion-popover trigger="click-groove" triggerAction="click">
+            <ng-template>
+              <ion-content>
+                <div class="w3-panel w3-leftbar w3-light-grey">
+                  <p class="txtSmall">
+                    <i>"ระยะร่อง 140 ซม.ขึ้นไป"</i></p>
+                  <!-- <p>ระดับพื้นที่ ไม่ทำ/ทำ</p> -->
+                </div>
+              </ion-content>
+            </ng-template>
+          </ion-popover>
+        </ion-item>
+
+
+
         <ion-item class="ion-text-center">
-          <ion-input type="number" [(ngModel)]="cpdata.wastedSpaceRai_fm" formControlName="wastedSpaceRai" class="inputBGBW" label="พื้นที่เสียหาย(ไร่)" placeholder="เช่น 0.5"></ion-input>
+          <ion-input type="number" [(ngModel)]="cpdata.wastedSpaceRai_fm" formControlName="wastedSpaceRai"
+            class="inputBGBW" label="พื้นที่เสียหาย(ไร่)" placeholder="เช่น 0.5"></ion-input>
         </ion-item>
         <ion-item class="ion-text-center">
-          <ion-input type="number" [(ngModel)]="cpdata.Cutseed_fm" formControlName="Cutseed" class="inputBGBW" label="ตัดพันธุ์(ตัน)" placeholder="เช่น 15"></ion-input>
+          <ion-input type="number" [(ngModel)]="cpdata.Cutseed_fm" formControlName="Cutseed" class="inputBGBW"
+            label="ตัดพันธุ์(ตัน)" placeholder="เช่น 15"></ion-input>
         </ion-item>
         <ion-item class="ion-text-center">
           <!-- <ion-input label="Outline input" label-placement="floating" fill="outline" placeholder="Enter text"></ion-input> -->
-          <ion-input type="number" [(ngModel)]="cpdata.ton_lost_fm" formControlName="ton_lost" class="inputBGBW" label="สูญเสียจากตัด(ตัน)" placeholder="เช่น 5"></ion-input>
+          <ion-input type="number" [(ngModel)]="cpdata.ton_lost_fm" formControlName="ton_lost" class="inputBGBW"
+            label="สูญเสียจากตัด(ตัน)" placeholder="เช่น 5"></ion-input>
         </ion-item>
       </ion-list>
 
       <div class="ion-text-center">
-        <ion-text class="txtBolder txtLarge txtBlue">ท่านประเมิน 
+        <ion-text class="txtBolder txtLarge txtBlue">ท่านประเมิน
           <ion-text class="txtRed">ตัน {{ perTon }}</ion-text> /ไร่
         </ion-text>
         <ion-item>
-          <ion-range style="margin-top: 20px;" class="inputBGBW" formControlName="ton" 
-          [min]="0" [max]="35" [pin]="true" [ticks]="true" [snaps]="true"
-          [(ngModel)]="cpdata.ton_last_fm"
-          (ionChange)="newTon($event,frm_addcpact.value)">
-        </ion-range>
+          <ion-range style="margin-top: 20px;" class="inputBGBW" formControlName="ton" [min]="0" [max]="35" [pin]="true"
+            [ticks]="true" [snaps]="true" [(ngModel)]="cpdata.ton_last_fm"
+            (ionChange)="newTon($event,frm_addcpact.value)">
+          </ion-range>
         </ion-item>
         <ion-item class="ion-text-center">
           <ion-grid [fixed]="true">
@@ -74,6 +147,136 @@
         <ion-row class="ion-text-center">
           <ion-col>
             <ion-button class="divMg-5" shape="round" type="submit" [disabled]="!frm_addcpact.valid">
+              <ion-icon name="save-outline"></ion-icon>
+              ...บันทึกข้อมูล
+            </ion-button>
+            <ion-button class="divMg-5" (click)="closeCurrentPage()" shape="round" fill="outline" color="danger">
+              <ion-icon name="close-circle-outline"></ion-icon>
+              ปิด
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-input type="hidden" [(ngModel)]="itid" formControlName="itid"></ion-input>
+      <ion-input type="hidden" [(ngModel)]="yearCr" formControlName="yearid"></ion-input>
+
+    </form>
+
+    <form *ngIf="frm_edit" [formGroup]="frm_editcpact" (ngSubmit)="test(frm_editcpact.value)" novalidate>
+      <ion-title class="w3-center">อัพเดตข้อมูล</ion-title>
+      <ion-list>
+        <ion-item [color]="cl_groundlevel" class="w3-round-large divMg-5">
+          <ion-toggle [(ngModel)]="tg_groundlevel" (ionChange)="ck_groundlevel($event)" justify="space-between"
+            formControlName="groundlevel">
+            1.ระดับพื้นที่ <ion-text class="txtBlue" id="click-groundlevel">?</ion-text>
+          </ion-toggle>
+          <ion-popover trigger="click-groundlevel" triggerAction="click">
+            <ng-template>
+              <ion-content>
+                <div class="w3-panel w3-leftbar w3-light-grey">
+                  <p class="txtSmall">
+                    <i>"ราบเรียบ ไม่มีแอ่งน้ำขังภายในแปลง"</i></p>
+                </div>
+              </ion-content>
+            </ng-template>
+          </ion-popover>
+        </ion-item>
+        <ion-item [color]="cl_hardSoilBlast" class="w3-round-large divMg-5">
+          <ion-toggle (ionChange)="ck_hardSoilBlast($event)" justify="space-between" formControlName="hardSoilBlast"
+            [(ngModel)]="tg_hardSoilBlast">
+            2.ระเบิดดินดาน <ion-text class="txtBlue" id="click-hardSoilBlast">?</ion-text>
+          </ion-toggle>
+          <ion-popover trigger="click-hardSoilBlast" triggerAction="click">
+            <ng-template>
+              <ion-content>
+                <div class="w3-panel w3-leftbar w3-light-grey">
+                  <p class="txtSmall">
+                    <i>"ระเบิดดินดาน ไม่ทำ/ทำ"</i></p>
+                </div>
+              </ion-content>
+            </ng-template>
+          </ion-popover>
+        </ion-item>
+        <ion-item [color]="cl_seedclear" class="w3-round-large divMg-5">
+          <ion-toggle (ionChange)="ck_seedclear($event)" justify="space-between" formControlName="seedclear"
+            [(ngModel)]="tg_seedclear">
+            3.การคัดพันธุ์ <ion-text class="txtBlue" id="click-seedclear">?</ion-text>
+          </ion-toggle>
+          <ion-popover trigger="click-seedclear" triggerAction="click">
+            <ng-template>
+              <ion-content>
+                <div class="w3-panel w3-leftbar w3-light-grey">
+                  <p class="txtSmall">
+                    <i>"คัดอ้อยพันธุ์ สะอาด ไม่คัด/คัด"</i></p>
+                </div>
+              </ion-content>
+            </ng-template>
+          </ion-popover>
+        </ion-item>
+        <ion-item [color]="cl_groove" class="w3-round-large divMg-5">
+          <ion-select (ionChange)="ck_groove($event)" formControlName="groove" [(ngModel)]="groove" label="4.ระยะร่อง">
+            <ion-select-option value="139">น้อยกว่า 140 ซม.</ion-select-option>
+            <ion-select-option value="140">140 ซม.</ion-select-option>
+            <ion-select-option value="150">150 ซม.</ion-select-option>
+            <ion-select-option value="160">160 ซม.</ion-select-option>
+            <ion-select-option value="170">170 ซม.</ion-select-option>
+            <ion-select-option value="180">180 ซม.</ion-select-option>
+            <ion-select-option value="190">190 ซม.</ion-select-option>
+            <ion-select-option value="200">200 ซม.</ion-select-option>
+            <ion-select-option value="201">มากกว่า 200 ซม.</ion-select-option>
+            <p class="color-gray font-12 text-align-right bold">
+              xxx
+            </p>
+          </ion-select>
+        </ion-item>
+
+        <!-- <ion-item class="ion-text-center">
+          <ion-input type="number" [(ngModel)]="cpdata.wastedSpaceRai_fm" formControlName="wastedSpaceRai"
+            class="inputBGBW" label="พื้นที่เสียหาย(ไร่)" placeholder="เช่น 0.5"></ion-input>
+        </ion-item>
+        <ion-item class="ion-text-center">
+          <ion-input type="number" [(ngModel)]="cpdata.Cutseed_fm" formControlName="Cutseed" class="inputBGBW"
+            label="ตัดพันธุ์(ตัน)" placeholder="เช่น 15"></ion-input>
+        </ion-item>
+        <ion-item class="ion-text-center">
+          <ion-input type="number" [(ngModel)]="cpdata.ton_lost_fm" formControlName="ton_lost" class="inputBGBW"
+            label="สูญเสียจากตัด(ตัน)" placeholder="เช่น 5"></ion-input>
+        </ion-item> -->
+
+      </ion-list>
+
+      <!-- <div class="ion-text-center">
+        <ion-text class="txtBolder txtLarge txtBlue">ท่านประเมิน
+          <ion-text class="txtRed">ตัน {{ perTon }}</ion-text> /ไร่
+        </ion-text>
+        <ion-item>
+          <ion-range style="margin-top: 20px;" class="inputBGBW" formControlName="ton" [min]="0" [max]="35" [pin]="true"
+            [ticks]="true" [snaps]="true" [(ngModel)]="cpdata.ton_last_fm"
+            (ionChange)="newTon($event,frm_addcpact.value)">
+          </ion-range>
+        </ion-item>
+        <ion-item class="ion-text-center">
+          <ion-grid [fixed]="true">
+            <ion-row>
+              <ion-col class="bgGreenSoft">
+                <p>พื้นที่เสียหาย {{ fminput.la }} ไร่</p>
+                <p>คงเหลือพื้นที่ {{ fminput.arealeft | number: '1.1-2'}} ไร่</p>
+                <p>ตัดพันธุ์ {{ fminput.cst }} ตัน</p>
+                <p>สูญเสียจากตัด {{ fminput.lc }} ตัน</p>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+        <ion-item class="txtBolder txtLarge ion-text-center paddingLR10 borderNonlineRedius" color="warning">
+          <ion-label> คงเหลืออ้อย <ion-text class="txtRed"> {{ ton }} </ion-text> ตัน</ion-label>
+        </ion-item>
+      </div> -->
+
+      <ion-grid style="margin-top: 10px;">
+        <ion-row class="ion-text-center">
+          <ion-col>
+            <ion-button class="divMg-5" shape="round" type="submit" [disabled]="!frm_editcpact.valid">
               <ion-icon name="save-outline"></ion-icon>
               ...บันทึกข้อมูล
             </ion-button>

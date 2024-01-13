@@ -19,3 +19,38 @@ export class GlobalConstants {
     public static yearLabel: string = "";
 
 }
+
+export function yearCr(): string {
+    let yearCr: string;
+    let yearnow: any = new Date().getFullYear();
+    yearnow = yearnow.toString().substring(2, 4)
+    // console.log('yearnow', yearnow)
+    let yearnext: any = new Date().getFullYear() + 1;
+    yearnext = yearnext.toString().substring(2, 4)
+    // console.log('yearnext', yearnext)
+    let yearpre: any = new Date().getFullYear() - 1;
+    yearCr = yearnow.concat(yearnext)
+    // console.log('yearCr', yearCr)
+    return yearCr;
+}
+
+export function yearTh(): string {
+    let yearTh: string;
+    let yearnow: any = new Date().getFullYear() + 543;
+    yearnow = yearnow.toString().substring(2, 4)
+    let yearnext: any = new Date().getFullYear() + 544;
+    yearnext = yearnext.toString().substring(2, 4)
+    let yearpre: any = new Date().getFullYear() + 542;
+    yearTh = yearnow.concat(yearnext)
+    return yearTh;
+}
+
+export function yearLabel(): string {
+    let yearLabel: string;
+    let yearnow: any = new Date().getFullYear() + 543;
+    yearnow = yearnow.toString().substring(2, 4)
+    let yearnext: any = new Date().getFullYear() + 544;
+    yearnext = yearnext.toString().substring(2, 4)
+    yearLabel = yearnow.concat(yearnext)
+    return yearLabel;
+}

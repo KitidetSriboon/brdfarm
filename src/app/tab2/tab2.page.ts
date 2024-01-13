@@ -73,8 +73,13 @@ export class Tab2Page {
     console.log('tab2 ionViewWillEnter:');
     let x = this.mapFbFm
     if (x.legth == 0) {
-      this.draw();
+      this.getUserLocation();
     }
+  }
+
+  ionViewDidEnter() {
+    console.log('tab2 ionViewDidEnter:');
+    // this.draw();
   }
 
   ionViewWillLeave() {
