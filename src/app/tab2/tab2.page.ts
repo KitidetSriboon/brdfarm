@@ -274,7 +274,7 @@ export class Tab2Page {
           map,
           label: "",
           icon: 'assets/icon/fm64.png',
-          // animation: google.maps.Animation.BOUNCE,
+          animation: google.maps.Animation.BOUNCE,
         });
 
         // 3. Create circle
