@@ -55,6 +55,7 @@ export class AddActivityPage implements OnInit {
   naturalfertilizer = ""
   fertilizerRatio = 0
   fertilizerFormula = ""
+  showChemicalFormula = false;
   tg_pipeup: boolean = false; // Default value
   pipeup = ""
   germinationpercent = 0
@@ -110,9 +111,11 @@ export class AddActivityPage implements OnInit {
             seedclear: [this.cpActivitydata.seedclear],  // การคัดพันธุ์อ้อย สะอาด
             groove: [this.cpActivitydata.groove,],  // ระยะรอง ซม.
             naturalfertilizer: [this.cpActivitydata.NaturalFertilizer,],  // ประเภทปุ๋ยอินทรีย์ที่ใส่
-            fertilizerRatio: [this.cpActivitydata.fertilizerRatio,],  // ประเภทเคมีที่ใส่
-            fertilizerFormula: [this.cpActivitydata.fertilizerFormula,],  // อัตราการใส่ปุ๋ยเคมีประเภทเคมีที่ใส่
-            // ton: [this.cpActivitydata.ton_last_fm, [Validators.required, Validators.min(0), Validators.max(35)]],  // ตันประเมิน
+            fertilizerRatio: [this.cpActivitydata.fertilizerRatio,],  // อัตราปุ๋ยเคมีที่ใส่
+            fertilizerFormula: [this.cpActivitydata.fertilizerFormula,],  // สูตรปุ๋ยเคมี
+            pipeup: [this.cpActivitydata.pipeup,],  // การพูนโคน
+            germinationPercent: [this.cpActivitydata.pipeup,],  // %การงอก
+            ton: [this.cpActivitydata.ton_In_Month, [Validators.required, Validators.min(0), Validators.max(35)]],  // ตันประเมิน
             // wastedSpaceRai: [this.cpActivitydata.wastedSpaceRai,],  // พท.สูญเสียของแปลง (ไร่)
             // Cutseed: [this.cpActivitydata.Cutseed,],  // ตันพันธุ์
             // ton_lost: [this.cpActivitydata.ton_lost,],  // ตันสูญเสียจากการตัด
@@ -175,7 +178,7 @@ export class AddActivityPage implements OnInit {
     if (ckdata) {
       ckdata = JSON.parse(ckdata)
       this.chemicalType = ckdata
-      console.log('chemicalType', this.chemicalType)
+      // console.log('chemicalType', this.chemicalType)
     } else {
       let x: any;
       await this.brdsql.getChemicalType().subscribe({
@@ -194,6 +197,7 @@ export class AddActivityPage implements OnInit {
 
   // ปรับสีกิจกรรมทำแล้ว สีเขียว
   ck_fmacOK(data: any) {
+    console.log('ck_fmacOK')
     let x = data
     if (data.groundlevel == true) {
       this.groundlevel = x.groundlevel
@@ -223,17 +227,37 @@ export class AddActivityPage implements OnInit {
       this.cl_NaturalFertilizer = 'success'
     }
     if (data.fertilizerRatio >= 100) {
+      console.log('fertilizerRatio >=100')
       this.fertilizerRatio = x.fertilizerRatio
       this.cl_fertilizerRatio = 'success'
     } else {
+      console.log('fertilizerRatio <100')
       this.fertilizerRatio = x.fertilizerRatio
     }
     if (data.fertilizerFormula == '0' || data.fertilizerFormula == null) {
       this.fertilizerFormula = x.fertilizerFormula
-      this.cl_fertilizerRatio = 'success'
+      this.cl_fertilizerFormula = 'success'
     } else {
       this.fertilizerFormula = x.fertilizerFormula
     }
+    if (data.pipeup == true) {
+      this.pipeup = x.pipeup
+      this.cl_pipeup = 'success'
+    } else {
+      this.pipeup = x.pipeup
+    }
+    if (data.GerminationPercent > 90) {
+      this.germinationpercent = x.GerminationPercent
+      this.cl_GerminationPercent = 'success'
+    } else {
+      this.germinationpercent = x.GerminationPercent
+    }
+    if (data.ton_last_fm > 0) {
+      this.tonfm = x.ton_last_fm
+      this.cl_tonfm = 'success'
+    } else {
+      this.tonfm = x.ton_last_fm
+    } 0
   }
 
 
@@ -340,17 +364,18 @@ export class AddActivityPage implements OnInit {
     switch (true) {
       case (x >= 100):
         this.cl_fertilizerRatio = "success"
+        this.showChemicalFormula = true;
         break;
-      // case (x == 0):
-      //   this.cl_NaturalFertilizer = "warning"
-      //   break;
+      case (x > 0):
+        this.showChemicalFormula = true;
+        break;
       default:
         this.cl_fertilizerRatio = "warning"
         break;
     }
   }
 
-  // สูตร ปุ๋ยเคมี ที่ใส่
+  // สูตร ปุ๋ยเคมี ที่ใส่ ต้องมากกว่า 100 กก.
   ck_chemicalFormula(e: any) {
     let x = e.detail.value
     x = x.toString()
@@ -368,6 +393,42 @@ export class AddActivityPage implements OnInit {
     }
   }
 
+  // การพูนโคน
+  ck_pipeup(e: any) {
+    let x = e.detail.checked
+    switch (x) {
+      case true:
+        this.cl_pipeup = "success"
+        this.pipeup = "true"
+        break;
+      case false:
+        this.cl_pipeup = "warning"
+        this.pipeup = "false"
+        break;
+      default:
+        this.cl_pipeup = "warning"
+        this.pipeup = ""
+        break;
+    }
+  }
+
+  // %การงอก ควรมากกว่า 90
+  ck_GerminationPercent(e: any) {
+    let x = e.detail.value
+    x = parseInt(x)
+    switch (true) {
+      case (x >= 90):
+        this.cl_GerminationPercent = "success"
+        break;
+      // case (x):
+      //   this.cl_GerminationPercent = "warning"
+      //   this.pipeup = "false"
+      //   break;
+      default:
+        this.cl_GerminationPercent = "warning"
+        break;
+    }
+  }
 
   // คำนวณปริมาณตัน
   async newTon(event: any, f: any) {
@@ -384,6 +445,25 @@ export class AddActivityPage implements OnInit {
     this.ton = toned.toFixed(2);
     this.fminput.tonleft = toned
     await Haptics.impact({ style: ImpactStyle.Light });
+    this.ck_ton(this.perTon)
+  }
+
+  // ประเมินอ้อย ควรจะมากกว่า 10
+  ck_ton(tonfm: any) {
+    tonfm = parseInt(tonfm)
+    console.log('ประเมิน ', tonfm)
+    switch (true) {
+      case (tonfm >= 10):
+        this.cl_tonfm = "success"
+        break;
+      // case (x):
+      //   this.cl_GerminationPercent = "warning"
+      //   this.pipeup = "false"
+      //   break;
+      default:
+        this.cl_tonfm = "warning"
+        break;
+    }
   }
 
   // test

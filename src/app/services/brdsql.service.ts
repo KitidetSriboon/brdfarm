@@ -132,9 +132,10 @@ export class BrdsqlService {
 
   // บันทึก กิจกรรมแปลงของชาวไร่
   updateFmActivity(f: any, frmType: string): Observable<any[]> {
-    const d = new Date()
+    let d: any = new Date()
     let m = d.getMonth() + 1
-    // console.log('month: ', m)
+    d = d.toString()
+    console.log('date update ', d)
     // console.log('form in brdservice:', f)
     let urlInsert = this.baseUrlInsert
     let urlUpdate = this.baseUrlUpdate
@@ -143,7 +144,10 @@ export class BrdsqlService {
       case 'edit':
         urlUpdate = urlUpdate + "t=dbIntech.dbo.p_farmer&"
           + "s=groundlevel='" + f.groundlevel + "',hardSoilBlast='" + f.hardSoilBlast
-          + "',seedclear='" + f.seedclear + "',groove=" + f.groove + ",naturalfertilizer='" + f.naturalfertilizer + "'&"
+          + "',seedclear='" + f.seedclear + "',groove=" + f.groove + ",naturalfertilizer='" + f.naturalfertilizer
+          + "',fertilizerRatio=" + f.fertilizerRatio + ",fertilizerFormula='" + f.fertilizerFormula
+          + "',pipeup='" + f.pipeup + "',GerminationPercent=" + f.germinationPercent
+          + ",ton=" + f.ton + ",tonm" + m + "=" + f.ton + ",ton_last='" + m + "',update_date='" + d + "'&"
           + "w=itid='" + f.itid + "'"
         console.log('urlUpdate', urlUpdate)
         return this.http.get<any[]>(urlUpdate)

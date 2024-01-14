@@ -166,6 +166,7 @@
     <form *ngIf="frm_edit" [formGroup]="frm_editcpact" (ngSubmit)="submit(frm_editcpact.value)" novalidate>
       <ion-title class="w3-center">อัพเดตข้อมูล</ion-title>
       <ion-list>
+        <!-- ระดับพื้นที่ -->
         <ion-item [color]="cl_groundlevel" class="w3-round-large divMg-5">
           <ion-toggle [enableOnOffLabels]="true" [(ngModel)]="tg_groundlevel" (ionChange)="ck_groundlevel($event)"
             justify="space-between" formControlName="groundlevel">
@@ -185,6 +186,7 @@
             </ng-template>
           </ion-popover>
         </ion-item>
+        <!-- ระเบิดดินดาน -->
         <ion-item [color]="cl_hardSoilBlast" class="w3-round-large divMg-5">
           <ion-toggle [enableOnOffLabels]="true" (ionChange)="ck_hardSoilBlast($event)" justify="space-between"
             formControlName="hardSoilBlast" [(ngModel)]="tg_hardSoilBlast">
@@ -204,6 +206,7 @@
             </ng-template>
           </ion-popover>
         </ion-item>
+        <!-- คัดอ้อยพันธุ์ -->
         <ion-item [color]="cl_seedclear" class="w3-round-large divMg-5">
           <ion-toggle [enableOnOffLabels]="true" alignment="center" (ionChange)="ck_seedclear($event)"
             formControlName="seedclear" [(ngModel)]="tg_seedclear">
@@ -223,6 +226,7 @@
             </ng-template>
           </ion-popover>
         </ion-item>
+        <!-- ระยะร่อง -->
         <ion-item [color]="cl_groove" class="w3-round-large divMg-5">
           <ion-select (ionChange)="ck_groove($event)" formControlName="groove" [(ngModel)]="groove" label="4.ระยะร่อง"
             placeholder="เลือก">
@@ -239,6 +243,7 @@
           <ion-text class="w3-sand showDesc w3-border w3-round-xlarge">{{ cpActivitydata.grooveDesc }}
           </ion-text>
         </ion-item>
+        <!-- อินทรีย์ที่ใส่ -->
         <ion-item [color]="cl_NaturalFertilizer" class="w3-round-large divMg-5">
           <ion-select (ionChange)="ck_NaturalFertilizer($event)" formControlName="naturalfertilizer"
             [(ngModel)]="naturalfertilizer" label="5.อินทรีย์ที่ใส่" placeholder="เลือก">
@@ -249,6 +254,7 @@
           <ion-text class="w3-sand showDesc w3-border w3-round-xlarge">{{ cpActivitydata.organicDesc }}
           </ion-text>
         </ion-item>
+        <!-- ปุ๋ยเคมี -->
         <ion-item [color]="cl_fertilizerRatio" class="w3-round-large divMg-5">
           <ion-select (ionChange)="ck_chemical($event)" formControlName="fertilizerRatio" [(ngModel)]="fertilizerRatio"
             label="6.อัตราการใส่ปุ๋ยเคมี" placeholder="เลือก">
@@ -263,74 +269,133 @@
           </ion-select>
           <ion-text class="w3-sand showDesc w3-border w3-round-xlarge">{{ cpActivitydata.fertilizerRatio }}
           </ion-text>
-        </ion-item>
-        <ion-item [color]="cl_fertilizerFormula" class="w3-round-large divMg-5">
-          <ion-select (ionChange)="ck_chemicalFormula($event)" formControlName="fertilizerFormula"
-            [(ngModel)]="fertilizerFormula" label="- สูตรปุ๋ยเคมีที่ใส่">
+          <ion-select *ngIf="showChemicalFormula" (ionChange)="ck_chemicalFormula($event)"
+            formControlName="fertilizerFormula" [(ngModel)]="fertilizerFormula" label="- สูตรปุ๋ยเคมีที่ใส่">
             <ion-select-option disabled>++อัตรา กก./ไร่++</ion-select-option>
             <ion-select-option *ngFor="let item of chemicalType" [value]="item.id">{{ item.descript }}
             </ion-select-option>
           </ion-select>
-          <ion-text class="w3-sand showDesc w3-border w3-round-xlarge">{{ cpActivitydata.chemicalDesc }}
+          <!-- <ion-text class="w3-sand showDesc w3-border w3-round-xlarge">{{ cpActivitydata.chemicalDesc }}
+          </ion-text> -->
+        </ion-item>
+        <!-- การพูนโคน -->
+        <ion-item [color]="cl_pipeup" class="w3-round-large divMg-5">
+          <ion-toggle [enableOnOffLabels]="true" alignment="center" (ionChange)="ck_pipeup($event)"
+            formControlName="pipeup" [(ngModel)]="tg_pipeup">
+            7.การพูนโคน
+            <ion-text class="txtBlue" id="click-pipeup">?</ion-text>
+            <ion-text class="w3-sand showDesc w3-border w3-round-xlarge">{{ cpActivitydata.pipeupDesc }}
+            </ion-text>
+          </ion-toggle>
+          <ion-popover trigger="click-pipeup" triggerAction="click">
+            <ng-template>
+              <ion-content>
+                <div class="w3-panel w3-leftbar w3-light-grey">
+                  <p class="txtSmall">
+                    <i>"ลดการสูณเสีย ลดการหักล้ม "</i></p>
+                </div>
+              </ion-content>
+            </ng-template>
+          </ion-popover>
+        </ion-item>
+        <!-- %การงอก -->
+        <ion-item [color]="cl_GerminationPercent" class="w3-round-large divMg-5">
+          <ion-select (ionChange)="ck_GerminationPercent($event)" formControlName="germinationpercent"
+            [(ngModel)]="germinationpercent" label="8.%การงอก" placeholder="เลือก">
+            <ion-select-option value="0">0</ion-select-option>
+            <ion-select-option value="10">10</ion-select-option>
+            <ion-select-option value="20">20</ion-select-option>
+            <ion-select-option value="30">30</ion-select-option>
+            <ion-select-option value="40">40</ion-select-option>
+            <ion-select-option value="50">50</ion-select-option>
+            <ion-select-option value="60">60</ion-select-option>
+            <ion-select-option value="70">70</ion-select-option>
+            <ion-select-option value="80">80</ion-select-option>
+            <ion-select-option value="90">90</ion-select-option>
+            <ion-select-option value="100">100</ion-select-option>
+          </ion-select>
+          <ion-text class="w3-sand showDesc w3-border w3-round-xlarge">{{ cpActivitydata.GerminationPercent }}
           </ion-text>
         </ion-item>
-
-        <!-- <ion-item class="ion-text-center">
-          <ion-input type="number" [(ngModel)]="cpdata.wastedSpaceRai_fm" formControlName="wastedSpaceRai"
-            class="inputBGBW" label="พื้นที่เสียหาย(ไร่)" placeholder="เช่น 0.5"></ion-input>
-        </ion-item>
-        <ion-item class="ion-text-center">
-          <ion-input type="number" [(ngModel)]="cpdata.Cutseed_fm" formControlName="Cutseed" class="inputBGBW"
-            label="ตัดพันธุ์(ตัน)" placeholder="เช่น 15"></ion-input>
-        </ion-item>
-        <ion-item class="ion-text-center">
-          <ion-input type="number" [(ngModel)]="cpdata.ton_lost_fm" formControlName="ton_lost" class="inputBGBW"
-            label="สูญเสียจากตัด(ตัน)" placeholder="เช่น 5"></ion-input>
-        </ion-item> -->
-
-      </ion-list>
-
-      <!-- <div class="ion-text-center">
-        <ion-text class="txtBolder txtLarge txtBlue">ท่านประเมิน
-          <ion-text class="txtRed">ตัน {{ perTon }}</ion-text> /ไร่
-        </ion-text>
-        <ion-item>
-          <ion-range style="margin-top: 20px;" class="inputBGBW" formControlName="ton" [min]="0" [max]="35" [pin]="true"
-            [ticks]="true" [snaps]="true" [(ngModel)]="cpdata.ton_last_fm"
-            (ionChange)="newTon($event,frm_addcpact.value)">
-          </ion-range>
-        </ion-item>
-        <ion-item class="ion-text-center">
-          <ion-grid [fixed]="true">
+        <!-- ประเมินอ้อย -->
+        <ion-item [color]="cl_tonfm" class="w3-round-large divMg-5">
+          <ion-grid>
+            <ion-row style="margin-top: 10px;margin-bottom: 10px;">
+              <ion-col class="w3-left">
+                <ion-text>9.ประเมินอ้อย</ion-text>
+              </ion-col>
+              <ion-col class="w3-right">
+                <ion-text class="w3-sand showDesc w3-border w3-round-xlarge">{{ cpActivitydata.ton_last_fm }}
+                </ion-text>
+              </ion-col>
+            </ion-row>
             <ion-row>
-              <ion-col class="bgGreenSoft">
-                <p>พื้นที่เสียหาย {{ fminput.la }} ไร่</p>
-                <p>คงเหลือพื้นที่ {{ fminput.arealeft | number: '1.1-2'}} ไร่</p>
-                <p>ตัดพันธุ์ {{ fminput.cst }} ตัน</p>
-                <p>สูญเสียจากตัด {{ fminput.lc }} ตัน</p>
+              <ion-col>
+                <ion-input type="number" [(ngModel)]="cpActivitydata.wastedSpaceRai_fm" formControlName="wastedSpaceRai"
+                  class="inputBGBW" label="พื้นที่เสียหาย(ไร่)" placeholder="เช่น 0.5"></ion-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-input type="number" [(ngModel)]="cpActivitydata.Cutseed_fm" formControlName="Cutseed"
+                  class="inputBGBW" label="ตัดพันธุ์(ตัน)" placeholder="เช่น 15"></ion-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-input type="number" [(ngModel)]="cpActivitydata.ton_lost_fm" formControlName="ton_lost"
+                  class="inputBGBW" label="สูญเสียจากตัด(ตัน)" placeholder="เช่น 5"></ion-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <div class="ion-text-center">
+                  <ion-text class="txtBolder txtLarge txtBlue">ท่านประเมิน
+                    <ion-text class="txtRed">ตัน {{ perTon }}</ion-text> /ไร่
+                  </ion-text>
+                  <ion-item>
+                    <ion-range style="margin-top: 20px;" class="inputBGBW" formControlName="ton" [min]="0" [max]="35"
+                      [pin]="true" [ticks]="true" [snaps]="true" [(ngModel)]="cpActivitydata.ton_last_fm"
+                      (ionChange)="newTon($event,frm_editcpact.value)">
+                    </ion-range>
+                  </ion-item>
+                  <ion-item class="ion-text-center">
+                    <ion-grid [fixed]="true">
+                      <ion-row>
+                        <ion-col class="bgGreenSoft">
+                          <p>พื้นที่เสียหาย {{ fminput.la }} ไร่</p>
+                          <p>คงเหลือพื้นที่ {{ fminput.arealeft | number: '1.1-2'}} ไร่</p>
+                          <p>ตัดพันธุ์ {{ fminput.cst }} ตัน</p>
+                          <p>สูญเสียจากตัด {{ fminput.lc }} ตัน</p>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+                  </ion-item>
+                  <ion-item class="txtBolder txtLarge ion-text-center paddingLR10 borderNonlineRedius" color="warning">
+                    <ion-label> คงเหลืออ้อย <ion-text class="txtRed"> {{ ton }} </ion-text> ตัน</ion-label>
+                  </ion-item>
+                </div>
               </ion-col>
             </ion-row>
           </ion-grid>
         </ion-item>
-        <ion-item class="txtBolder txtLarge ion-text-center paddingLR10 borderNonlineRedius" color="warning">
-          <ion-label> คงเหลืออ้อย <ion-text class="txtRed"> {{ ton }} </ion-text> ตัน</ion-label>
-        </ion-item>
-      </div> -->
 
-      <ion-grid style="margin-top: 10px;">
-        <ion-row class="ion-text-center">
-          <ion-col>
-            <ion-button class="divMg-5" shape="round" type="submit" [disabled]="!frm_editcpact.valid">
-              <ion-icon name="save-outline"></ion-icon>
-              ...บันทึกข้อมูล
-            </ion-button>
-            <ion-button class="divMg-5" (click)="closeCurrentPage()" shape="round" fill="outline" color="danger">
-              <ion-icon name="close-circle-outline"></ion-icon>
-              ปิด
-            </ion-button>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+        <ion-grid style="margin-top: 10px;">
+          <ion-row class="ion-text-center">
+            <ion-col>
+              <ion-button class="divMg-5" shape="round" type="submit" [disabled]="!frm_editcpact.valid">
+                <ion-icon name="save-outline"></ion-icon>
+                ...บันทึกข้อมูล
+              </ion-button>
+              <ion-button class="divMg-5" (click)="closeCurrentPage()" shape="round" fill="outline" color="danger">
+                <ion-icon name="close-circle-outline"></ion-icon>
+                ปิด
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+      </ion-list>
 
       <ion-input type="hidden" [(ngModel)]="itid" formControlName="itid"></ion-input>
       <ion-input type="hidden" [(ngModel)]="yearCr" formControlName="yearid"></ion-input>
