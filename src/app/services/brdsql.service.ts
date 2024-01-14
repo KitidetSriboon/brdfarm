@@ -131,23 +131,36 @@ export class BrdsqlService {
   }
 
   // บันทึก กิจกรรมแปลงของชาวไร่
-  updateFmActivity(f: any): Observable<any[]> {
+  updateFmActivity(f: any, frmType: string): Observable<any[]> {
     const d = new Date()
     let m = d.getMonth() + 1
-    console.log('month: ', m)
-    console.log('form in brdservice:', f)
-    // function pad(s) { return (s < 10) ? '0' + s : s; }
-    // let d = new Date();
-    // let newd = [pad(d.getMonth() + 1), pad(d.getDate()), d.getFullYear()].join('/')
-    const url = this.baseUrlUpdate
-      + "t=dbIntech.dbo.p_farmer&"
-      + "s=&"
-      + "w=itid='" + f.itid + "'"
-      //"https://asia-southeast2-brr-farmluck.cloudfunctions.net/app_smfbrr/push_p_farmer?itid="
-      + f.itid + "&year=" + f.yearid
-      + "&tonm" + m + "=" + f.ton + "&wastedSpaceRai="
-      + f.wastedSpaceRai + "&Cutseed=" + f.Cutseed + "&ton_lost=" + f.ton_lost + "&ton_last=" + m;
-    return this.http.get<any[]>(url)
+    // console.log('month: ', m)
+    // console.log('form in brdservice:', f)
+    let urlInsert = this.baseUrlInsert
+    let urlUpdate = this.baseUrlUpdate
+    // เชคว่าเป็นฟอร์มแบบ insert หรือ edit
+    switch (frmType) {
+      case 'edit':
+        urlUpdate = urlUpdate + "t=dbIntech.dbo.p_farmer&"
+          + "s=groundlevel='" + f.groundlevel + "',hardSoilBlast='" + f.hardSoilBlast
+          + "',seedclear='" + f.seedclear + "',groove=" + f.groove + ",naturalfertilizer='" + f.naturalfertilizer + "'&"
+          + "w=itid='" + f.itid + "'"
+        console.log('urlUpdate', urlUpdate)
+        return this.http.get<any[]>(urlUpdate)
+        break;
+      case 'insert':
+        urlInsert + "t=dbIntech.dbo.p_farmer&"
+          + "c=itid, year_id, landno, qtype, num_qcard, Requester, comment & "
+          + "v='" + f.itid + "', '" + f.year_id + "', '" + f.landno + "', '" + f.qtype + "', " + f.num_qcard
+          + ",'" + f.requester + "','" + f.comment + "'"
+        return this.http.get<any[]>(urlInsert)
+        break;
+      default:
+        let url = ""
+        return this.http.get<any[]>(url)
+        break;
+    }
+
   }
 
   // กิจกรรมแปลงตาม itid
@@ -201,6 +214,24 @@ export class BrdsqlService {
       + "ck_realty_debt?"
       + "year=" + yearTh
       + "&fmcode=" + fmcode
+    return this.http.get<any[]>(url)
+  }
+
+  // ปุ๋ยอินทรีย์
+  getOrganicType() {
+    const url = this.baseSelectUrl
+      + "s=id,descript&"
+      + "f=CPS6263.dbo.organic&"
+      + "w=descript <> '' order by id"
+    return this.http.get<any[]>(url)
+  }
+
+  //ปุ๋ยเคมี select * from CPS6263.dbo.chemical where isactive = 1 order by descript
+  getChemicalType() {
+    const url = this.baseSelectUrl
+      + "s=id,descript&"
+      + "f=CPS6263.dbo.chemical&"
+      + "w=isactive = 1 order by descript"
     return this.http.get<any[]>(url)
   }
 

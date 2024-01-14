@@ -16,10 +16,12 @@ import { yearCr, yearTh, yearLabel } from 'src/app/global-constants';
 })
 export class AddActivityPage implements OnInit {
 
-  formMethod = ""
+  formType = ""
   itid?: any;
   cpdata?: any = [];
   cpActivitydata?: any = [];
+  organicType?: any = [];
+  chemicalType?: any = [];
   frm_addcpact!: FormGroup;
   frm_editcpact!: FormGroup;
   frm_insert?: boolean
@@ -37,9 +39,11 @@ export class AddActivityPage implements OnInit {
   cl_groove = "warning"
   cl_NaturalFertilizer = "warning"
   cl_FertilizerRound1 = "warning"
+  cl_fertilizerRatio = "warning"
+  cl_fertilizerFormula = "warning"
   cl_pipeup = "warning"
   cl_GerminationPercent = "warning"
-  cl_ton = "warning"
+  cl_tonfm = "warning"
   //ตัวแปร สำหรับ binding ฟอร์มกับ field database
   groundlevel = ""
   tg_groundlevel: boolean = false; // Default value
@@ -48,6 +52,13 @@ export class AddActivityPage implements OnInit {
   seedclear = ""
   tg_seedclear: boolean = false; // Default value
   groove = 0
+  naturalfertilizer = ""
+  fertilizerRatio = 0
+  fertilizerFormula = ""
+  tg_pipeup: boolean = false; // Default value
+  pipeup = ""
+  germinationpercent = 0
+  tonfm = 0
   fminput = {
     "la": 0,
     "cst": 0,
@@ -75,20 +86,21 @@ export class AddActivityPage implements OnInit {
     cp_data = localStorage.getItem('cpfmdata')
     cp_data = JSON.parse(cp_data)
     cp_data = cp_data.filter((o: any) => o.itid === this.itid)
-    console.log('cpdata filter :', cp_data)
+    // console.log('cpdata filter :', cp_data)
     this.cpdata = cp_data[0];
     this.perTon = cp_data.ton_last_fm
 
     // เชคว่า เคยมีการบันทึกข้อมูลไว้แล้วหรือไม่จาก itid
     this.brdsql.cpActivityFm(this.itid).subscribe({
       next: (res: any) => {
-        console.log('res cpActivityFm ', res)
+        // console.log('res cpActivityFm ', res)
         if (res && res.recordset !== 0) {
           this.frm_edit = true
+          this.formType = 'edit'
           console.log('frm_edit', this.frm_edit)
           this.cpActivitydata = res.recordset[0]
           this.ck_fmacOK(this.cpActivitydata);
-          console.log('cpActivityFm ', this.cpActivitydata)
+          // console.log('cpActivityFm ', this.cpActivitydata)
 
           this.frm_editcpact = fb.group({
             itid: [this.cpActivitydata.itid,],
@@ -97,7 +109,9 @@ export class AddActivityPage implements OnInit {
             hardSoilBlast: [this.cpActivitydata.hardSoilBlast],  // การระเบิดดาน
             seedclear: [this.cpActivitydata.seedclear],  // การคัดพันธุ์อ้อย สะอาด
             groove: [this.cpActivitydata.groove,],  // ระยะรอง ซม.
-            // NaturalFertilizer: [this.cpActivitydata.NaturalFertilizer,],  // ประเภทปุ๋ยอินทรีย์ที่ใส่
+            naturalfertilizer: [this.cpActivitydata.NaturalFertilizer,],  // ประเภทปุ๋ยอินทรีย์ที่ใส่
+            fertilizerRatio: [this.cpActivitydata.fertilizerRatio,],  // ประเภทเคมีที่ใส่
+            fertilizerFormula: [this.cpActivitydata.fertilizerFormula,],  // อัตราการใส่ปุ๋ยเคมีประเภทเคมีที่ใส่
             // ton: [this.cpActivitydata.ton_last_fm, [Validators.required, Validators.min(0), Validators.max(35)]],  // ตันประเมิน
             // wastedSpaceRai: [this.cpActivitydata.wastedSpaceRai,],  // พท.สูญเสียของแปลง (ไร่)
             // Cutseed: [this.cpActivitydata.Cutseed,],  // ตันพันธุ์
@@ -106,6 +120,7 @@ export class AddActivityPage implements OnInit {
 
         } else {
           this.frm_insert = true;
+          this.formType = 'insert'
           console.log('frm_insert', this.frm_insert)
           let cp_data = this.cpdata
           this.frm_addcpact = fb.group({
@@ -115,7 +130,7 @@ export class AddActivityPage implements OnInit {
             hardSoilBlast: [''],  // การระเบิดดาน
             seedclear: [''],  // การคัดพันธุ์อ้อย สะอาด
             groove: [0, [Validators.min(0), Validators.max(300)]],  // ระยะรอง ซม.
-            // NaturalFertilizer: ['',],  // ประเภทปุ๋ยอินทรีย์ที่ใส่
+            // naturalfertilizer: ['',],  // ประเภทปุ๋ยอินทรีย์ที่ใส่
             // ton: [0, [Validators.required, Validators.min(0), Validators.max(35)]],  // ตันประเมิน
             // wastedSpaceRai: [0,],  // พท.สูญเสียของแปลง (ไร่)
             // Cutseed: [0,],  // ตันพันธุ์
@@ -128,22 +143,69 @@ export class AddActivityPage implements OnInit {
   }
 
   ngOnInit() {
+    this.getOrgaincType()
+    this.getChemicalType()
+  }
+
+  // ปุ๋ยอินทรีย์สำหรับ select naturalfertilizer
+  async getOrgaincType() {
+    // console.log('getOrgaincType')
+    let ckdata = localStorage.getItem('organic')
+    if (ckdata) {
+      ckdata = JSON.parse(ckdata)
+      this.organicType = ckdata
+    } else {
+      let x: any;
+      await this.brdsql.getOrganicType().subscribe({
+        next: (res: any) => {
+          if (res) {
+            x = res.recordset
+            x = JSON.stringify(x)
+            localStorage.setItem('organic', x)
+          }
+        }
+      })
+    }
+  }
+
+  // ปุ๋ยเคมี select naturalfertilizer
+  async getChemicalType() {
+    // console.log('getOrgaincType')
+    let ckdata = localStorage.getItem('chemical')
+    if (ckdata) {
+      ckdata = JSON.parse(ckdata)
+      this.chemicalType = ckdata
+      console.log('chemicalType', this.chemicalType)
+    } else {
+      let x: any;
+      await this.brdsql.getChemicalType().subscribe({
+        next: (res: any) => {
+          if (res) {
+            x = res.recordset
+            x = JSON.stringify(x)
+            localStorage.setItem('chemical', x)
+            this.chemicalType = x
+            console.log('chemicalType', this.chemicalType)
+          }
+        }
+      })
+    }
   }
 
   // ปรับสีกิจกรรมทำแล้ว สีเขียว
   ck_fmacOK(data: any) {
-    let x = this.cpActivitydata
-    if (data.groundlevel == 'Y') {
+    let x = data
+    if (data.groundlevel == true) {
       this.groundlevel = x.groundlevel
       this.cl_groundlevel = 'success'
       this.tg_groundlevel = true
     }
-    if (data.hardSoilBlast == 'Y') {
+    if (data.hardSoilBlast == true) {
       this.hardSoilBlast = x.hardSoilBlast
       this.cl_hardSoilBlast = 'success'
       this.tg_hardSoilBlast = true;
     }
-    if (data.seedclear == 'Y') {
+    if (data.seedclear == true) {
       this.seedclear = x.seedclear
       this.cl_seedclear = 'success'
       this.tg_seedclear = true;
@@ -151,7 +213,26 @@ export class AddActivityPage implements OnInit {
     if (data.groove >= 140) {
       this.groove = x.groove
       this.cl_groove = 'success'
-      console.log('groove', this.groove)
+    } else {
+      this.groove = x.groove
+    }
+    if (data.NaturalFertilizer == 0 || data.NaturalFertilizer == null) {
+      this.naturalfertilizer = x.NaturalFertilizer
+    } else {
+      this.naturalfertilizer = x.NaturalFertilizer
+      this.cl_NaturalFertilizer = 'success'
+    }
+    if (data.fertilizerRatio >= 100) {
+      this.fertilizerRatio = x.fertilizerRatio
+      this.cl_fertilizerRatio = 'success'
+    } else {
+      this.fertilizerRatio = x.fertilizerRatio
+    }
+    if (data.fertilizerFormula == '0' || data.fertilizerFormula == null) {
+      this.fertilizerFormula = x.fertilizerFormula
+      this.cl_fertilizerRatio = 'success'
+    } else {
+      this.fertilizerFormula = x.fertilizerFormula
     }
   }
 
@@ -164,12 +245,12 @@ export class AddActivityPage implements OnInit {
       case true:
         this.cl_groundlevel = "success"
         this.tg_groundlevel = true
-        this.groundlevel = "Y"
+        this.groundlevel = "true"
         break;
       case false:
         this.cl_groundlevel = "warning"
         this.tg_groundlevel = false
-        this.groundlevel = "N"
+        this.groundlevel = "false"
         break;
       default:
         this.cl_groundlevel = "warning"
@@ -186,12 +267,15 @@ export class AddActivityPage implements OnInit {
     switch (x) {
       case true:
         this.cl_hardSoilBlast = "success"
+        this.hardSoilBlast = "true"
         break;
       case false:
         this.cl_hardSoilBlast = "warning"
+        this.hardSoilBlast = "false"
         break;
       default:
         this.cl_hardSoilBlast = "warning"
+        this.hardSoilBlast = ''
         break;
     }
   }
@@ -203,12 +287,15 @@ export class AddActivityPage implements OnInit {
     switch (x) {
       case true:
         this.cl_seedclear = "success"
+        this.seedclear = "true"
         break;
       case false:
         this.cl_seedclear = "warning"
+        this.seedclear = "false"
         break;
       default:
         this.cl_seedclear = "warning"
+        this.seedclear = ""
         break;
     }
   }
@@ -226,6 +313,61 @@ export class AddActivityPage implements OnInit {
         break;
     }
   }
+
+  // การใส่ปุ๋ยอินทรีย์
+  ck_NaturalFertilizer(e: any) {
+    let x = e.detail.value
+    x = x.toString()
+    console.log('การใส่ปุ๋ยอินทรีย์', x)
+    switch (x) {
+      case '0':
+        this.cl_NaturalFertilizer = "warning"
+        break;
+      case '' || null:
+        this.cl_NaturalFertilizer = "warning"
+        break;
+      default:
+        this.cl_NaturalFertilizer = "success"
+        break;
+    }
+  }
+
+  // อัตราการใส่ปุ๋ยเคมี 
+  ck_chemical(e: any) {
+    let x = e.detail.value
+    x = parseInt(x)
+    console.log('อัตรการใส่ปุ๋ยเคมี', x)
+    switch (true) {
+      case (x >= 100):
+        this.cl_fertilizerRatio = "success"
+        break;
+      // case (x == 0):
+      //   this.cl_NaturalFertilizer = "warning"
+      //   break;
+      default:
+        this.cl_fertilizerRatio = "warning"
+        break;
+    }
+  }
+
+  // สูตร ปุ๋ยเคมี ที่ใส่
+  ck_chemicalFormula(e: any) {
+    let x = e.detail.value
+    x = x.toString()
+    console.log('สูตรปุ๋ยเคมี ที่ใส่', x)
+    switch (x) {
+      case '0':
+        this.cl_fertilizerFormula = "warning"
+        break;
+      case '' || null:
+        this.cl_fertilizerFormula = "warning"
+        break;
+      default:
+        this.cl_fertilizerFormula = "success"
+        break;
+    }
+  }
+
 
   // คำนวณปริมาณตัน
   async newTon(event: any, f: any) {
@@ -284,22 +426,22 @@ export class AddActivityPage implements OnInit {
     console.log('form to brdservice :', f)
 
     // updat firebase database
-    this.firebase.updateFmAS(this.yearCr, this.itid, f)
-      .then(res => { })
-      .finally(() => { })
-      .catch(e => {
-        console.log('error ', e)
-      })
+    // this.firebase.updateFmAS(this.yearCr, this.itid, f)
+    //   .then(res => { })
+    //   .finally(() => { })
+    //   .catch(e => {
+    //     console.log('error ', e)
+    //   })
 
     // update sql server
-    await this.brdsql.updateFmActivity(f).subscribe({
+    await this.brdsql.updateFmActivity(f, this.formType).subscribe({
       next: (res: any) => {
         console.log('res :', res)
         if (res.rowsAffected.length !== 1) {
           this.presentAlert('!!ผิดพลาด...', '', 'ข้อมูลไม่ถูกบันทึก กรุณาลองอีกครั้ง')
         } else {
           this.presentAlert('(^-^)...สำเร็จ', '', '...บันทึกข้อมูลของท่านแล้ว ขอขอบพระคุณอย่างสูง')
-          this.navCtrl.back();
+          // this.navCtrl.back();
         }
       }, error(err) { }
       , complete() {
