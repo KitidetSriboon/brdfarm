@@ -146,8 +146,8 @@ export class BrdsqlService {
           + "s=groundlevel='" + f.groundlevel + "',hardSoilBlast='" + f.hardSoilBlast
           + "',seedclear='" + f.seedclear + "',groove=" + f.groove + ",naturalfertilizer='" + f.naturalfertilizer
           + "',fertilizerRatio=" + f.fertilizerRatio + ",fertilizerFormula='" + f.fertilizerFormula
-          + "',pipeup='" + f.pipeup + "',GerminationPercent=" + f.germinationPercent
-          + ",ton=" + f.ton + ",tonm" + m + "=" + f.ton + ",ton_last='" + m + "',update_date='" + d + "'&"
+          + "',pipeup='" + f.pipeup + "',GerminationPercent=" + f.germinationpercent + ",GerminationPercent_date=getdate()"
+          + ",ton=" + f.ton + ",tonm" + m + "=" + f.ton + ",ton_last='" + m + "',update_date=getdate()&"
           + "w=itid='" + f.itid + "'"
         console.log('urlUpdate', urlUpdate)
         return this.http.get<any[]>(urlUpdate)

@@ -114,7 +114,7 @@ export class AddActivityPage implements OnInit {
             fertilizerRatio: [this.cpActivitydata.fertilizerRatio,],  // อัตราปุ๋ยเคมีที่ใส่
             fertilizerFormula: [this.cpActivitydata.fertilizerFormula,],  // สูตรปุ๋ยเคมี
             pipeup: [this.cpActivitydata.pipeup,],  // การพูนโคน
-            germinationPercent: [this.cpActivitydata.pipeup,],  // %การงอก
+            germinationpercent: [this.cpActivitydata.GerminationPercent,],  // %การงอก
             ton: [this.cpActivitydata.ton_In_Month, [Validators.required, Validators.min(0), Validators.max(35)]],  // ตันประเมิน
             // wastedSpaceRai: [this.cpActivitydata.wastedSpaceRai,],  // พท.สูญเสียของแปลง (ไร่)
             // Cutseed: [this.cpActivitydata.Cutseed,],  // ตันพันธุ์
@@ -246,7 +246,7 @@ export class AddActivityPage implements OnInit {
     } else {
       this.pipeup = x.pipeup
     }
-    if (data.GerminationPercent > 90) {
+    if (data.GerminationPercent >= 90) {
       this.germinationpercent = x.GerminationPercent
       this.cl_GerminationPercent = 'success'
     } else {
@@ -416,9 +416,11 @@ export class AddActivityPage implements OnInit {
   ck_GerminationPercent(e: any) {
     let x = e.detail.value
     x = parseInt(x)
+    console.log('ck_GerminationPercent', x)
     switch (true) {
       case (x >= 90):
         this.cl_GerminationPercent = "success"
+        this.germinationpercent = x
         break;
       // case (x):
       //   this.cl_GerminationPercent = "warning"
