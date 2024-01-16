@@ -52,7 +52,7 @@
 }
 
 .gfPattata {
-    font-family: 'Pattata', cursive;
+    font-family: 'Pattata', cursive !important;
 }
 
 .gfMaitree {
@@ -68,7 +68,7 @@
 }
 
 .gfSriracha {
-    font-family: 'Sriracha', cursive;
+    font-family: 'Sriracha', cursive !important;
 }
 
 * {
@@ -752,8 +752,9 @@ button.alert-button.alert-button-confirm {
 .inputBGBW:hover {
     background-color: black;
     color: rgb(2, 255, 129);
-    font-weight: bolder;
+    // font-weight: bolder;
     border-radius: 0px 75px 75px 0px;
+    // margin-left: 5px;
 }
 
 // ++++++++++++++++++++ div element +++++++++++++++++++

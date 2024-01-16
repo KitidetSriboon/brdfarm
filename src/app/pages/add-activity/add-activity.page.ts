@@ -59,6 +59,9 @@ export class AddActivityPage implements OnInit {
   tg_pipeup: boolean = false; // Default value
   pipeup = ""
   germinationpercent = 0
+  wastedSpaceRai = 0
+  Cutseed = 0
+  ton_lost = 0
   tonfm = 0
   fminput = {
     "la": 0,
@@ -116,10 +119,12 @@ export class AddActivityPage implements OnInit {
             pipeup: [this.cpActivitydata.pipeup,],  // การพูนโคน
             germinationpercent: [this.cpActivitydata.GerminationPercent,],  // %การงอก
             ton: [this.cpActivitydata.ton_In_Month, [Validators.required, Validators.min(0), Validators.max(35)]],  // ตันประเมิน
-            // wastedSpaceRai: [this.cpActivitydata.wastedSpaceRai,],  // พท.สูญเสียของแปลง (ไร่)
-            // Cutseed: [this.cpActivitydata.Cutseed,],  // ตันพันธุ์
-            // ton_lost: [this.cpActivitydata.ton_lost,],  // ตันสูญเสียจากการตัด
+            wastedSpaceRai: [this.cpActivitydata.wastedSpaceRai,],  // พท.สูญเสียของแปลง (ไร่)
+            Cutseed: [this.cpActivitydata.Cutseed,],  // ตันพันธุ์
+            ton_lost: [this.cpActivitydata.ton_lost,],  // ตันสูญเสียจากการตัด
           })
+
+          // console.log('form value on load ', this.frm_editcpact.value)
 
         } else {
           this.frm_insert = true;
@@ -197,8 +202,8 @@ export class AddActivityPage implements OnInit {
 
   // ปรับสีกิจกรรมทำแล้ว สีเขียว
   ck_fmacOK(data: any) {
-    console.log('ck_fmacOK')
     let x = data
+    // console.log('this.wastedSpaceRai', this.wastedSpaceRai)
     if (data.groundlevel == true) {
       this.groundlevel = x.groundlevel
       this.cl_groundlevel = 'success'
@@ -214,7 +219,7 @@ export class AddActivityPage implements OnInit {
       this.cl_seedclear = 'success'
       this.tg_seedclear = true;
     }
-    if (data.groove >= 140) {
+    if (data.groove >= 160) {
       this.groove = x.groove
       this.cl_groove = 'success'
     } else {
@@ -227,7 +232,7 @@ export class AddActivityPage implements OnInit {
       this.cl_NaturalFertilizer = 'success'
     }
     if (data.fertilizerRatio >= 100) {
-      console.log('fertilizerRatio >=100')
+      // console.log('fertilizerRatio >=100')
       this.fertilizerRatio = x.fertilizerRatio
       this.cl_fertilizerRatio = 'success'
     } else {
@@ -252,14 +257,30 @@ export class AddActivityPage implements OnInit {
     } else {
       this.germinationpercent = x.GerminationPercent
     }
-    if (data.ton_last_fm > 0) {
-      this.tonfm = x.ton_last_fm
-      this.cl_tonfm = 'success'
-    } else {
-      this.tonfm = x.ton_last_fm
-    } 0
+    // อ้อยปลูกใหม่ 14 อ้อยตอ 10
+    let ctype: string = data.canetype.trim()
+    ctype = ctype.substring(0, 2)
+    switch (true) {
+      case (ctype == 'ER' && data.ton_last_fm >= 14):
+        this.cl_tonfm = 'success'
+        break;
+      case (ctype == 'SR' && data.ton_last_fm >= 14):
+        this.cl_tonfm = 'success'
+        break;
+      case (ctype == 'ST' && data.ton_last_fm >= 10):
+        this.cl_tonfm = 'success'
+        break;
+      default:
+        this.tonfm = x.ton_last_fm
+        break;
+    }
+    // if (data.ton_last_fm > 0) {
+    //   this.tonfm = x.ton_last_fm
+    //   this.cl_tonfm = 'success'
+    // } else {
+    //   this.tonfm = x.ton_last_fm
+    // }
   }
-
 
   // การปรับพื้นที่แปลง
   ck_groundlevel(e: any) {
@@ -324,12 +345,12 @@ export class AddActivityPage implements OnInit {
     }
   }
 
-  // ระยะร่อง 140 ขึ้นไป
+  // ระยะร่อง 160 ขึ้นไป
   ck_groove(e: any) {
     let x: number = e.detail.value
     // console.log('groove ', x);
     switch (true) {
-      case (x >= 140):
+      case (x >= 160):
         this.cl_groove = "success"
         break;
       default:
@@ -434,7 +455,14 @@ export class AddActivityPage implements OnInit {
 
   // คำนวณปริมาณตัน
   async newTon(event: any, f: any) {
+    // let _wastedSpaceRai: number | any;
+    // let _Cutseed: number | any;
+    // let _ton_lost: number | any;
+    // if (f.wastedSpaceRai == null || f.wastedSpaceRai == undefined) { _wastedSpaceRai = 0 }
+    // if (f.Cutseed == null || f.Cutseed == undefined) { _Cutseed = 0 }
+    // if (f.ton_lost == null || f.ton_lost == undefined) { _ton_lost = 0 }
     this.perTon = event.target.value;
+    // console.log('ประเมิน', this.perTon)
     this.fminput.la = parseFloat(f.wastedSpaceRai)
     this.fminput.cst = parseFloat(f.Cutseed)
     this.fminput.lc = parseFloat(f.ton_lost)
@@ -447,23 +475,27 @@ export class AddActivityPage implements OnInit {
     this.ton = toned.toFixed(2);
     this.fminput.tonleft = toned
     await Haptics.impact({ style: ImpactStyle.Light });
-    this.ck_ton(this.perTon)
+    this.ck_ton(this.perTon,)
   }
 
   // ประเมินอ้อย ควรจะมากกว่า 10
   ck_ton(tonfm: any) {
     tonfm = parseInt(tonfm)
-    console.log('ประเมิน ', tonfm)
+    // console.log('ประเมิน ', tonfm)
+    let ctype: string = this.cpActivitydata.canetype.trim()
+    ctype = ctype.substring(0, 2)
     switch (true) {
-      case (tonfm >= 10):
-        this.cl_tonfm = "success"
+      case (ctype == 'ER' && tonfm >= 14):
+        this.cl_tonfm = 'success'
         break;
-      // case (x):
-      //   this.cl_GerminationPercent = "warning"
-      //   this.pipeup = "false"
-      //   break;
+      case (ctype == 'SR' && tonfm >= 14):
+        this.cl_tonfm = 'success'
+        break;
+      case (ctype == 'ST' && tonfm >= 10):
+        this.cl_tonfm = 'success'
+        break;
       default:
-        this.cl_tonfm = "warning"
+        this.cl_tonfm = 'warning'
         break;
     }
   }

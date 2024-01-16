@@ -98,22 +98,16 @@
             </ng-template>
           </ion-popover>
         </ion-item>
-
-
-
-        <ion-item class="ion-text-center">
-          <ion-input type="number" [(ngModel)]="cpdata.wastedSpaceRai_fm" formControlName="wastedSpaceRai"
-            class="inputBGBW" label="พื้นที่เสียหาย(ไร่)" placeholder="เช่น 0.5"></ion-input>
+        <!-- <ion-item class="ion-text-center">
+          <ion-input type="number" formControlName="wastedSpaceRai" class="inputBGBW" label="พื้นที่เสียหาย(ไร่)">
+          </ion-input>
         </ion-item>
         <ion-item class="ion-text-center">
-          <ion-input type="number" [(ngModel)]="cpdata.Cutseed_fm" formControlName="Cutseed" class="inputBGBW"
-            label="ตัดพันธุ์(ตัน)" placeholder="เช่น 15"></ion-input>
+          <ion-input type="number" formControlName="Cutseed" class="inputBGBW" label="ตัดพันธุ์(ตัน)"></ion-input>
         </ion-item>
         <ion-item class="ion-text-center">
-          <!-- <ion-input label="Outline input" label-placement="floating" fill="outline" placeholder="Enter text"></ion-input> -->
-          <ion-input type="number" [(ngModel)]="cpdata.ton_lost_fm" formControlName="ton_lost" class="inputBGBW"
-            label="สูญเสียจากตัด(ตัน)" placeholder="เช่น 5"></ion-input>
-        </ion-item>
+          <ion-input type="number" formControlName="ton_lost" class="inputBGBW" label="สูญเสียจากตัด(ตัน)"></ion-input>
+        </ion-item> -->
       </ion-list>
 
       <div class="ion-text-center">
@@ -129,17 +123,21 @@
         <ion-item class="ion-text-center">
           <ion-grid [fixed]="true">
             <ion-row>
-              <ion-col class="bgGreenSoft">
+              <ion-col>
                 <p>พื้นที่เสียหาย {{ fminput.la }} ไร่</p>
                 <p>คงเหลือพื้นที่ {{ fminput.arealeft | number: '1.1-2'}} ไร่</p>
                 <p>ตัดพันธุ์ {{ fminput.cst }} ตัน</p>
                 <p>สูญเสียจากตัด {{ fminput.lc }} ตัน</p>
               </ion-col>
             </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-item class="txtBolder txtLarge ion-text-center paddingLR10 borderNonlineRedius" color="warning">
+                  <ion-label> คงเหลืออ้อย <ion-text class="txtRed"> {{ ton }} </ion-text> ตัน</ion-label>
+                </ion-item>
+              </ion-col>
+            </ion-row>
           </ion-grid>
-        </ion-item>
-        <ion-item class="txtBolder txtLarge ion-text-center paddingLR10 borderNonlineRedius" color="warning">
-          <ion-label> คงเหลืออ้อย <ion-text class="txtRed"> {{ ton }} </ion-text> ตัน</ion-label>
         </ion-item>
       </div>
 
@@ -331,19 +329,19 @@
             </ion-row>
             <ion-row>
               <ion-col>
-                <ion-input type="number" [(ngModel)]="cpActivitydata.wastedSpaceRai_fm" formControlName="wastedSpaceRai"
+                <ion-input type="number" [(ngModel)]="cpActivitydata.wastedSpaceRai" formControlName="wastedSpaceRai"
                   class="inputBGBW" label="พื้นที่เสียหาย(ไร่)" placeholder="เช่น 0.5"></ion-input>
               </ion-col>
             </ion-row>
             <ion-row>
               <ion-col>
-                <ion-input type="number" [(ngModel)]="cpActivitydata.Cutseed_fm" formControlName="Cutseed"
+                <ion-input type="number" [(ngModel)]="cpActivitydata.Cutseed" formControlName="Cutseed"
                   class="inputBGBW" label="ตัดพันธุ์(ตัน)" placeholder="เช่น 15"></ion-input>
               </ion-col>
             </ion-row>
             <ion-row>
               <ion-col>
-                <ion-input type="number" [(ngModel)]="cpActivitydata.ton_lost_fm" formControlName="ton_lost"
+                <ion-input type="number" [(ngModel)]="cpActivitydata.ton_lost" formControlName="ton_lost"
                   class="inputBGBW" label="สูญเสียจากตัด(ตัน)" placeholder="เช่น 5"></ion-input>
               </ion-col>
             </ion-row>
@@ -360,9 +358,9 @@
                     </ion-range>
                   </ion-item>
                   <ion-item class="ion-text-center">
-                    <ion-grid [fixed]="true">
+                    <ion-grid [fixed]="true" style="margin-bottom: 10px;">
                       <ion-row>
-                        <ion-col class="bgGreenSoft">
+                        <ion-col class="">
                           <p>พื้นที่เสียหาย {{ fminput.la }} ไร่</p>
                           <p>คงเหลือพื้นที่ {{ fminput.arealeft | number: '1.1-2'}} ไร่</p>
                           <p>ตัดพันธุ์ {{ fminput.cst }} ตัน</p>
@@ -371,10 +369,15 @@
                       </ion-row>
                     </ion-grid>
                   </ion-item>
-                  <ion-item class="txtBolder txtLarge ion-text-center paddingLR10 borderNonlineRedius" color="warning">
-                    <ion-label> คงเหลืออ้อย <ion-text class="txtRed"> {{ ton }} </ion-text> ตัน</ion-label>
-                  </ion-item>
                 </div>
+              </ion-col>
+            </ion-row>
+            <ion-row class="divMg-5">
+              <ion-col>
+                <ion-item class="txtBolder txtLarge ion-text-center paddingLR10 borderNonlineRedius" color="warning">
+                  <ion-label> คงเหลืออ้อย <ion-text class="txtRed"> {{ ton }} </ion-text>
+                    ตัน</ion-label>
+                </ion-item>
               </ion-col>
             </ion-row>
           </ion-grid>

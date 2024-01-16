@@ -167,12 +167,21 @@ export class BrdsqlService {
 
   }
 
-  // กิจกรรมแปลงตาม itid
+  // กิจกรรมแปลงของ นสส.ตาม itid
   getActivityData(year: any, itid: string): Observable<any[]> {
     const url = this.baseSelectUrl
       + "s=*"
       + "&f=cps6263.dbo.v_cp_data"
       + "&w=year='" + year + "' and itid='" + itid + "'";
+    return this.http.get<any[]>(url);
+  }
+
+  // กิจกรรมแปลงของ ชาวไร่ ตาม itid
+  getActivityDataFm(itid: string): Observable<any[]> {
+    const url = this.baseSelectUrl
+      + "s=*"
+      + "&f=dbIntech.dbo.v_p_farmer"
+      + "&w=itid='" + itid + "'";
     return this.http.get<any[]>(url);
   }
 
