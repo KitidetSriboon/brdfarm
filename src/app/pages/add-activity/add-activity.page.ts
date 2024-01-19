@@ -104,7 +104,7 @@ export class AddActivityPage implements OnInit {
           console.log('frm_edit', this.frm_edit)
           this.cpActivitydata = res.recordset[0]
           this.ck_fmacOK(this.cpActivitydata);
-          // console.log('cpActivityFm ', this.cpActivitydata)
+          console.log('cpActivityFm ', this.cpActivitydata)
 
           this.frm_editcpact = fb.group({
             itid: [this.cpActivitydata.itid,],
@@ -248,6 +248,7 @@ export class AddActivityPage implements OnInit {
     if (data.pipeup == true) {
       this.pipeup = x.pipeup
       this.cl_pipeup = 'success'
+      this.tg_pipeup = true;
     } else {
       this.pipeup = x.pipeup
     }

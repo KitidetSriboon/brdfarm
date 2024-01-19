@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { GlobalConstants } from '../global-constants';
+import { GlobalConstants, yearCr } from '../global-constants';
 import { environment } from 'src/environments/environment';
 import { GoogleMap } from '@capacitor/google-maps';
 import { Loader } from '@googlemaps/js-api-loader';
@@ -71,10 +71,10 @@ export class Tab2Page {
 
   ionViewWillEnter() {
     console.log('tab2 ionViewWillEnter:');
-    let x = this.mapFbFm
-    if (x.legth == 0) {
-      this.getUserLocation();
-    }
+    // let x = this.mapFbFm
+    // if (x.legth == 0) {
+    //   this.getUserLocation();
+    // }
   }
 
   ionViewDidEnter() {
@@ -88,6 +88,38 @@ export class Tab2Page {
 
   ngAfterViewInit(): void {
     // console.log('tab2 ngAfterViewInit:')
+  }
+
+  async loadNewFmdata() {
+
+    this.fmdata = []
+    this.cpFmdata = []
+    this.mapFbFm = []
+
+    // console.log('tab2 LoadFmdata:')
+    let yx = localStorage.getItem('yearID')
+    if (yx) {
+      yx = JSON.parse(yx)
+      this.yeardata = yx;
+    }
+    let fm_data: any = localStorage.getItem('fmdata')
+    fm_data = JSON.parse(fm_data)
+    let cp_data: any = localStorage.getItem('cpfmdata')
+    cp_data = JSON.parse(cp_data)
+    this.cpFmdata = cp_data;  // ข้อมูลแปลงอ้อยจาก brdSQL
+    cp_data = cp_data[0].year  // ex 2324
+    let x: any = this.yeardata.filter((el: any) => el.yearCr == cp_data)
+    // console.log('year filter ', x)
+    if (x.length !== 0) { this.yearDesc = x[0].yearDesc };  // ex ปี 66/67
+    let map_data: any = localStorage.getItem('mapfm')
+    map_data = JSON.parse(map_data)
+    this.fmdata = fm_data;
+    this.mapFbFm = map_data;
+    this.getUserLocation();
+
+    setTimeout(() => {
+      this.draw();
+    }, 500)
   }
 
   selectyear(e: any) {
@@ -162,36 +194,6 @@ export class Tab2Page {
     // Open the menu by side
     this.menuCtrl.enable(true, 'third-menu');
     this.menuCtrl.open('third-menu');
-  }
-
-  async loadNewFmdata() {
-
-    this.fmdata = []
-    this.cpFmdata = []
-    this.mapFbFm = []
-
-    // console.log('tab2 LoadFmdata:')
-    let yx = localStorage.getItem('yearID')
-    if (yx) {
-      yx = JSON.parse(yx)
-      this.yeardata = yx;
-    }
-    let fm_data: any = localStorage.getItem('fmdata')
-    fm_data = JSON.parse(fm_data)
-    let cp_data: any = localStorage.getItem('cpfmdata')
-    cp_data = JSON.parse(cp_data)
-    let map_data: any = localStorage.getItem('mapfm')
-    map_data = JSON.parse(map_data)
-    this.fmdata = fm_data;
-    this.cpFmdata = cp_data;
-    this.mapFbFm = map_data;
-
-    setTimeout(() => {
-      this.getUserLocation();
-      setTimeout(() => {
-        this.draw();
-      }, 1000)
-    }, 1000);
   }
 
   segmentChanged(event: any) {
@@ -342,26 +344,26 @@ export class Tab2Page {
           bermudaTriangle.setMap(map);
 
           let contentString = ``;
-          for (let j = 0; j < cpfm.length; j++) {
-            if (cpfm[j].intlandno === cpfm[i].landno) {
-              let landname = '';
-              if (cpfm[j].landname_fm !== null) {
-                landname = cpfm[j].landname_fm;
-              } else {
-                landname = 'ว่าง';
-              }
-              contentString = `
-            <h3 style="color: #000;">ข้อมูลแปลง</h3>
-            <h6 style="color: #000;">ชื่อแปลง : ${landname}</h6>
-            <h6 style="color: #000;">หมายเลขแปลง : </h6>
-            <h6 style="color: #000;"> ${cpfm[j].intlandno}</h6>
-            <h6 style="color: #000;">ประเภทอ้อย : ${cpfm[j].CaneTypeName}</h6>
-            <h6 style="color: #000;">อายุอ้อย : ${cpfm[j].caneage} วัน</h6>
-            <h6 style="color: #000;">พื้นที่แปลง : ${cpfm[j].landvalue} ไร่</h6>
-            <h6 style="color: #000;">โซน : ${cpfm[j].supzone}</h6>
-          `;
-            }
-          }
+          // for (let j = 0; j < cpfm.length; j++) {
+          //   if (cpfm[j].intlandno === cpfm[i].landno) {
+          //     let landname = '';
+          //     if (cpfm[j].landname_fm !== null) {
+          //       landname = cpfm[j].landname_fm;
+          //     } else {
+          //       landname = 'ว่าง';
+          //     }
+          //     contentString = `
+          //   <h3 style="color: #000;">ข้อมูลแปลง</h3>
+          //   <h6 style="color: #000;">ชื่อแปลง : ${landname}</h6>
+          //   <h6 style="color: #000;">หมายเลขแปลง : </h6>
+          //   <h6 style="color: #000;"> ${cpfm[j].intlandno}</h6>
+          //   <h6 style="color: #000;">ประเภทอ้อย : ${cpfm[j].CaneTypeName}</h6>
+          //   <h6 style="color: #000;">อายุอ้อย : ${cpfm[j].caneage} วัน</h6>
+          //   <h6 style="color: #000;">พื้นที่แปลง : ${cpfm[j].landvalue} ไร่</h6>
+          //   <h6 style="color: #000;">โซน : ${cpfm[j].supzone}</h6>
+          // `;
+          //   }
+          // }
 
           const infowindow = new google.maps.InfoWindow({
             content: contentString,
@@ -378,19 +380,20 @@ export class Tab2Page {
 
   async presentActionSheet(keypara: string) {
     // console.log('key :', keypara)
-    let mapsql: any = []
+    let mapsql: any;
     mapsql = this.cpFmdata
-    mapsql = mapsql.filter((o: any) => o.itid === keypara)
+    mapsql = mapsql.filter((o: any) => o.itid == keypara)
     // console.log('mapsql filter :', mapsql)
     mapsql = mapsql[0]
 
     const actionSheet = await this.acsCtrl.create({
       header: `แปลง ${mapsql.CaneTypeName} พท.${mapsql.landvalue.toFixed(2)} ไร่`,
       subHeader: `กลุ่ม ${mapsql.groupCode} ท่านประเมิน ${mapsql.ton_last_fm} ตัน/ไร่ `,
-      cssClass: 'acs-orange',
+      cssClass: 'acs-green',
+      animated: true,
       buttons: [{
         text: 'บันทึกกิจกรรมแปลง',
-        icon: 'calendar-clear-outline',
+        icon: 'create-outline',
         handler: () => {
           this.openAddActivityPage(mapsql.itid)
         }

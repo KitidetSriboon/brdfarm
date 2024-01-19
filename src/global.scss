@@ -443,13 +443,16 @@ ion-tab-bar {
 // ++++++++++++++++ Action sheet ++++++++++++++++++++++++++
 /* Note: These styles should be located in your global stylesheet */
 ion-action-sheet.acs-orange .action-sheet-group {
-    background: #f58840;
+    background: #fbad76;
+    // border-radius: 10px 10px 10px 10px;
 }
 
 ion-action-sheet.acs-orange .action-sheet-title {
-    color: #000000;
-    font-weight: bold;
-    background-color: #797979;
+    color: #ffffff;
+    // font-weight: bold;
+    background-color: #929393;
+    border-radius: 10px 10px 10px 10px;
+    // padding-bottom: 10px;
 }
 
 ion-action-sheet.acs-orange .action-sheet-cancel::after {
@@ -458,6 +461,62 @@ ion-action-sheet.acs-orange .action-sheet-cancel::after {
 
 ion-action-sheet.acs-orange .action-sheet-button,
 ion-action-sheet.acs-orange .action-sheet-button.ion-focused {
+    color: #000000;
+}
+
+ion-action-sheet.acs-blue .action-sheet-group {
+    background: #aff0fc;
+    // border-radius: 10px 10px 10px 10px;
+}
+
+ion-action-sheet.acs-blue .action-sheet-title {
+    color: #ffffff;
+    // font-weight: bold;
+    background-color: #197095;
+    border-radius: 10px 10px 10px 10px;
+    // padding-bottom: 10px;
+}
+
+ion-action-sheet.acs-green .action-sheet-group {
+    // background: #cefedc;
+    background-image: url('/assets/images/canerain.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    // border-radius: 10px 10px 10px 10px;
+}
+
+ion-action-sheet.acs-green .action-sheet-title {
+    background-image: url('/assets/icon/fm64.png');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: right center;
+    position: relative;
+    color: #ffffff;
+    // font-weight: bold;
+    background-color: #00811a;
+    border-radius: 10px 10px 10px 10px;
+    border-color: whitesmoke;
+    border-width: 5px;
+    border-style: double;
+    // padding-bottom: 10px;
+}
+
+ion-action-sheet.acs-green .action-sheet-button {
+    background-image: linear-gradient(to right, rgb(3, 134, 21), rgba(255, 255, 255, 0));
+    background-color: rgb(132, 255, 177);
+    border-width: 5px;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    margin-right: 10px;
+    border-radius: 10px 10px 10px 10px;
+}
+
+ion-action-sheet.acs-green .action-sheet-button.ion-focused {
     color: #000000;
 }
 
@@ -1324,4 +1383,50 @@ button.alert-button.alert-button-confirm {
 
     /* When the animation is finished, start again */
     animation-iteration-count: infinite;
+}
+
+/** ++++++++++ Animation div */
+
+@keyframes example {
+    0% {
+        background-color: red;
+        left: 0px;
+        top: 0px;
+    }
+
+    25% {
+        background-color: yellow;
+        left: 200px;
+        top: 0px;
+    }
+
+    50% {
+        // background-color: blue;
+        background-image: url('/assets/images/appwelcome.png');
+        left: 200px;
+        top: 200px;
+    }
+
+    75% {
+        background-color: green;
+        left: 0px;
+        top: 200px;
+    }
+
+    100% {
+        // background-color: red;
+        background-image: url('/assets/images/brdwelcome1.png');
+        left: 0px;
+        top: 0px;
+    }
+}
+
+.testdiv {
+    background-image: url('/assets/images/brdwelcome1.png');
+    width: 100px;
+    height: 100px;
+    // background-color: red;
+    position: relative;
+    animation-name: example;
+    animation-duration: 4s;
 }
