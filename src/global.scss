@@ -486,7 +486,7 @@ ion-action-sheet.acs-green .action-sheet-group {
 }
 
 ion-action-sheet.acs-green .action-sheet-title {
-    background-image: url('/assets/icon/fm64.png');
+    background-image: url('/assets/icon/destination.png');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: right center;
@@ -1383,6 +1383,24 @@ button.alert-button.alert-button-confirm {
 
     /* When the animation is finished, start again */
     animation-iteration-count: infinite;
+}
+
+.icon-top-right {
+    position: relative;
+    top: 0px;
+    right: 0;
+    width: 36px;
+    height: 36px;
+    // border: 3px solid #73AD21;
+}
+
+div.absolute {
+    position: absolute;
+    top: 80px;
+    right: 0;
+    width: 200px;
+    height: 100px;
+    border: 3px solid #73AD21;
 }
 
 /** ++++++++++ Animation div */

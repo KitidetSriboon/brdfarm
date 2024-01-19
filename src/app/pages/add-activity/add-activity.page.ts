@@ -97,8 +97,8 @@ export class AddActivityPage implements OnInit {
     // เชคว่า เคยมีการบันทึกข้อมูลไว้แล้วหรือไม่จาก itid
     this.brdsql.cpActivityFm(this.itid).subscribe({
       next: (res: any) => {
-        // console.log('res cpActivityFm ', res)
-        if (res && res.recordset !== 0) {
+        console.log('res cpActivityFm ', res)
+        if (res && res.recordset.length !== 0) {
           this.frm_edit = true
           this.formType = 'edit'
           console.log('frm_edit', this.frm_edit)
@@ -138,12 +138,17 @@ export class AddActivityPage implements OnInit {
             hardSoilBlast: [''],  // การระเบิดดาน
             seedclear: [''],  // การคัดพันธุ์อ้อย สะอาด
             groove: [0, [Validators.min(0), Validators.max(300)]],  // ระยะรอง ซม.
-            // naturalfertilizer: ['',],  // ประเภทปุ๋ยอินทรีย์ที่ใส่
-            // ton: [0, [Validators.required, Validators.min(0), Validators.max(35)]],  // ตันประเมิน
-            // wastedSpaceRai: [0,],  // พท.สูญเสียของแปลง (ไร่)
-            // Cutseed: [0,],  // ตันพันธุ์
-            // ton_lost: [0,],  // ตันสูญเสียจากการตัด
+            naturalfertilizer: [,],  // ประเภทปุ๋ยอินทรีย์ที่ใส่
+            fertilizerRatio: [,],  // อัตราปุ๋ยเคมีที่ใส่
+            fertilizerFormula: [,],  // สูตรปุ๋ยเคมี
+            pipeup: [,],  // การพูนโคน
+            germinationpercent: [0,],  // %การงอก
+            ton: [0, [Validators.min(0), Validators.max(35)]],  // ตันประเมิน
+            wastedSpaceRai: [0,],  // พท.สูญเสียของแปลง (ไร่)
+            Cutseed: [0,],  // ตันพันธุ์
+            ton_lost: [0,],  // ตันสูญเสียจากการตัด
           })
+          console.log('form load ', this.frm_addcpact.value)
         }
       }
     })
@@ -259,7 +264,14 @@ export class AddActivityPage implements OnInit {
       this.germinationpercent = x.GerminationPercent
     }
     // อ้อยปลูกใหม่ 14 อ้อยตอ 10
-    let ctype: string = data.canetype.trim()
+    let ctype = ""
+    if (this.frm_edit == true) {
+      ctype = data.canetype.trim()
+      console.log('ctype data', ctype)
+    } else {
+      ctype = this.cpdata.canetype.trim()
+      console.log('ctype cpdata', ctype)
+    }
     ctype = ctype.substring(0, 2)
     switch (true) {
       case (ctype == 'ER' && data.ton_last_fm >= 14):
@@ -479,11 +491,18 @@ export class AddActivityPage implements OnInit {
     this.ck_ton(this.perTon,)
   }
 
-  // ประเมินอ้อย ควรจะมากกว่า 10
+  // ประเมินอ้อย ควรจะมากกว่า อ้อยใหม่ 14 อ้อยตอ 10 
   ck_ton(tonfm: any) {
     tonfm = parseInt(tonfm)
     // console.log('ประเมิน ', tonfm)
-    let ctype: string = this.cpActivitydata.canetype.trim()
+    let ctype = ""
+    if (this.frm_edit == true) {
+      ctype = this.cpActivitydata.canetype.trim()
+      // console.log('ctype cpActivitydata', ctype)
+    } else {
+      ctype = this.cpdata.canetype.trim()
+      // console.log('ctype cpdata', ctype)
+    }
     ctype = ctype.substring(0, 2)
     switch (true) {
       case (ctype == 'ER' && tonfm >= 14):
