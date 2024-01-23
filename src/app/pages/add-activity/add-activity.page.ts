@@ -28,6 +28,7 @@ export class AddActivityPage implements OnInit {
   frm_edit?: boolean
   yearCr = yearCr();
   yearTh = yearTh();
+  yearid = ""
   yearLabel = yearLabel();
   perTon?: number = 0;
   ton?: any
@@ -62,7 +63,7 @@ export class AddActivityPage implements OnInit {
   wastedSpaceRai = 0
   Cutseed = 0
   ton_lost = 0
-  tonfm = 0
+  ton_fm = 0
   fminput = {
     "la": 0,
     "cst": 0,
@@ -90,9 +91,10 @@ export class AddActivityPage implements OnInit {
     cp_data = localStorage.getItem('cpfmdata')
     cp_data = JSON.parse(cp_data)
     cp_data = cp_data.filter((o: any) => o.itid === this.itid)
-    // console.log('cpdata filter :', cp_data)
+    console.log('cpdata filter :', cp_data)
     this.cpdata = cp_data[0];
     this.perTon = cp_data.ton_last_fm
+    this.yearid = this.cpdata.year
 
     // เชคว่า เคยมีการบันทึกข้อมูลไว้แล้วหรือไม่จาก itid
     this.brdsql.cpActivityFm(this.itid).subscribe({
@@ -118,7 +120,7 @@ export class AddActivityPage implements OnInit {
             fertilizerFormula: [this.cpActivitydata.fertilizerFormula,],  // สูตรปุ๋ยเคมี
             pipeup: [this.cpActivitydata.pipeup,],  // การพูนโคน
             germinationpercent: [this.cpActivitydata.GerminationPercent,],  // %การงอก
-            ton: [this.cpActivitydata.ton_In_Month, [Validators.required, Validators.min(0), Validators.max(35)]],  // ตันประเมิน
+            ton_fm: [this.cpActivitydata.ton_In_Month, [Validators.min(0), Validators.max(35)]],  // ตันประเมิน
             wastedSpaceRai: [this.cpActivitydata.wastedSpaceRai,],  // พท.สูญเสียของแปลง (ไร่)
             Cutseed: [this.cpActivitydata.Cutseed,],  // ตันพันธุ์
             ton_lost: [this.cpActivitydata.ton_lost,],  // ตันสูญเสียจากการตัด
@@ -138,12 +140,12 @@ export class AddActivityPage implements OnInit {
             hardSoilBlast: [''],  // การระเบิดดาน
             seedclear: [''],  // การคัดพันธุ์อ้อย สะอาด
             groove: [0, [Validators.min(0), Validators.max(300)]],  // ระยะรอง ซม.
-            naturalfertilizer: [,],  // ประเภทปุ๋ยอินทรีย์ที่ใส่
-            fertilizerRatio: [,],  // อัตราปุ๋ยเคมีที่ใส่
-            fertilizerFormula: [,],  // สูตรปุ๋ยเคมี
-            pipeup: [,],  // การพูนโคน
+            naturalfertilizer: ['',],  // ประเภทปุ๋ยอินทรีย์ที่ใส่
+            fertilizerRatio: [0,],  // อัตราปุ๋ยเคมีที่ใส่
+            fertilizerFormula: ['',],  // สูตรปุ๋ยเคมี
+            pipeup: ['',],  // การพูนโคน
             germinationpercent: [0,],  // %การงอก
-            ton: [0, [Validators.min(0), Validators.max(35)]],  // ตันประเมิน
+            ton_fm: [0, [Validators.min(0), Validators.max(35)]],  // ตันประเมิน
             wastedSpaceRai: [0,],  // พท.สูญเสียของแปลง (ไร่)
             Cutseed: [0,],  // ตันพันธุ์
             ton_lost: [0,],  // ตันสูญเสียจากการตัด
@@ -198,7 +200,7 @@ export class AddActivityPage implements OnInit {
             x = JSON.stringify(x)
             localStorage.setItem('chemical', x)
             this.chemicalType = x
-            console.log('chemicalType', this.chemicalType)
+            // console.log('chemicalType', this.chemicalType)
           }
         }
       })
@@ -284,7 +286,7 @@ export class AddActivityPage implements OnInit {
         this.cl_tonfm = 'success'
         break;
       default:
-        this.tonfm = x.ton_last_fm
+        this.ton_fm = x.ton_last_fm
         break;
     }
     // if (data.ton_last_fm > 0) {
@@ -475,15 +477,16 @@ export class AddActivityPage implements OnInit {
     // if (f.Cutseed == null || f.Cutseed == undefined) { _Cutseed = 0 }
     // if (f.ton_lost == null || f.ton_lost == undefined) { _ton_lost = 0 }
     this.perTon = event.target.value;
-    // console.log('ประเมิน', this.perTon)
+    console.log('ประเมิน', this.perTon)
     this.fminput.la = parseFloat(f.wastedSpaceRai)
     this.fminput.cst = parseFloat(f.Cutseed)
     this.fminput.lc = parseFloat(f.ton_lost)
     let toned: number = 0;
+    let arealeft: number = 0;
     // พื้นที่ - พื้นที่เสียหาย x ตัดพันธุ์+ตันสูญเสียจากการตัด = ปริมาณตันประเมิน
-    toned = (this.cpdata.landvalue - this.fminput.la)
-    this.fminput.arealeft = toned
-    toned = (event.target.value * toned)
+    arealeft = (this.cpdata.landvalue - this.fminput.la)
+    this.fminput.arealeft = arealeft
+    toned = (event.target.value * arealeft)  // ตันประเมิน คูณ พท.คงเหลือ
     toned = (toned - (this.fminput.cst + this.fminput.lc));
     this.ton = toned.toFixed(2);
     this.fminput.tonleft = toned
@@ -571,7 +574,7 @@ export class AddActivityPage implements OnInit {
     await this.brdsql.updateFmActivity(f, this.formType).subscribe({
       next: (res: any) => {
         console.log('res :', res)
-        if (res.rowsAffected.length !== 1) {
+        if (res.code === 'EREQUEST') {
           this.presentAlert('!!ผิดพลาด...', '', 'ข้อมูลไม่ถูกบันทึก กรุณาลองอีกครั้ง')
         } else {
           this.presentAlert('(^-^)...สำเร็จ', '', '...บันทึกข้อมูลของท่านแล้ว ขอขอบพระคุณอย่างสูง')
@@ -582,6 +585,10 @@ export class AddActivityPage implements OnInit {
 
       },
     })
+  }
+
+  isFormValid(): boolean {
+    return this.frm_addcpact.valid;
   }
 
   closeCurrentPage() {

@@ -74,7 +74,7 @@
           <ion-label>ข้อมูล</ion-label>
         </ion-item>
         <div class="ion-padding" slot="content">
-          <ion-button (click)="loadNewAlldata()" fill="outline" expand="full">
+          <ion-button (click)="loadNewAlldata($event)" fill="outline" expand="full">
             <ion-icon name="refresh-outline" slot="end"></ion-icon>
             <div>โหลดข้อมูลล่าสุด</div>
           </ion-button>
@@ -160,6 +160,10 @@
 
   <ion-content *ngFor="let item of fmdata" style="--background:tranparent;" id="con" class="animate__animated imgCane1"
     [ngClass]="{animate__fadeIn: start}">
+
+    <ion-refresher slot="fixed" (ionRefresh)="loadNewAlldata($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
 
     <div class="img-cov">
       <img src="{{ item.pic_url}}" class="img-dis" />

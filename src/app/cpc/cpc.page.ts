@@ -53,77 +53,79 @@ export class CpcPage implements OnInit {
     private excelsv: ExcelService,
   ) { Chart.register(...registerables); }
 
-  ngAfterViewInit() {
-    setTimeout(() => {
-      // this.barChartMethod();
-      // this.doughnutChartMethod();
-      // this.lineChartCcs();
-    }, 500);
-
-    // console.log('ngAfterViewInit', this.datecpc);
-    // this.datecpc.nativeElement.innerHTML = "จะเปิดหีบในอีก...";
-  }
-
-  async ionViewWillEnter() {
+  async ionViewWillEnter(e: any) {
     console.log('ionViewWillEnter');
 
-    let fm = localStorage.getItem('fmcode')
-    if (fm) {
-      this.fmcode = fm
-    }
-    // ข้อมูลสรุป อ้อยเข้าหีบ ประเมิน คงเหลือ ผลผลิต ชาวไร่
-    let data: any = localStorage.getItem('cpcSummaryFm')
-    if (data) {
-      data = JSON.parse(data)
-      this.cpcSummaryFm = data
-    }
-    // ข้อมูลกราฟอ้อยเข้า/ซีซีเอส สรุปประจำวัน ชาวไร่
-    let data2: any = localStorage.getItem('cpcdiaryfm')
-    if (data2) {
-      data2 = JSON.parse(data2)
-      this.cpcDiaryFm = data2
-      setTimeout(() => {
-        this.lineChartMethod()
-        this.lineChartCcs()
-      }, 500);
-    }
-    // ccs brr diary
-    await this.brdsql.ccsBrr().subscribe({
-      next: (res: any) => {
-        // console.log('res ccs ', res)
-        this.ccsbrr = res.recordset
-      }, error(err) {
-
-      }, complete() {
-
-      },
-    })
     setTimeout(() => {
-      this.lineChartCcsBrr()
-    }, 500)
+      // Any calls to load data go here
+      let fm = localStorage.getItem('fmcode')
+      if (fm) {
+        this.fmcode = fm
+      }
+      // ข้อมูลสรุป อ้อยเข้าหีบ ประเมิน คงเหลือ ผลผลิต ชาวไร่
+      let data: any = localStorage.getItem('cpcSummaryFm')
+      if (data) {
+        data = JSON.parse(data)
+        this.cpcSummaryFm = data
+      }
+      // ข้อมูลกราฟอ้อยเข้า/ซีซีเอส สรุปประจำวัน ชาวไร่
+      let data2: any = localStorage.getItem('cpcdiaryfm')
+      if (data2) {
+        data2 = JSON.parse(data2)
+        this.cpcDiaryFm = data2
+        setTimeout(() => {
+          this.lineChartMethod()
+          this.lineChartCcs()
+        }, 500);
+      }
+      // ccs brr diary
+      this.brdsql.ccsBrr().subscribe({
+        next: (res: any) => {
+          // console.log('res ccs ', res)
+          this.ccsbrr = res.recordset
+        }, error(err) {
+
+        }, complete() {
+
+        },
+      })
+      setTimeout(() => {
+        this.lineChartCcsBrr()
+      }, 500)
+
+      this.subcpcDetail = this.brdsql.getCpcDetail(this.fmcode).subscribe({
+        next: (res: any) => {
+          // console.log('getCpcDetail res ', res)
+          this.cpcDetail = res.recordset
+        }, error(err) {
+          alert('Error :' + err)
+        }, complete() { },
+      })
+
+      let datafm: any = localStorage.getItem('cpfmdata')
+      if (datafm) {
+        datafm = JSON.parse(datafm)
+        // console.log('cpfmdata ', data)
+        this.cpcpc = datafm.sort((a: any, b: any) => b.yieldEnd - a.yieldEnd)
+      }
+      e.target.complete();
+    }, 2000);
+
   }
 
   async ionViewDidEnter() {
     console.log('ionViewDidEnter');
+  }
 
-    let data: any = localStorage.getItem('cpfmdata')
-    if (data) {
-      data = JSON.parse(data)
-      // console.log('cpfmdata ', data)
-      this.cpcpc = data.sort((a: any, b: any) => b.yieldEnd - a.yieldEnd)
-    }
+  ngAfterViewInit() {
+    console.log('ngAfterViewInit');
+    // setTimeout(() => {
+    //   this.lineChartMethod();
+    //   this.lineChartCcs();
+    //   this.lineChartCcsBrr();
+    // }, 500);
 
-    this.subcpcDetail = await this.brdsql.getCpcDetail(this.fmcode).subscribe({
-      next: (res: any) => {
-        console.dir('getCpcDetail res ', res)
-        this.cpcDetail = res.recordset
-      }, error(err) {
-        alert('Error :' + err)
-      }, complete() {
-
-      },
-    })
-
+    // this.datecpc.nativeElement.innerHTML = "จะเปิดหีบในอีก...";
   }
 
   async barChartMethod() {
@@ -165,6 +167,9 @@ export class CpcPage implements OnInit {
         // }
       }
     });
+
+    // this.barChart.destroy();
+
   }
 
   async doughnutChartMethod() {
@@ -192,6 +197,8 @@ export class CpcPage implements OnInit {
         }]
       }
     });
+
+    // this.doughnutChart.destroy();
   }
 
   async lineChartMethod() {
@@ -230,6 +237,7 @@ export class CpcPage implements OnInit {
         ],
       }
     });
+    // this.lineChart.destroy();
   }
 
   async lineChartCcs() {
@@ -268,6 +276,7 @@ export class CpcPage implements OnInit {
         ],
       }
     });
+
     // this.lineChart_ccs.destroy()
   }
 
@@ -308,6 +317,8 @@ export class CpcPage implements OnInit {
         ],
       }
     });
+
+    // this.lineChart_ccsbrr.destroy();
   }
 
   ngOnInit() {

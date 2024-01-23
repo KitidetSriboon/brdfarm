@@ -160,24 +160,28 @@ export class Tab1Page {
       this.yearDesc = x[0].yearDesc
       if (this.fmcode) {
         let fm = this.fmcode
-        this.loadNewAlldata()
+        this.loadNewAlldata(e)
       }
     }
   }
 
-  loadNewAlldata() {
-    this.cpfm = [];
-    this.mapfm = [];
-    this.fmdata = [];
-    this.cpcSummaryFm = []
-    this.cpcDetailFm = []
-    this.cpcDiaryFm = []
-    this.fmimg = ''
-    this.fmname = '';
-    this.pcFm = 0;
-    this.pcSupcode = 0;
-    // let fmc = localStorage.getItem('fmcode')
-    this.getFmdata({ fmcode: this.fmcode })
+  loadNewAlldata(e: any) {
+    setTimeout(() => {
+      this.cpfm = [];
+      this.mapfm = [];
+      this.fmdata = [];
+      this.cpcSummaryFm = []
+      this.cpcDetailFm = []
+      this.cpcDiaryFm = []
+      this.fmimg = ''
+      this.fmname = '';
+      this.pcFm = 0;
+      this.pcSupcode = 0;
+      // let fmc = localStorage.getItem('fmcode')
+      this.getFmdata({ fmcode: this.fmcode })
+      // Any calls to load data go here
+      e.target.complete();
+    }, 2000);
   }
 
   // โหลดข้อมูลชาวไร่จาก api

@@ -199,8 +199,9 @@
                     <ion-text class="txtRed">ตัน {{ perTon }}</ion-text> /ไร่
                   </ion-text>
                   <ion-item>
-                    <ion-range style="margin-top: 20px;" class="inputBGBW" formControlName="ton" [pin]="true"
-                      [ticks]="true" [snaps]="true" [(ngModel)]="ton" (ionChange)="newTon($event,frm_addcpact.value)">
+                    <ion-range style="margin-top: 20px;" class="inputBGBW" formControlName="ton_fm" [pin]="true"
+                      [min]="0" [max]="35" [ticks]="true" [snaps]="true" [(ngModel)]="ton_fm"
+                      (ionChange)="newTon($event,frm_addcpact.value)">
                     </ion-range>
                   </ion-item>
                   <ion-item class="ion-text-center">
@@ -232,9 +233,9 @@
         <ion-grid style="margin-top: 10px;">
           <ion-row class="ion-text-center">
             <ion-col>
-              <ion-button class="divMg-5" shape="round" type="submit" [disabled]="!frm_addcpact.valid">
+              <ion-button class="divMg-5" shape="round" type="submit">
                 <ion-icon name="save-outline"></ion-icon>
-                ...บันทึกข้อมูล
+                ...บันทึก เพิ่มข้อมูล
               </ion-button>
               <ion-button class="divMg-5" (click)="closeCurrentPage()" shape="round" fill="outline" color="danger">
                 <ion-icon name="close-circle-outline"></ion-icon>
@@ -247,9 +248,12 @@
       </ion-list>
 
       <ion-input type="hidden" [(ngModel)]="itid" formControlName="itid"></ion-input>
-      <ion-input type="hidden" [(ngModel)]="yearCr" formControlName="yearid"></ion-input>
+      <ion-input type="hidden" [(ngModel)]="yearid" formControlName="yearid"></ion-input>
 
     </form>
+
+    <!-- <div *ngIf="isFormValid()">Form is valid!</div>
+    <div *ngIf="!isFormValid()">Form is invalid!</div> -->
 
     <!-- Form value {{ frm_addcpact.value | json }}
     Form valid {{ frm_addcpact.valid }} -->
@@ -445,7 +449,7 @@
                     <ion-text class="txtRed">ตัน {{ perTon }}</ion-text> /ไร่
                   </ion-text>
                   <ion-item>
-                    <ion-range style="margin-top: 20px;" class="inputBGBW" formControlName="ton" [min]="0" [max]="35"
+                    <ion-range style="margin-top: 20px;" class="inputBGBW" formControlName="ton_fm" [min]="0" [max]="35"
                       [pin]="true" [ticks]="true" [snaps]="true" [(ngModel)]="cpActivitydata.ton_last_fm"
                       (ionChange)="newTon($event,frm_editcpact.value)">
                     </ion-range>
@@ -481,7 +485,7 @@
             <ion-col>
               <ion-button class="divMg-5" shape="round" type="submit" [disabled]="!frm_editcpact.valid">
                 <ion-icon name="save-outline"></ion-icon>
-                ...บันทึกข้อมูล
+                ...บันทึก อัพเดตข้อมูล
               </ion-button>
               <ion-button class="divMg-5" (click)="closeCurrentPage()" shape="round" fill="outline" color="danger">
                 <ion-icon name="close-circle-outline"></ion-icon>
@@ -494,7 +498,7 @@
       </ion-list>
 
       <ion-input type="hidden" [(ngModel)]="itid" formControlName="itid"></ion-input>
-      <ion-input type="hidden" [(ngModel)]="yearCr" formControlName="yearid"></ion-input>
+      <ion-input type="hidden" [(ngModel)]="yearid" formControlName="yearid"></ion-input>
 
     </form>
 

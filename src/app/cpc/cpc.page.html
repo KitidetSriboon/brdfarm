@@ -4,10 +4,19 @@
       <ion-icon name="bus-outline"></ion-icon>
       เปิดหีบ {{ yearDesc }}
     </ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="ionViewWillEnter($event)">
+        <ion-icon slot="icon-only" name="reload-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+
+  <ion-refresher slot="fixed" (ionRefresh)="ionViewWillEnter($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
 
   <!-- สรุปอ้อยเข้าหีบ -->
   <ion-card class="divMg-5 w3-sand">

@@ -135,7 +135,7 @@ export class BrdsqlService {
     let d: any = new Date()
     let m = d.getMonth() + 1
     d = d.toString()
-    console.log('date update ', d)
+    // console.log('date update ', d)
     // console.log('form in brdservice:', f)
     let urlInsert = this.baseUrlInsert
     let urlUpdate = this.baseUrlUpdate
@@ -147,16 +147,19 @@ export class BrdsqlService {
           + "',seedclear='" + f.seedclear + "',groove=" + f.groove + ",naturalfertilizer='" + f.naturalfertilizer
           + "',fertilizerRatio=" + f.fertilizerRatio + ",fertilizerFormula='" + f.fertilizerFormula
           + "',pipeup='" + f.pipeup + "',GerminationPercent=" + f.germinationpercent + ",GerminationPercent_date=getdate()"
-          + ",ton=" + f.ton + ",tonm" + m + "=" + f.ton + ",ton_last='" + m + "',update_date=getdate()&"
+          + ",ton=" + f.ton_fm + ",tonm" + m + "=" + f.ton_fm + ",ton_last='" + m + "',update_date=getdate()&"
           + "w=itid='" + f.itid + "'"
         console.log('urlUpdate', urlUpdate)
         return this.http.get<any[]>(urlUpdate)
         break;
       case 'insert':
-        urlInsert + "t=dbIntech.dbo.p_farmer&"
-          + "c=itid, year_id, landno, qtype, num_qcard, Requester, comment & "
-          + "v='" + f.itid + "', '" + f.year_id + "', '" + f.landno + "', '" + f.qtype + "', " + f.num_qcard
-          + ",'" + f.requester + "','" + f.comment + "'"
+        urlInsert = urlInsert + "t=dbIntech.dbo.p_farmer&"
+          + "c=itid, year, groundlevel, hardSoilBlast, seedclear, groove, naturalfertilizer, fertilizerRatio, fertilizerFormula,"
+          + "pipeup, GerminationPercent, GerminationPercent_date, ton, tonm" + m + ", ton_last, update_date&"
+          + "v='" + f.itid + "', '" + f.yearid + "', '" + f.groundlevel + "', '" + f.hardSoilBlast + "','" + f.seedclear
+          + "'," + f.groove + ",'" + f.naturalfertilizer + "'," + f.fertilizerRatio + ",'" + f.fertilizerFormula
+          + "','" + f.pipeup + "'," + f.germinationpercent + ",getdate()," + f.ton_fm + "," + f.ton_fm + "," + m + ",getdate()"
+        console.log('url insert', urlInsert)
         return this.http.get<any[]>(urlInsert)
         break;
       default:

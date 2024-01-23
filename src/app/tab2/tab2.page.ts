@@ -61,7 +61,7 @@ export class Tab2Page {
     let fm = localStorage.getItem('fmcode')
     if (fm) {
       this.fmcode = fm
-      this.loadNewFmdata();
+      this.loadNewFmdata('');
     }
   }
 
@@ -90,36 +90,40 @@ export class Tab2Page {
     // console.log('tab2 ngAfterViewInit:')
   }
 
-  async loadNewFmdata() {
-
-    this.fmdata = []
-    this.cpFmdata = []
-    this.mapFbFm = []
-
-    // console.log('tab2 LoadFmdata:')
-    let yx = localStorage.getItem('yearID')
-    if (yx) {
-      yx = JSON.parse(yx)
-      this.yeardata = yx;
-    }
-    let fm_data: any = localStorage.getItem('fmdata')
-    fm_data = JSON.parse(fm_data)
-    let cp_data: any = localStorage.getItem('cpfmdata')
-    cp_data = JSON.parse(cp_data)
-    this.cpFmdata = cp_data;  // ข้อมูลแปลงอ้อยจาก brdSQL
-    cp_data = cp_data[0].year  // ex 2324
-    let x: any = this.yeardata.filter((el: any) => el.yearCr == cp_data)
-    // console.log('year filter ', x)
-    if (x.length !== 0) { this.yearDesc = x[0].yearDesc };  // ex ปี 66/67
-    let map_data: any = localStorage.getItem('mapfm')
-    map_data = JSON.parse(map_data)
-    this.fmdata = fm_data;
-    this.mapFbFm = map_data;
-    this.getUserLocation();
+  async loadNewFmdata(e: any | string) {
 
     setTimeout(() => {
-      this.draw();
-    }, 500)
+      this.fmdata = []
+      this.cpFmdata = []
+      this.mapFbFm = []
+
+      // console.log('tab2 LoadFmdata:')
+      let yx = localStorage.getItem('yearID')
+      if (yx) {
+        yx = JSON.parse(yx)
+        this.yeardata = yx;
+      }
+      let fm_data: any = localStorage.getItem('fmdata')
+      fm_data = JSON.parse(fm_data)
+      let cp_data: any = localStorage.getItem('cpfmdata')
+      cp_data = JSON.parse(cp_data)
+      this.cpFmdata = cp_data;  // ข้อมูลแปลงอ้อยจาก brdSQL
+      cp_data = cp_data[0].year  // ex 2324
+      let x: any = this.yeardata.filter((el: any) => el.yearCr == cp_data)
+      // console.log('year filter ', x)
+      if (x.length !== 0) { this.yearDesc = x[0].yearDesc };  // ex ปี 66/67
+      let map_data: any = localStorage.getItem('mapfm')
+      map_data = JSON.parse(map_data)
+      this.fmdata = fm_data;
+      this.mapFbFm = map_data;
+      this.getUserLocation();
+
+      setTimeout(() => {
+        this.draw();
+      }, 500)
+      // Any calls to load data go here
+      e.target.complete();
+    }, 1000);
   }
 
   selectyear(e: any) {
