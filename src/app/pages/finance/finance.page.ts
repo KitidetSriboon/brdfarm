@@ -20,12 +20,13 @@ export class FinancePage implements OnInit {
   supcode?: string;
   year_th?: string;
   cpdata?: any = [];
+
   cpActivityData?: any = []
   yearCr?: string = GlobalConstants.yearCr
   yearTh?: string = GlobalConstants.yearTh
   yearDesc?: string = GlobalConstants.yeardata.yearDesc
-  moneyamt?: any;  // จำนวนเงินที่ขอ
-  fnAmount?: number // วงเงินได้รับ
+  moneyamt!: number;  // จำนวนเงินที่ขอ
+  fnAmount!: number // วงเงินได้รับ
   fnUsed?: number // วงเงินใช้ไป
   fnLeft?: number // วงเงินคงเหลือ
   frm_getfn: FormGroup;
@@ -53,29 +54,45 @@ export class FinancePage implements OnInit {
       // type_money: ['', [Validators.required]],
       comment1: ['', [Validators.required]],
     })
-
     let cp_data: any = []
     cp_data = localStorage.getItem('cpfmdata')
     cp_data = JSON.parse(cp_data)
-    cp_data = cp_data.filter((o: any) => o.itid === this.itid)
+    cp_data = cp_data.filter((o: any) => o.itid == this.itid)
+
+    let cp_data0 = cp_data[0]
     console.log('cpdata filter :', cp_data)
 
+    this.thItid.itid = cp_data0.itid
+    this.thItid.intlandno = cp_data0.intlandno
+    this.thItid.fmcode = cp_data0.fmcode
+    this.thItid.credit_amount = cp_data0.credit_amount
+    this.thItid.year_th = cp_data0.year_th
+    this.thItid.supcode = cp_data0.supcode
+    this.thItid.fm_doc = ''
+
+    console.log('thItid:', this.thItid)
+
     setTimeout(() => {
-      this.cpdata = cp_data[0];
+      this.getData_money_itid(cp_data0.year_th, cp_data0.itid);
+      this.cpdata = cp_data0
       this.cpActivityData = cp_data
-      console.log('cpdata :', this.cpdata)
+      /*console.log('cpdata :', this.cpdata)
       // console.log('cpActivityData :', this.cpActivityData)
-      this.itid = this.cpdata.itid
-      this.intlandno = this.cpdata.intlandno
-      this.fmcode = this.cpdata.fmcode
-      this.fnAmount = this.cpdata.credit_amount
-      this.year_th = this.cpdata.year_th
-      this.supcode = this.cpdata.supcode
+      this.itid = cp_data0.itid
+      this.intlandno = cp_data0.intlandno
+      this.fmcode = cp_data0.fmcode
+      this.fnAmount = cp_data0.credit_amount
+      this.year_th = cp_data0.year_th
+      this.supcode = cp_data0.supcode
       console.log('วงเงินได้รับ', this.fnAmount)
-      // this.getDataActivity()
-    }, 1000);
+      // this.getDataActivity()*/
+    }, 500);
 
   }
+  thItid = {
+    itid: '', intlandno: '', fmcode: '', credit_amount: 0, credit_used: 0, credit_left: 0, year_th: '', supcode: '', fm_doc: '', money_amt: 0,
+  }
+  isLoading = false;
 
   ngOnInit() {
   }
@@ -84,24 +101,55 @@ export class FinancePage implements OnInit {
     this.navCtrl.back();
   }
 
-  setMoney() {
-    this.moneyamt = this.fnAmount
+  getData_money_itid(year: string, itid: string) {
+    this.isLoading = true;
+    this.brdsql.getData_money_itid(year, itid).subscribe({
+      next: (res: any[]) => {
+        this.isLoading = false;
+        let data = res[0]
+        if (res.length > 0) {
+          this.thItid.credit_used = data.credit_amount - data.sum_money_amt;
+          this.thItid.credit_left = data.sum_money_amt;
+        }
+        //this.cpActivityData = data;
+        //this.yearDesc = data.year
+        // console.log('groundlevel ', this.cpActivityData.groundlevel)
+        //console.log('getData_money_itid :', data)
+      }
+    });
   }
 
   checkOver(e: any) {
-    console.log('checkOver value: ', e.target.value)
-    let x: number = this.moneyamt.replace(',', '');
-    if (x > this.fnAmount!) {
+    //console.log('checkOver value: ', e.target.value)
+    let y = this.thItid.credit_left
+    let x = e.target.value//.replace(',', '');
+    //this.thItid.money_amt = (x);
+    if (x > y) {
       this.swal1('error', 'คุณป้อนจำนวนเงินที่ขอ เกินกว่าวงเงินคงเหลือ..')
-      this.moneyamt = this.fnAmount;
+      this.thItid.money_amt = y;
     }
+    console.log('x:', x, ', y:', y);
   }
 
-  saveApplyFn(f: any) {
-    // this.removeCommas(f.money_amt);
-    console.log('form: ', f)
-    Swal.fire("อยู่ระหว่างพัฒนา!..เร็วๆ นี้ ครับ");
-    // this.swalSave(f, 'warning', 'ขอเกี้ยว', 'คุณต้องการยืนยันการส่งคำขอสินเชื่อ หรือไม่ (อยู่ระหว่างพัฒนา...)');
+  saveApplyFn() {
+    let f = this.thItid;
+    if (confirm(`ต้องการขอเงิน จำนวน ${f.money_amt.toLocaleString()} บาท ใช่หรือไม่`)) {
+      this.isLoading = true;
+      // this.removeCommas(f.money_amt);
+      this.brdsql.add_factor_money(f).subscribe((res: any) => {
+        this.isLoading = false;
+        //console.log('res :', res)
+        if (res.code == 'EREQUEST') {
+          alert('!!ผิดพลาด...' + 'ข้อมูลไม่ถูกบันทึก กรุณาลองอีกครั้ง')
+        } else {
+          alert('(^-^)...สำเร็จ' + '...บันทึกข้อมูลของท่านแล้ว')
+          // this.navCtrl.back();
+        }
+      })
+      //console.log('thItid.money_amt: ', f)
+      //Swal.fire("อยู่ระหว่างพัฒนา!..เร็วๆ นี้ ครับ");
+      // this.swalSave(f, 'warning', 'ขอเกี้ยว', 'คุณต้องการยืนยันการส่งคำขอสินเชื่อ หรือไม่ (อยู่ระหว่างพัฒนา...)');
+    }
   }
 
   swalSave(f: any, i: any, ti: string, tx: string) {
@@ -144,7 +192,7 @@ export class FinancePage implements OnInit {
   }
 
   /* Test */
-  CommaFormatted(event: any) {
+  /*CommaFormatted(event: any) {
     console.log('CommaFormatted')
     // skip for arrow keys
     if (event.which >= 37 && event.which <= 40) return;
@@ -155,20 +203,19 @@ export class FinancePage implements OnInit {
         .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
   }
-
-  numberCheck(args: any) {
-    console.log('numberCheck')
-    if (args.key === 'e' || args.key === '+' || args.key === '-') {
-      return false;
-    } else {
-      return true;
-    }
+*/
+  addComma(event: any) {
+    let input = event.target.value;
+    let numberWithCommas = input.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    event.target.value = numberWithCommas;
   }
 
-  removeCommas(): Observable<number> {
+
+
+  /*removeCommas(): Observable<number> {
     console.log('removeCommas')
     console.log('moneyamt', this.moneyamt)
     return this.moneyamt = this.moneyamt.replace(',', '');
-  }
+  }*/
 
 }

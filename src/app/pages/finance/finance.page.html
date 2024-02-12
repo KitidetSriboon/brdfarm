@@ -9,51 +9,51 @@
 
 <ion-content [fullscreen]="true">
 
-  <div class="w3-panel w3-pale-red">
+  <!-- <div class="w3-panel w3-pale-red">
     <h3>อยู่ระหว่างพัฒนา</h3>
     <p class="gfFahkwang">...ในเวอร์ชั่นต่อไป ท่านจะสามารถขอเกี้ยวและปัจจัย ได้เองผ่านแอพนี้..โปรดติดตามการแจ้งอัพเดตแอพ
       นะครับ</p>
-  </div>
+  </div>-->
 
-  <form [formGroup]="frm_getfn" (ngSubmit)="saveApplyFn(frm_getfn.value);frm_getfn.reset();" novalidate>
-
-    <ion-input type="hidden" formControlName="itid" [(ngModel)]="itid"></ion-input>
-    <ion-input type="hidden" formControlName="intlandno" [(ngModel)]="intlandno"></ion-input>
-    <ion-input type="hidden" formControlName="fmcode" [(ngModel)]="fmcode"></ion-input>
-    <ion-input type="hidden" formControlName="yearid" [(ngModel)]="year_th"></ion-input>
-    <ion-input type="hidden" formControlName="supcode" [(ngModel)]="supcode"></ion-input>
-
-    <div class="w3-panel w3-pale-blue w3-leftbar w3-rightbar w3-border-blue">
-      <p>แปลง {{cpdata.CaneTypeName}} พื้นที่ {{cpdata.landvalue}} ไร่</p>
-      <p>วงเงินได้รับ {{ cpdata.credit_amount | number: '1.1-2'}} บาท</p>
-      <p>ใช้ไป 0 บาท</p>
-      <p>คงเหลือ 0 บาท</p>
-    </div>
+  <div class="w3-panel w3-pale-blue w3-leftbar w3-rightbar w3-border-blue">
+    <br>
+    <p>หมายเลขแปลง {{cpdata.intlandno}}</p>
+    <p>โควตา {{cpdata.fmcode}}</p>
+    <p>ชื่อ {{cpdata.fmname}}</p>
+    <p>แปลง {{cpdata.CaneTypeName}} พื้นที่ {{cpdata.landvalue | number}} ไร่</p>
+    <p>วงเงินได้รับ {{ cpdata.credit_amount | number: '1.1-2'}} บาท</p>
+    <p>ใช้ไป {{thItid.credit_used | number: '1.1-2'}} บาท</p>
+    <p>คงเหลือ {{thItid.credit_left | number: '1.1-2'}} บาท</p>
 
     <ion-item>
-      <ion-label position="floating">วัตถุประสงค์:</ion-label>
-      <ion-input formControlName="comment1" type="text" helperText="วัตถุประสงค์ในการขอสินเชื่อ" placeholder="...">
+      <ion-input type="text" color="primary" label="วัตถุประสงค์:" label-placement="floating"
+        [(ngModel)]="thItid.fm_doc" [ngModelOptions]="{standalone: true}" [clearInput]="true" placeholder=". .">
       </ion-input>
     </ion-item>
 
-    <ion-item>
-      <ion-label position="floating">จำนวนเงินที่ขอ:</ion-label>
-      <!-- <input type="text" formControlName="money_amt" [(ngModel)]="moneyamt" autocomplete="off"
-        (keydown)="numberCheck($event)" (keyup)="CommaFormatted($event)" /> -->
+    <!-- <input type="text" formControlName="money_amt" [(ngModel)]="moneyamt" autocomplete="off"
+        (keydown)="numberCheck($event)" (keyup)="CommaFormatted($event)" /> 
       <ion-input formControlName="money_amt" [(ngModel)]="moneyamt" type="type" class="txtxxlarge txtRed"
         autocomplete="off" (ionBlur)="checkOver($event)" (keydown)="numberCheck($event)" (focus)="setMoney()"
         (keyup)="CommaFormatted($event)">
+      </ion-input>-->
+    <ion-item>
+      <ion-input type="number" color="danger" label="จำนวนเงินที่ขอ" label-placement="floating"
+        [(ngModel)]="thItid.money_amt" [ngModelOptions]="{standalone: true}" min=1 autocomplete="off"
+        (ionChange)="checkOver($event)">
       </ion-input>
     </ion-item>
 
     <div class="ion-text-center divPadding-5">
-      <ion-button [disabled]="!frm_getfn.valid" (click)="saveApplyFn(frm_getfn.value)">
+      <ion-button [disabled]="(!(thItid.fm_doc.length>0) || !(thItid.money_amt>0))" (click)="saveApplyFn()">
         <ion-icon slot="start" name="save"></ion-icon>
         ตกลง
       </ion-button>
     </div>
+    <ion-loading *ngIf="isLoading" message="Loading..." spinner="circles"></ion-loading>
 
-  </form>
+  </div>
+
 
   <!-- {{ frm_getfn.value | json  }} -->
 
