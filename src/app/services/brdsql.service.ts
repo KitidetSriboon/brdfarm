@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, tap } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import axios from 'axios';
 
 @Injectable({
   providedIn: 'root'
@@ -167,7 +168,23 @@ export class BrdsqlService {
         return this.http.get<any[]>(url)
         break;
     }
+  }
 
+  add_factor_money(f: any) {
+    const url = `https://asia-southeast2-brr-farmluck.cloudfunctions.net/brdsqlapi/insert_getfactorw?supcode='${f.supcode}'
+    &factor_type='1'&doc_status='F'&itid='${f.itid}'&intlandno='${f.intlandno}'
+    &fmcode='${f.fmcode}'&YearID='${f.year_th}'&money_amt=${f.money_amt}&comment_fm='${f.fm_doc}'`
+    //console.log('add_factor_money', url)
+    return this.http.get<any[]>(url);
+  }
+
+  getData_money_itid(year: any, itid: string): Observable<any[]> {
+    //https://asia-southeast2-brr-farmluck.cloudfunctions.net/dbcps/select_s_f_w_0?s=*&f=[cps6263].[dbo].[v_sum_money_amt]&w=[YearID]=%276768%27and[itid]=%27-NJE_dvPj8HEqW5i9gQ5?special=-NJE_dvPj8HEqW5i9gQ5%27
+    const url = 'https://asia-southeast2-brr-farmluck.cloudfunctions.net/dbcps/select_s_f_w_0?'
+      + "s=*"
+      + "&f=[cps6263].[dbo].[v_sum_money_amt]"
+      + "&w=[YearID]='" + year + "'and[itid]='" + itid + "'";
+    return this.http.get<any[]>(url);
   }
 
   // กิจกรรมแปลงของ นสส.ตาม itid
