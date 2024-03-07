@@ -187,6 +187,15 @@ export class BrdsqlService {
     return this.http.get<any[]>(url);
   }
 
+  // ข้อมูลการขอสินเชื่อของชาวไร่
+  getFnFarmer(fmcode: any, yearTh: any) {
+    const url = this.baseSelectUrl
+      + "s=*&"
+      + "f=cps6263.dbo.v_getfinance" + yearTh + "&"
+      + "w=fmcode_b1=" + fmcode + " order by datepost desc"
+    return this.http.get<any[]>(url)
+  }
+
   // กิจกรรมแปลงของ นสส.ตาม itid
   getActivityData(year: any, itid: string): Observable<any[]> {
     const url = this.baseSelectUrl

@@ -19,11 +19,13 @@ import { ThaidatePipe } from './pipes/thaidate.pipe';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { NgxGaugeModule } from 'ngx-gauge';
+import { FinancesPipe } from './pages/finances.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ThaidatePipe
+    ThaidatePipe,
+    FinancesPipe
   ],
   imports: [
     BrowserModule,

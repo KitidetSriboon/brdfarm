@@ -56,6 +56,10 @@ const routes: Routes = [
     path: '',
     redirectTo: '/login',
     pathMatch: 'full'
+  },
+  {
+    path: 'finances',
+    loadChildren: () => import('./pages/finances/finances.module').then( m => m.FinancesPageModule)
   }
 ];
 @NgModule({
