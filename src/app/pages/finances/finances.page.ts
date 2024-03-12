@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalController, LoadingController, ToastController, AlertController, NavController } from '@ionic/angular';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 import Swal from 'sweetalert2'
 import { BrdsqlService } from 'src/app/services/brdsql.service';
 import { LoadingService } from 'src/app/services/loading.service';
+import { GlobalConstants, yearCr, yearTh, yearLabel } from 'src/app/global-constants';
+import { filter } from 'rxjs/operators';
+import axios from 'axios';
 
 @Component({
   selector: 'app-finances',
@@ -19,6 +23,12 @@ export class FinancesPage implements OnInit {
   yearDesc?: string;
   yearData?: any = [];
   fnData?: any = [];
+  sumcpFm?: any = [];
+  crFm?: any = [];
+  loanFm?: any = [];
+  listloanFm?: any = [];
+  loanThisyear = 0;
+  yearThX: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -26,6 +36,11 @@ export class FinancesPage implements OnInit {
     private brdsql: BrdsqlService,
     private ldingCtrl: LoadingService,
   ) {
+
+    this.yearCr = yearCr();
+    this.yearTh = yearTh();
+    this.yearDesc = yearLabel();
+
     let x: any = localStorage.getItem('yearID')
     if (x) {
       x = JSON.parse(x)
@@ -38,6 +53,118 @@ export class FinancesPage implements OnInit {
   }
 
   ngOnInit() {
+    this.getSumcpFm()
+  }
+
+  // ข้อมูล สรุปพื้นที่ปลูกอ้อยแยกประเภท วงเงิน แปลงเช่า แปลงเสียหาย ประเมินอ้อย 
+  async getSumcpFm() {
+    // console.log('สรุปพื้นที่ปลูก')
+    await this.brdsql.getSumcpFm(this.yearTh, this.fmcode).subscribe({
+      next: (res: any) => {
+        // console.log('getSumcpFm res:', res)
+        this.sumcpFm = res.recordset[0]
+      }
+      , error(err) {
+        alert('Error :' + err)
+      }, complete() {
+        // console.log('getSumcpFm complete')
+      },
+    })
+    this.getCrFm();
+  }
+
+  // ข้อมูลวงเงินหลักทรัพย์ เช็ค การใช้ เบิกเงิน กับเบิกปัจจัย
+  async getCrFm() {
+    // console.log('วงเงินหลักทรัพย์')
+    await this.brdsql.getCrFm(this.yearTh, this.fmcode).subscribe({
+      next: (res: any) => {
+        // console.log('getCreditFm res:', res)
+        this.crFm = res.recordset[0]
+      }
+      , error(err) {
+        alert('Error :' + err)
+      }, complete() {
+        // console.log('getCrFm complete')
+      },
+    })
+    this.getLoanNow()
+  }
+
+  // ข้อมูลหนี้จาก dbo.v_loanFarmer
+  async getLoanNow() {
+    // console.log('หนี้')
+    await this.brdsql.getLoannow(this.fmcode).subscribe({
+      next: (res: any) => {
+        // console.log('res fmloan: ', res)
+        if (res) {
+          this.loanFm = res.recordset[0]
+          this.loanThisyear = this.loanFm.Loanleft6768
+          this.yearThX = this.yearTh?.substring(0, 2)
+        }
+      }
+    })
+    this.LoanDatailNow();
+  }
+
+  // รายละเอียดหนี้
+  LoanDatailData: { [key: string]: any[] } = {};
+  LoanDatailKeys: string[] = [];
+  listLoanNow: any;
+  listLoanyear: string[] = [];
+  async LoanDatailNow() {
+    let data = [];
+    let fmcode = this.fmcode
+    await axios.get("https://asia-southeast2-brr-farmluck.cloudfunctions.net/dbbrr/VW_DOCLIST2_fmcode_w?cardcode=" + fmcode)
+      .then(res => {
+        let data = res.data;
+        // console.log('load res:', data)
+        if (data.length > 0) {
+          this.listLoanNow = data;
+          let groupedData: any = {};
+          //this.listLoanyear = data.filter(el => el.year == this.yearTh.substring(0, 2));
+          data.forEach((entry: { year: any; }) => {
+            const year = entry.year;
+            if (!groupedData[year]) {
+              groupedData[year] = [];
+            }
+            groupedData[year].push(entry);
+          });
+
+          //this.data_group = groupedData;
+          this.LoanDatailData = groupedData;
+          this.LoanDatailKeys = Object.keys(groupedData);
+          console.log('LoanDatailData: ', this.LoanDatailData);
+          // console.log('LoanDatailKeys: ', this.LoanDatailKeys);
+          // console.log('listLoanyear: ',this.yearTh.substring(0, 2), this.listLoanyear);
+        }
+        else this.listLoanNow = [];
+      }).catch(err => { throw (err); })
+
+  }
+
+  // รายละเอียดหนี้
+  async getLoanNowDetail() {
+    let data: any = [];
+    let year = this.yearTh?.substring(0, 2)
+    console.log('รายละเอียดหนี้')
+    await this.brdsql.getFnNowDetail(this.fmcode).subscribe({
+      next: (res: any) => {
+        data = res
+        console.log('listload : ', data)
+        // data = data.filter((o: any) => o.year === '67')
+        // data.sort((a: any, b: any) => a.docdate - b.docdate); // b - a for reverse sort
+        this.listloanFm = data
+        // let groupedData = {};
+        // data.forEach((entry: { year: any; }) => {
+        //   const year = entry.year;
+        //   if (!groupedData[year]) {
+        //     groupedData[year] = [];
+        //   }
+        //   groupedData[year].push(entry);
+        // });
+        // console.log('list loan 67 : ', data)
+      }
+    })
   }
 
   async selectyear(e: any) {
@@ -66,6 +193,16 @@ export class FinancesPage implements OnInit {
         }
       })
     }, 2000);
+  }
+
+  setnY(key: any): string {
+    if (!key) { return '' }
+    return `${key}/${Number(key) + 1}`;
+  }
+
+  calculateTotal(entries: any[]): number {
+    if (!entries) { return 0 }
+    return entries.reduce((total, entry) => total + entry.balance, 0);
   }
 
 }

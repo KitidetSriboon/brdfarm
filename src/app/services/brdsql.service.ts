@@ -196,6 +196,21 @@ export class BrdsqlService {
     return this.http.get<any[]>(url)
   }
 
+  // ข้อมูลหนี้ปีปัจจุุบัน
+  getLoannow(fmcode: any) {
+    const url = this.baseSelectUrl
+      + "s=*&"
+      + "f=cps6263.dbo.v_loanFarmer&"
+      + "w=fmcode_b1='" + fmcode + "'"
+    return this.http.get<any[]>(url)
+  }
+
+  // รายละเอียดหนี้
+  getFnNowDetail(fmcode: any) {
+    const url = "https://asia-southeast2-brr-farmluck.cloudfunctions.net/dbbrr/VW_DOCLIST2_fmcode_w?cardcode=" + fmcode
+    return this.http.get<any[]>(url)
+  }
+
   // กิจกรรมแปลงของ นสส.ตาม itid
   getActivityData(year: any, itid: string): Observable<any[]> {
     const url = this.baseSelectUrl

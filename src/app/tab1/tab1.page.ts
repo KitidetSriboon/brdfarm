@@ -126,7 +126,7 @@ export class Tab1Page {
     this.menuCtrl.open('moremenu');
   }
 
-  // ตั้งค่าปีที่ใช้งาน จาก api
+  // ตั้งค่าปีที่ใช้งาน จาก api from table yearid
   async yearID() {
     await this.brdsql.yearId().subscribe({
       next: (res: any) => {
@@ -135,6 +135,7 @@ export class Tab1Page {
         localStorage.setItem('yearID', x)
         this.yearActive = res.recordset.filter((o: any) => o.setActive === 'Y')
         this.yearActive = this.yearActive[0]
+        // เก็บค่าปีที่ active ไว้ที่ตัวแปร
         GlobalConstants._yearid = res.recordset
         GlobalConstants.yearCr = this.yearActive.yearCr
         GlobalConstants.yearTh = this.yearActive.yearTh
@@ -144,6 +145,8 @@ export class Tab1Page {
         this.yearTh = GlobalConstants.yearTh
         this.yearDesc = GlobalConstants.yearLabel
         console.log('yearCr: ', this.yearCr)
+        console.log('yearTh: ', this.yearTh)
+        console.log('yearDesc: ', this.yearDesc)
       }
     })
   }
@@ -155,6 +158,9 @@ export class Tab1Page {
       x = JSON.parse(x)
       x = x.filter((o: any) => o.yearCr == e.target.value)
       // console.log('year filter', x)
+      GlobalConstants.yearCr = x[0].yearCr
+      GlobalConstants.yearTh = x[0].yearTh
+      GlobalConstants.yearLabel = x[0].yearDesc
       this.yearCr = x[0].yearCr
       this.yearTh = x[0].yearTh
       this.yearDesc = x[0].yearDesc
