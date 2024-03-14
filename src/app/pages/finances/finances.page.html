@@ -31,31 +31,94 @@
             <ion-grid>
               <ion-row>
                 <ion-col size="6" class="txtSmall ion-text-left">
-                  <ion-text>วงเงิน {{ sumcpFm.credit_amount | number: '1.1-2' }}
+                  <ion-text> วงเงิน {{ sumcpFm.credit_amount | number: '1.1-2' }}
                   </ion-text>
                 </ion-col>
                 <ion-col size="6" class="txtSmall ion-text-right">
-                  <ion-text>ปัจจัย {{ sumcpFm.manure_amount | number: '1.1-2' }}</ion-text>
+                  <ion-text> ปัจจัย {{ sumcpFm.manure_amount | number: '1.1-2' }}</ion-text>
                 </ion-col>
               </ion-row>
             </ion-grid>
           </ion-item>
           <ion-item [button]="true">
             <ion-icon color="warning" slot="start" name="battery-half" size="large"></ion-icon>
-            <ion-label>วงเงินใช้ไป</ion-label>
+            <ion-label> วงเงินใช้ไป </ion-label>
             <ion-label class="w3-display-right">0</ion-label>
           </ion-item>
           <ion-item [button]="true">
             <ion-icon color="danger" slot="start" name="battery-dead" size="large"></ion-icon>
-            <ion-label>วงเงินคงเหลือ</ion-label>
+            <ion-label> วงเงินคงเหลือ </ion-label>
             <ion-label class="w3-display-right">0</ion-label>
           </ion-item>
           <ion-item [button]="true">
             <ion-icon color="primary" slot="start" name="bus"></ion-icon>
-            <ion-label>หลักทรัพย์ประเมิน</ion-label>
+            <ion-label> หลักทรัพย์ประเมิน </ion-label>
             <ion-label class="w3-display-right">{{ crFm.sumRealty | number: '1.1-2' }}</ion-label>
             <!-- <ion-label slot="end">{{ crFm.guaranter | number: '1.1-2' }}</ion-label> -->
           </ion-item>
+          <div class="card card-outline card-primary collapsed-card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <ion-icon color="primary" slot="start" name="people"></ion-icon>
+                ผู้ค้ำประกัน/หลักทรัพย์
+              </h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                  <ion-icon name="arrow-down-outline"></ion-icon>
+                  <!-- <i class="fas fa-minus"></i> -->
+                </button>
+              </div>
+            </div>
+            <div class="card-body" *ngIf="guarantor">
+              <ion-list>
+                <ion-item>
+                  <ion-icon aria-hidden="true" name="person-add" slot="start"></ion-icon>
+                  <ion-label>{{ guarantor.FmCode1}} : {{ guarantor.FullName1}}</ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-icon aria-hidden="true" name="person-add" slot="start"></ion-icon>
+                  <ion-label>{{ guarantor.FmCode2}} : {{ guarantor.FullName2}}</ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-icon aria-hidden="true" name="person-add" slot="start"></ion-icon>
+                  <ion-label>{{ guarantor.FmCode3}} : {{ guarantor.FullName3}}</ion-label>
+                </ion-item>
+                <ion-item class="txtSmall">
+                  <ion-icon aria-hidden="true" name="layers-outline" slot="start"></ion-icon>
+                  <ion-label> {{ guarantor.type1 }} </ion-label>
+                </ion-item>
+                <ion-item class="txtSmall">
+                  <ion-icon aria-hidden="true" name="layers-outline" slot="start"></ion-icon>
+                  <ion-label> {{ guarantor.type2 }} </ion-label>
+                </ion-item>
+                <ion-item class="txtSmall">
+                  <ion-icon aria-hidden="true" name="layers-outline" slot="start"></ion-icon>
+                  <ion-label> {{ guarantor.type3}} </ion-label>
+                </ion-item>
+                <ion-item class="txtSmall">
+                  <ion-icon aria-hidden="true" name="layers-outline" slot="start"></ion-icon>
+                  <ion-label> {{ guarantor.type4}} </ion-label>
+                </ion-item>
+                <ion-item class="txtSmall">
+                  <ion-icon aria-hidden="true" name="layers-outline" slot="start"></ion-icon>
+                  <ion-label> {{ guarantor.type5}} </ion-label>
+                </ion-item>
+                <ion-item class="txtSmall">
+                  <ion-icon aria-hidden="true" name="layers-outline" slot="start"></ion-icon>
+                  <ion-label> {{ guarantor.type6}} </ion-label>
+                </ion-item>
+                <ion-item class="txtSmall">
+                  <ion-icon aria-hidden="true" name="layers-outline" slot="start"></ion-icon>
+                  <ion-label> {{ guarantor.type7}} </ion-label>
+                </ion-item>
+              </ion-list>
+            </div>
+          </div>
+          <!-- <ion-item [button]="true">
+            <ion-icon color="primary" slot="start" name="people"></ion-icon>
+            <ion-label> ผู้ค้ำประกัน </ion-label>
+            <ion-label class="w3-display-right">{{ guarantor }}</ion-label>
+          </ion-item> -->
           <ion-text class="txtSmall w3-right">*กรุณาเช็คกับฝ่ายสินเชื่ออีกครั้ง</ion-text>
         </ion-list>
       </div>
@@ -67,74 +130,140 @@
     <ion-card-content>
       <div style="margin-top: 3%;">
         <ion-card-title style="margin-bottom: 3%;" color="dark">หนี้ ณ {{ loanFm.DateupdateTH }}</ion-card-title>
-
         <!-- ยอดหนี้ปีปัจจุบัน -->
-        <div class="card w3-khaki collapsed-card">
+        <div class="card card-primary">
           <div class="card-header">
-            <ion-label class="w3-left"> หนี้ {{ setnY(yearThX) }}</ion-label>
-            <ion-button fill="outline" class="w3-right txtBolder">
-              {{ loanThisyear | number: '1.1-2' }}
-            </ion-button>
+            <h3 class="card-title">หนี้ {{ setnY(yearThX) }}</h3>
+            <div class="card-tools">
+              <span title="" class="badge bg-primary txtBolder txtLarger">{{ loanThisyear | number: '1.1-2' }}</span>
+              <!-- <ion-button fill="outline" class="w3-right txtBolder">
+                {{ loanThisyear | number: '1.1-2' }}
+              </ion-button> -->
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <ion-icon name="arrow-down-outline"></ion-icon>
+              </button>
+              <!-- <button type="button" class="btn btn-tool" title="Contacts" data-widget="chat-pane-toggle">
+                <ion-icon name="chatbox-ellipses-outline"></ion-icon>
+              </button> -->
+              <!-- <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <i class="fas fa-times"></i>
+              </button> -->
+            </div>
           </div>
           <div class="card-body">
+
             <div class="card-body table-responsive p-0" style="height: 300px;">
-              <table class="table table-head-fixed text-nowrap">
+              <table class="table table-head-fixed text-nowrap w3-card-4 w3-tiny">
                 <thead>
                   <tr>
                     <th>วันที่</th>
                     <th>รายการ</th>
-                    <th class="w3-right">จำนวนเงิน</th>
+                    <th class="">จำนวนเงิน</th>
                   </tr>
                 </thead>
                 <tbody *ngIf="listloanFm">
                   <tr *ngFor="let item of listloanFm ">
                     <td>{{ item.StartDeductSugDate | date: 'dd/MM/yyyy' }}</td>
                     <td>{{ item.loandesc }}</td>
-                    <td class="w3-right">{{ item.balance | number: '1.2-2' }}</td>
+                    <td class="">{{ item.balance | number: '1.2-2' }}</td>
                   </tr>
                 </tbody>
+                <tr class="txtLarge">
+                  <td colspan="2">++รวม++</td>
+                  <td class="w3-text-right w3-light-gray">
+                    {{ calculateTotal(listloanFm) | number : '1.2-2' }}
+                  </td>
+                </tr>
               </table>
             </div>
+
+            <!-- Contacts are loaded here -->
+            <div class="direct-chat-contacts">
+              <ul class="contacts-list">
+                <li>
+                  <a href="#">
+                    <img class="contacts-list-img" src="../dist/img/user1-128x128.jpg" alt="User Avatar">
+
+                    <div class="contacts-list-info">
+                      <span class="contacts-list-name">
+                        Count Dracula
+                        <small class="contacts-list-date float-right">2/28/2015</small>
+                      </span>
+                      <span class="contacts-list-msg">How have you been? I was...</span>
+                    </div>
+                    <!-- /.contacts-list-info -->
+                  </a>
+                </li>
+                <!-- End Contact Item -->
+              </ul>
+              <!-- /.contatcts-list -->
+            </div>
+          </div>
+          <div class="card-footer">
+            <!-- <form action="#" method="post">
+              <div class="input-group">
+                <input type="text" name="message" placeholder="Type Message ..." class="form-control">
+                <span class="input-group-append">
+                  <button type="submit" class="btn btn-primary">Send</button>
+                </span>
+              </div>
+            </form> -->
           </div>
         </div>
 
         <!-- หนี้แต่ละปี -->
-        <div *ngFor="let keyY of LoanDatailKeys" class="card card-primary collapsed-card card-outline">
+        <div class="card card-primary collapsed-card">
           <div class="card-header">
-            <ion-label class="w3-left"> รายละเอียดหนี้ {{ setnY(keyY) }}</ion-label>
-            <ion-button fill="clear" class="w3-right" data-card-widget="collapse">
-              <ion-icon slot="end" name="arrow-down-circle-outline"></ion-icon>
-            </ion-button>
+            <h3 class="card-title">รายละเอียดหนี้แต่ละปี</h3>
+
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <ion-icon name="arrow-down-outline"></ion-icon>
+                <!-- <i class="fas fa-plus"></i> -->
+              </button>
+            </div>
           </div>
           <div class="card-body">
-            <div class="card-body table-responsive p-0" style="height: 300px;">
-              <table class="table table-head-fixed text-nowrap">
-                <thead>
-                  <tr>
-                    <th>วันที่</th>
-                    <th>รายการ</th>
-                    <th class="w3-right">จำนวนเงิน</th>
-                  </tr>
-                </thead>
-                <tbody *ngIf="LoanDatailData">
-                  <tr *ngFor="let item of LoanDatailData[keyY]">
-                    <td>{{ item.StartDeductSugDate | date: 'dd/MM/yyyy' }}</td>
-                    <td>{{ item.loandesc }}</td>
-                    <td class="w3-right">{{ item.balance | number: '1.2-2' }}</td>
-                  </tr>
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <td colspan="2">++รวม++</td>
-                    <td class="w3-text-right txtBolder w3-light-gray">
-                      {{ calculateTotal(LoanDatailData[keyY]) | number : '1.2-2' }}
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
+            <div *ngFor="let keyY of LoanDatailKeys" class="card card-primary collapsed-card card-outline">
+              <div class="card-header">
+                <ion-label class="w3-left"> หนี้ {{ setnY(keyY) }} =
+                  {{ calculateTotal(LoanDatailData[keyY]) | number : '1.2-2' }}</ion-label>
+                <ion-button fill="clear" class="w3-right" data-card-widget="collapse">
+                  <ion-icon slot="end" name="arrow-down-circle-outline"></ion-icon>
+                </ion-button>
+              </div>
+              <div class="card-body">
+                <div class="card-body table-responsive p-0" style="height: 300px;">
+                  <table class="table table-head-fixed text-nowrap w3-card-4 w3-tiny">
+                    <thead>
+                      <tr>
+                        <th>วันที่</th>
+                        <th>รายการ</th>
+                        <th class="w3-right">จำนวนเงิน</th>
+                      </tr>
+                    </thead>
+                    <tbody *ngIf="LoanDatailData">
+                      <tr *ngFor="let item of LoanDatailData[keyY]">
+                        <td>{{ item.StartDeductSugDate | date: 'dd/MM/yyyy' }}</td>
+                        <td>{{ item.loandesc }}</td>
+                        <td class="w3-right">{{ item.balance | number: '1.2-2' }}</td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr class="txtLarge">
+                        <td colspan="2">++รวม++</td>
+                        <td class="w3-text-right txtBolder w3-light-gray">
+                          {{ calculateTotal(LoanDatailData[keyY]) | number : '1.2-2' }}
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+
         <ion-text class="txtSmall w3-right">*กรุณาเช็คกับฝ่ายสินเชื่ออีกครั้ง</ion-text>
         <!-- </ion-list> -->
       </div>
@@ -269,7 +398,7 @@
   <ion-list lines="full">
     <ion-title>
       <ion-icon name="list-outline"></ion-icon>
-      รายการเบิกปัจจัยการผลิต ปี {{ setnY(yearThX) }}
+      รายการเบิกปัจจัยฯ ปี {{ setnY(yearThX) }}
     </ion-title>
 
     <div class="card-body table-responsive p-0" style="height: 300px;">

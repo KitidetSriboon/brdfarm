@@ -274,6 +274,15 @@ export class BrdsqlService {
     return this.http.get<any[]>(url)
   }
 
+  // ข้อมูลการค้ำประกัน 
+  getGuarantor(yearTh: any, fmcode: any) {
+    const url = this.baseSelectUrl
+      + "s=*"
+      + "&f=cps6263.dbo.v_promisted" + yearTh
+      + "&w=fmcode_b1='" + fmcode + "'"
+    return this.http.get<any[]>(url)
+  }
+
   // ข้อมูลวงเงินหลักทรัพย์ เช็ค การใช้ เบิกเงิน กับเบิกปัจจัย
   getCrFm(yearTh: any, fmcode: any) {
     const url = this.brr_funcUrl

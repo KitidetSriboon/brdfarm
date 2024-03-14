@@ -28,6 +28,7 @@ export class FinancesPage implements OnInit {
   factorData?: any = [];
   sumcpFm?: any = [];
   crFm?: any = [];
+  guarantor?: any = [];
   loanFm?: any = [];
   listloanFm?: any = [];
   loanThisyear = 0;
@@ -93,13 +94,24 @@ export class FinancesPage implements OnInit {
         // console.log('getCreditFm res:', res)
         this.crFm = res.recordset[0]
       }
-      , error(err) {
-        alert('Error :' + err)
-      }, complete() {
-        // console.log('getCrFm complete')
+      , error: (err) => {
+        this.alertSv.swalAlertAnimate('!ผิดพลาด', 'พบข้อผิดพลาด ' + err, 'error')
+      }, complete: () => {
+        // this.getLoanNow()
       },
     })
-    this.getLoanNow()
+
+    await this.brdsql.getGuarantor(this.yearTh, this.fmcode).subscribe({
+      next: (res: any) => {
+        this.guarantor = res.recordset[0]
+        // console.log('guarantor res:', this.guarantor)
+      }
+      , error: (err) => {
+        this.alertSv.swalAlertAnimate('!ผิดพลาด', 'พบข้อผิดพลาด ' + err, 'error')
+      }, complete: () => {
+        this.getLoanNow()
+      },
+    })
   }
 
   // ข้อมูลหนี้จาก dbo.v_loanFarmer
@@ -149,7 +161,7 @@ export class FinancesPage implements OnInit {
       }).catch(err => { throw (err); })
       .finally(() => {
         // console.log('loading data finally..')
-        this.ldingCtrl.closeLoading();
+        this.getLoanNowDetail();
       })
 
   }
@@ -158,25 +170,21 @@ export class FinancesPage implements OnInit {
   async getLoanNowDetail() {
     let data: any = [];
     let year = this.yearTh?.substring(0, 2)
-    console.log('รายละเอียดหนี้')
+    // console.log('รายละเอียดหนี้')
     await this.brdsql.getFnNowDetail(this.fmcode).subscribe({
       next: (res: any) => {
         data = res
-        console.log('listload : ', data)
-        // data = data.filter((o: any) => o.year === '67')
-        // data.sort((a: any, b: any) => a.docdate - b.docdate); // b - a for reverse sort
+        // console.log('data res : ', data)
+        data = data.filter((o: any) => o.year === year)
+        data.sort((a: any, b: any) => a.docdate - b.docdate); // b - a for reverse sort
         this.listloanFm = data
-        // let groupedData = {};
-        // data.forEach((entry: { year: any; }) => {
-        //   const year = entry.year;
-        //   if (!groupedData[year]) {
-        //     groupedData[year] = [];
-        //   }
-        //   groupedData[year].push(entry);
-        // });
-        // console.log('list loan 67 : ', data)
-      }
+      }, complete: () => {
+        this.ldingCtrl.closeLoading();
+      }, error: (err) => {
+        this.alertSv.swalAlertAnimate('!ผิดพลาด', 'เกิดความผิดพลาด' + err, 'warning')
+      },
     })
+    // this.ldingCtrl.closeLoading();
   }
 
   async selectyear(e: any) {
@@ -203,7 +211,7 @@ export class FinancesPage implements OnInit {
         if (res.code === "EREQUEST") {
           this.alertSv.swalAlertAnimate('ไม่พบข้อมูล', 'หรือเกิดความผิดพลาดในการเรียกข้อมูล รายการเบิกปัจจัยการผลิตในปีที่เลือก', 'warning')
         }
-        console.log('res getfactor : ', res)
+        // console.log('res getfactor : ', res)
         this.factorData = res.recordset
         this.ldingCtrl.closeLoading();
       }, error(err) {
