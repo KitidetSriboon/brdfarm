@@ -196,6 +196,15 @@ export class BrdsqlService {
     return this.http.get<any[]>(url)
   }
 
+  // ข้อมูลการเบิกปัจจัยการผลิต
+  getFactor(fmcode: any, year: any) {
+    const url = this.baseSelectUrl
+      + "s=*&"
+      + "f=cps6263.dbo.v_getfactor" + year + "&"
+      + "w=fmcode='" + fmcode + "' order by datepost desc"
+    return this.http.get<any[]>(url)
+  }
+
   // ข้อมูลหนี้ปีปัจจุุบัน
   getLoannow(fmcode: any) {
     const url = this.baseSelectUrl

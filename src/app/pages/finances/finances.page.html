@@ -16,14 +16,6 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <ion-item>
-    <ion-select (ionChange)="selectyear($event)" label="เลือกปีของข้อมูล" placeholder="">
-      <ion-select-option value="" disabled>++เลือกปี++</ion-select-option>
-      <ion-select-option *ngFor="let i of yearData" value="{{i.yearTh}}">{{ i.yearDesc }}
-      </ion-select-option>
-    </ion-select>
-  </ion-item>
-
   <!-- ข้อมูลด้านสินเชื่อ -->
   <ion-card class="boxGreenPowerpointR w3-light-blue divPadding-10" style="margin-bottom: 25px;">
     <ion-card-content>
@@ -149,14 +141,52 @@
     </ion-card-content>
   </ion-card>
 
+  <ion-item color="medium">
+    <ion-select (ionChange)="selectyear($event)" label="เลือกปีของข้อมูล" placeholder="">
+      <ion-select-option value="" disabled>++เลือกปี++</ion-select-option>
+      <ion-select-option *ngFor="let i of yearData" value="{{i.yearTh}}">{{ i.yearDesc }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
 
-
-
+  <!-- รายการขอสินเชื่อ -->
   <ion-list lines="full">
     <ion-title>
       <ion-icon name="list-outline"></ion-icon>
-      รายการขอสินเชื่อ ปี {{ yearDesc }}
+      รายการขอสินเชื่อ ปี {{ setnY(yearThX) }}
     </ion-title>
+
+    <div class="card-body table-responsive p-0" style="height: 300px;">
+      <table class="table table-head-fixed text-nowrap w3-card-4 w3-tiny">
+        <thead>
+          <tr class="text-indigo">
+            <th>วันที่</th>
+            <th>แปลง</th>
+            <th>รายการ</th>
+            <th>จำนวนเงิน</th>
+            <th>สถานะ</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="fnData">
+          <tr *ngFor="let item of fnData">
+            <td>{{ item.datepost_th }}</td>
+            <td>{{ item.intlandno }} {{ item.canename }} พท. {{ item.landvalue }}</td>
+            <td>{{ item.comment1 }}</td>
+            <td>{{ item.money_amt | number: '1.2-2' }}</td>
+            <td [ngClass]="{'w3-text-teal': item.doc_status == '4', 'w3-text-red': item.doc_status !== '4'}">
+              {{ item.docdesc }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="5">++รวม++</td>
+            <!-- <td class="w3-text-right txtBolder w3-light-gray">
+              {{ calculateTotal(LoanDatailData[keyY]) | number : '1.2-2' }}
+            </td> -->
+          </tr>
+        </tfoot>
+      </table>
+    </div>
 
     <!-- <ion-list>
       <ion-card *ngFor="let item of fnData | async; let i = index">
@@ -232,6 +262,54 @@
         </div>
       </ion-accordion>
     </ion-accordion-group> -->
+
+  </ion-list>
+
+  <!-- รายการเบิกปัจจัยการผลิต -->
+  <ion-list lines="full">
+    <ion-title>
+      <ion-icon name="list-outline"></ion-icon>
+      รายการเบิกปัจจัยการผลิต ปี {{ setnY(yearThX) }}
+    </ion-title>
+
+    <div class="card-body table-responsive p-0" style="height: 300px;">
+      <table class="table table-head-fixed text-nowrap w3-table-all w3-card-4 w3-tiny">
+        <thead>
+          <tr class="text-indigo">
+            <th>วันที่</th>
+            <th>แปลง</th>
+            <th>ปุ๋ยเคมี</th>
+            <th>จำนวน</th>
+            <th>อินทรีย์</th>
+            <th>จำนวน</th>
+            <th>ยาฯ</th>
+            <th>จำนวน</th>
+            <th>สต็อค</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="factorData">
+          <tr *ngFor="let item of factorData">
+            <td>{{ item.datepost_th }}</td>
+            <td>{{ item.intlandno }} {{ item.CaneTypeName }} พท. {{ item.landvalue }}</td>
+            <td>{{ item.desc1 }}</td>
+            <td>{{ item.amt1 | number: '1.2-2' }}</td>
+            <td>{{ item.desc2 }}</td>
+            <td>{{ item.amt2 | number: '1.2-2' }}</td>
+            <td>{{ item.desc3 }}</td>
+            <td>{{ item.amt3 | number: '1.2-2' }}</td>
+            <td>{{ item.Stockname }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="9">++++</td>
+            <!-- <td class="w3-text-right txtBolder w3-light-gray">
+              {{ calculateTotal(LoanDatailData[keyY]) | number : '1.2-2' }}
+            </td> -->
+          </tr>
+        </tfoot>
+      </table>
+    </div>
 
   </ion-list>
 

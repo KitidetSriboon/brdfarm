@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalController, LoadingController, ToastController, AlertController, NavController } from '@ionic/angular';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import Swal from 'sweetalert2'
+// import Swal from 'sweetalert2'
+import { AlertService } from 'src/app/services/alert.service';
 import { BrdsqlService } from 'src/app/services/brdsql.service';
+import { NetworkService } from 'src/app/services/network.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { GlobalConstants, yearCr, yearTh, yearLabel } from 'src/app/global-constants';
 import { filter } from 'rxjs/operators';
@@ -23,19 +25,28 @@ export class FinancesPage implements OnInit {
   yearDesc?: string;
   yearData?: any = [];
   fnData?: any = [];
+  factorData?: any = [];
   sumcpFm?: any = [];
   crFm?: any = [];
   loanFm?: any = [];
   listloanFm?: any = [];
   loanThisyear = 0;
   yearThX: any;
+  LoanDatailData: { [key: string]: any[] } = {};
+  LoanDatailKeys: string[] = [];
+  listLoanNow: any;
+  listLoanyear: string[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private navCtrl: NavController,
     private brdsql: BrdsqlService,
     private ldingCtrl: LoadingService,
+    private alertSv: AlertService,
+    public networkSv: NetworkService,
   ) {
+
+    this.networkSv.initializeApp();
 
     this.yearCr = yearCr();
     this.yearTh = yearTh();
@@ -58,6 +69,7 @@ export class FinancesPage implements OnInit {
 
   // ข้อมูล สรุปพื้นที่ปลูกอ้อยแยกประเภท วงเงิน แปลงเช่า แปลงเสียหาย ประเมินอ้อย 
   async getSumcpFm() {
+    this.ldingCtrl.presentLoading('กำลังโหลดข้อมูลต่างๆ... ');
     // console.log('สรุปพื้นที่ปลูก')
     await this.brdsql.getSumcpFm(this.yearTh, this.fmcode).subscribe({
       next: (res: any) => {
@@ -106,11 +118,7 @@ export class FinancesPage implements OnInit {
     this.LoanDatailNow();
   }
 
-  // รายละเอียดหนี้
-  LoanDatailData: { [key: string]: any[] } = {};
-  LoanDatailKeys: string[] = [];
-  listLoanNow: any;
-  listLoanyear: string[] = [];
+  // รายละเอียดหนี้แต่ละปี
   async LoanDatailNow() {
     let data = [];
     let fmcode = this.fmcode
@@ -133,12 +141,16 @@ export class FinancesPage implements OnInit {
           //this.data_group = groupedData;
           this.LoanDatailData = groupedData;
           this.LoanDatailKeys = Object.keys(groupedData);
-          console.log('LoanDatailData: ', this.LoanDatailData);
+          // console.log('LoanDatailData: ', this.LoanDatailData);
           // console.log('LoanDatailKeys: ', this.LoanDatailKeys);
           // console.log('listLoanyear: ',this.yearTh.substring(0, 2), this.listLoanyear);
         }
         else this.listLoanNow = [];
       }).catch(err => { throw (err); })
+      .finally(() => {
+        // console.log('loading data finally..')
+        this.ldingCtrl.closeLoading();
+      })
 
   }
 
@@ -168,26 +180,45 @@ export class FinancesPage implements OnInit {
   }
 
   async selectyear(e: any) {
+    this.ldingCtrl.presentLoading('กำลังโหลดข้อมูล รายการเบิกเกี้ยว/ปัจจัย..')
     // console.log('select event', e.target.value)
-    this.ldingCtrl.presentLoading('กำลังโหลดข้อมูลสินเชื่อปี ' + e.target.value)
     this.yearTh = e.target.value
+    this.yearThX = this.yearTh?.substring(0, 2)
     await this.brdsql.getFnFarmer(this.fmcode, this.yearTh).subscribe({
       next: (res: any) => {
+        if (res.code === "EREQUEST") {
+          this.alertSv.swalAlertAnimate('ไม่พบข้อมูล', 'รายการขอสินเชื่อในปีที่เลือก', 'warning')
+        }
         // console.log('res: ', res)
-        this.ldingCtrl.closeLoading();
         this.fnData = res.recordset
-      }
+      }, error(err) {
+
+      }, complete() {
+        // console.log('load รายการเบิกเกี้ยว finished')
+      },
+    })
+
+    await this.brdsql.getFactor(this.fmcode, this.yearTh).subscribe({
+      next: (res: any) => {
+        if (res.code === "EREQUEST") {
+          this.alertSv.swalAlertAnimate('ไม่พบข้อมูล', 'หรือเกิดความผิดพลาดในการเรียกข้อมูล รายการเบิกปัจจัยการผลิตในปีที่เลือก', 'warning')
+        }
+        console.log('res getfactor : ', res)
+        this.factorData = res.recordset
+        this.ldingCtrl.closeLoading();
+      }, error(err) {
+      }, complete() {
+        // console.log('load รายการเบิกเกี้ยว finished')
+      },
     })
   }
 
   handleRefresh(event: any) {
     setTimeout(() => {
       // Any calls to load data go here
-      this.ldingCtrl.presentLoading('กำลังโหลดข้อมูลสินเชื่อปี ' + this.yearTh)
       this.brdsql.getFnFarmer(this.fmcode, this.yearTh).subscribe({
         next: (res: any) => {
           // console.log('res: ', res)
-          this.ldingCtrl.closeLoading();
           this.fnData = res.recordset
           event.target.complete();
         }
