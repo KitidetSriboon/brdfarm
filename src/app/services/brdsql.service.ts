@@ -171,28 +171,41 @@ export class BrdsqlService {
   }
 
   add_factor_money(f: any) {
-    const url = `https://asia-southeast2-brr-farmluck.cloudfunctions.net/brdsqlapi/insert_getfactorw?supcode='${f.supcode}'
-    &factor_type='1'&doc_status='F'&itid='${f.itid}'&intlandno='${f.intlandno}'
-    &fmcode='${f.fmcode}'&YearID='${f.year_th}'&money_amt=${f.money_amt}&comment_fm='${f.fm_doc}'`
+    const url = `https://asia-southeast2-brr-farmluck.cloudfunctions.net/brdsqlapi/insert_getfactorw?supcode='${f.supcode}'&factor_type='1'
+    &doc_status='F'&itid='${f.itid}'&intlandno='${f.intlandno}'&fmcode='${f.fmcode}'&YearID='${f.year_th}'&money_amt=${f.money_amt}&comment_fm='${f.fm_doc}'`
     //console.log('add_factor_money', url)
+    return this.http.get<any[]>(url);
+  }
+  add_factor_factor(f: any, j: any) {
+    const url = `https://asia-southeast2-brr-farmluck.cloudfunctions.net/brdsqlapi/insert_getfactorw?supcode='${f.supcode}'&factor_type='2'
+    &doc_status='F'&itid='${f.itid}'&intlandno='${f.intlandno}'&fmcode='${f.fmcode}'&YearID='${f.year_th}'&money_amt=${f.money_amt}
+    &get1='${j.get1}'&amt1=${j.amt1}&get2='${j.get2}'&amt2=${j.amt2}&get3='${j.get3}'&amt3=${j.amt3}&get4='${j.get4}'&amt4=${j.amt4}&get5='${j.get5}'&amt5=${j.amt5}`
+    console.log('add_factor_money', url)
     return this.http.get<any[]>(url);
   }
 
   getData_money_itid(year: any, itid: string): Observable<any[]> {
-    //https://asia-southeast2-brr-farmluck.cloudfunctions.net/dbcps/select_s_f_w_0?s=*&f=[cps6263].[dbo].[v_sum_money_amt]&w=[YearID]=%276768%27and[itid]=%27-NJE_dvPj8HEqW5i9gQ5?special=-NJE_dvPj8HEqW5i9gQ5%27
     const url = 'https://asia-southeast2-brr-farmluck.cloudfunctions.net/dbcps/select_s_f_w_0?'
       + "s=*"
       + "&f=[cps6263].[dbo].[v_sum_money_amt]"
       + "&w=[YearID]='" + year + "'and[itid]='" + itid + "'";
     return this.http.get<any[]>(url);
   }
-
+  getData_factor_itid(year: any, itid: string): Observable<any[]> {
+    const url = `https://asia-southeast2-brr-farmluck.cloudfunctions.net/dbcps/select_s_f_w_0?s=*&f=[cps6263].[dbo].[v_getfactor]&w=[YearID]='${year}'and[itid]='${itid}'`;
+    return this.http.get<any[]>(url);
+  }
   // ข้อมูลการขอสินเชื่อของชาวไร่
   getFnFarmer(fmcode: any, yearTh: any) {
     const url = this.baseSelectUrl
       + "s=*&"
       + "f=cps6263.dbo.v_getfinance" + yearTh + "&"
       + "w=fmcode_b1=" + fmcode + " order by datepost desc"
+    return this.http.get<any[]>(url)
+  }
+
+  getstock_data() {
+    let url = `https://asia-southeast2-brr-farmluck.cloudfunctions.net/dbcps/select_s_f_w_0?s=stock_id,description,amt_in,amt_out,CntUnitMsr,group_type,per_unit&f=[dbo].[stock]&w=[amt_in]>0or[amt_out]>0`;
     return this.http.get<any[]>(url)
   }
 

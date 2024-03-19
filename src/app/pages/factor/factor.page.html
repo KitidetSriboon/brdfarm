@@ -1,13 +1,138 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>factor</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title>เบิกปัจจัย</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">factor</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="w3-panel w3-pale-blue w3-leftbar w3-rightbar w3-border-blue">
+    <br>
+    <p>หมายเลขแปลง {{cpdata.intlandno}}</p>
+    <p>โควตา {{cpdata.fmcode}}, ชื่อ {{cpdata.fmname}}</p>
+    <p>แปลง {{cpdata.CaneTypeName}} พื้นที่ {{cpdata.landvalue | number}} ไร่</p>
+    <p>วงเงินได้รับ {{ cpdata.credit_amount | number: '1.1-2'}} บาท</p>
+
+    <ion-list>
+      <ion-select fill="outline" label="ประเภทการขอเบิก" interface="popover" placeholder="เลือกรายการ"
+        (ionChange)="filterList($event)" label-placement="floating">
+        <ion-select-option [value]="1">ปุ๋ยเคมี</ion-select-option>
+        <ion-select-option [value]="2">อินทรีย์</ion-select-option>
+        <ion-select-option [value]="4">โดโลไมท์</ion-select-option>
+        <ion-select-option [value]="3">ยา</ion-select-option>
+      </ion-select>
+    </ion-list>
+
+    <ion-list *ngIf="filteredItems.length>0">
+      <!--<ion-searchbar show-clear-button="always" (ionChange)="filterItems($event)" value="" style="color: #000;"></ion-searchbar>-->
+      <ion-select fill="outline" label="รายการขอเบิก" interface="popover" placeholder="เลือกรายการขอเบิก"
+        label-placement="floating" [(ngModel)]="selectedValue" (ionChange)="onSelectChange()">
+        <ion-select-option [value]="item" *ngFor="let item of filteredItems;">{{item.description}}
+        </ion-select-option>
+      </ion-select>
+    </ion-list>
+
+    <ion-item *ngIf="setnumOf>0">
+      <ion-input type="number" min=1 max="500" [(ngModel)]="selected_num" (ionChange)="onSelectChange()"
+        label="จำนวนที่ขอเบิก" [clearInput]="true" placeholder="ระบุจำนวน" value=0>
+      </ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>ราคาประมาณ: {{thItid.money_amt | number: '1.1-1'}} บาท</ion-label>
+    </ion-item>
+
+    <div class="ion-text-center divPadding-5">
+      <ion-button [disabled]="(!(filteredItems.length>0) || !(selected_num>0))" (click)="saveApplyFn()">
+        <ion-icon slot="start" name="save"></ion-icon>
+        ตกลง
+      </ion-button>
+    </div>
+    <ion-loading *ngIf="isLoading" message="Loading..." spinner="circles"></ion-loading>
+  </div>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>รายการขอเบิกแปลง:{{thItid.intlandno}}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content *ngIf="data_factor.length>0">
+      <table class="table table-sm table-bordered">
+        <thead>
+          <tr class="text-bold">
+            <td>วันที่ทำรายการ</td>
+            <td>รายการ</td>
+            <td class="text-right">
+              จำนวน
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="sumdata.cemecal > 0">
+            <th colspan="3"> <i class="fas fa-list"></i> ขอเบิกปุ๋ยเคมี</th>
+          </tr>
+          <tr *ngFor="let item of data_factor">
+            <td *ngIf="item.desc1 != null || item.amt1 > 0">{{item.datepost_th}}</td>
+            <td *ngIf="item.desc1 != null || item.amt1 > 0">{{item.desc1}} <b *ngIf="item.take_method == 1"
+                style="color: red;">(เงินสด)</b>
+              <span *ngIf="item.getFert3 === 'Y'">(ปุ๋ยรอบ3)</span>
+            </td>
+            <td *ngIf="item.desc1 != null || item.amt1 > 0" class="text-right">{{item.amt1}}</td>
+          </tr>
+          <tr *ngIf="sumdata.cemecal != 0">
+            <td colspan="3" class="text-right text-bold"> *** รวม *** <u>{{sumdata.cemecal}} </u></td>
+          </tr>
+          <tr *ngIf="sumdata.oganic > 0">
+            <th colspan="3"> <i class="fas fa-list"></i> ขอเบิกปุ๋ยอินทรีย์</th>
+          </tr>
+          <tr *ngFor="let item of data_factor">
+            <td *ngIf="item.desc2 != null || item.amt2 > 0">{{item.datepost_th}}</td>
+            <td *ngIf="item.desc2 != null || item.amt2 > 0">{{item.desc2}} <b *ngIf="item.take_method == 1"
+                style="color: red;">(เงินสด)</b></td>
+            <td *ngIf="item.desc2 != null || item.amt2 > 0" class="text-right">{{item.amt2}}</td>
+          </tr>
+          <tr *ngIf="sumdata.oganic != 0">
+            <td colspan="3" class="text-right text-bold"> *** รวม *** <u>{{sumdata.oganic}} </u></td>
+          </tr>
+          <tr *ngIf="sumdata.lomite != 0">
+            <th colspan="3"> <i class="fas fa-list"></i> ขอเบิกโดโลไมท์</th>
+          </tr>
+          <tr *ngFor="let item of data_factor">
+            <td *ngIf="item.desc4 != null || item.amt4 > 0">{{item.datepost_th}}</td>
+            <td *ngIf="item.desc4 != null || item.amt4 > 0">{{item.desc4}} <b *ngIf="item.take_method == 1"
+                style="color: red;">(เงินสด)</b></td>
+            <td *ngIf="item.desc4 != null || item.amt4 > 0" class="text-right">{{item.amt4}}</td>
+          </tr>
+          <tr *ngIf="sumdata.lomite != 0">
+            <td colspan="3" class="text-right text-bold"> *** รวม *** <u>{{sumdata.lomite}} </u></td>
+          </tr>
+          <tr *ngIf="sumdata.fertilizer != 0">
+            <th colspan="3"> <i class="fas fa-list"></i> ขอเบิกยาปราบศัตรูพืช</th>
+          </tr>
+          <tr *ngFor="let item of data_factor">
+            <td *ngIf="item.desc3 != null || item.amt3 > 0">{{item.datepost_th}}</td>
+            <td *ngIf="item.desc3 != null || item.amt3 > 0">{{item.desc3}} <b *ngIf="item.take_method == 1"
+                style="color: red;">(เงินสด)</b></td>
+            <td *ngIf="item.desc3 != null || item.amt3 > 0" class="text-right">{{item.amt3}}</td>
+          </tr>
+          <tr *ngIf="sumdata.fertilizer != 0">
+            <td colspan="3" class="text-right text-bold"> *** รวม *** <u>{{sumdata.fertilizer}} </u></td>
+          </tr>
+          <tr *ngIf="sumdata.machin != 0">
+            <th colspan="3"> <i class="fas fa-list"></i> ขอเบิกอุปกรณ์</th>
+          </tr>
+          <tr *ngFor="let item of data_factor">
+            <td *ngIf="item.desc5 != null || item.amt5 > 0">{{item.datepost_th}}</td>
+            <td *ngIf="item.desc5 != null || item.amt5 > 0">{{item.desc5}} <b *ngIf="item.take_method == 1"
+                style="color: red;">(เงินสด)</b></td>
+            <td *ngIf="item.desc5 != null || item.amt5 > 0" class="text-right">{{item.amt5}}
+            </td>
+          </tr>
+          <tr *ngIf="sumdata.machin != 0">
+            <td colspan="3" class="text-right text-bold"> *** รวม *** <u>{{sumdata.machin}} </u></td>
+          </tr>
+        </tbody>
+      </table>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
