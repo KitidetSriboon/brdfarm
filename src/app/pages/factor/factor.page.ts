@@ -127,6 +127,7 @@ export class FactorPage implements OnInit {
   filterList(e: any) {
     let keyword: number = e.target.value;
     let data = this.stock_d.s;
+    this.selected_num = 0;
     this.thItid.type_s = keyword;
     if (data.length > 0) {
       if (keyword > 0) {
@@ -191,7 +192,7 @@ export class FactorPage implements OnInit {
     let f = this.thItid;
     let j = this.isfactor;
 
-    if (confirm(`ต้องการบันทึกขอเบิก ราคา ${f.money_amt.toLocaleString()} บาท ใช่หรือไม่`)) {
+    if (confirm(`ต้องการบันทึกขอเบิกปัจจัย ราคา ${f.money_amt.toLocaleString()} บาท ใช่หรือไม่`)) {
       this.isLoading = true;
       // this.removeCommas(f.money_amt);
       this.brdsql.add_factor_factor(f, j).subscribe((res: any) => {

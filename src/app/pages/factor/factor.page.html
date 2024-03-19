@@ -16,7 +16,7 @@
     <p>วงเงินได้รับ {{ cpdata.credit_amount | number: '1.1-2'}} บาท</p>
 
     <ion-list>
-      <ion-select fill="outline" label="ประเภทการขอเบิก" interface="popover" placeholder="เลือกรายการ"
+      <ion-select fill="outline" label="1.เลือกประเภทการขอเบิก" interface="popover" placeholder="เลือกรายการ"
         (ionChange)="filterList($event)" label-placement="floating">
         <ion-select-option [value]="1">ปุ๋ยเคมี</ion-select-option>
         <ion-select-option [value]="2">อินทรีย์</ion-select-option>
@@ -27,7 +27,7 @@
 
     <ion-list *ngIf="filteredItems.length>0">
       <!--<ion-searchbar show-clear-button="always" (ionChange)="filterItems($event)" value="" style="color: #000;"></ion-searchbar>-->
-      <ion-select fill="outline" label="รายการขอเบิก" interface="popover" placeholder="เลือกรายการขอเบิก"
+      <ion-select fill="outline" label="2.เลือกรายการขอเบิก" interface="popover" placeholder="เลือกรายการขอเบิก"
         label-placement="floating" [(ngModel)]="selectedValue" (ionChange)="onSelectChange()">
         <ion-select-option [value]="item" *ngFor="let item of filteredItems;">{{item.description}}
         </ion-select-option>
@@ -36,7 +36,7 @@
 
     <ion-item *ngIf="setnumOf>0">
       <ion-input type="number" min=1 max="500" [(ngModel)]="selected_num" (ionChange)="onSelectChange()"
-        label="จำนวนที่ขอเบิก" [clearInput]="true" placeholder="ระบุจำนวน" value=0>
+        label="3.ระบุจำนวนที่ขอเบิก" [clearInput]="true" placeholder="ระบุจำนวน" value=0>
       </ion-input>
     </ion-item>
 
