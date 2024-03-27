@@ -109,6 +109,7 @@ export class Tab1Page {
   }
 
   ngOnInit() {
+    this.setyearActive();
     this.yearID();
   }
 
@@ -126,16 +127,13 @@ export class Tab1Page {
     this.menuCtrl.open('moremenu');
   }
 
-  // ตั้งค่าปีที่ใช้งาน จาก api
-  async yearID() {
-    await this.brdsql.yearId().subscribe({
+  // เชคว่า แอพถูกตั้งค่าปีการผลิตไว้อย่างไร ปีไหน
+  async setyearActive() {
+    await this.brdsql.yearActive().subscribe({
       next: (res: any) => {
-        this.yearData = res.recordset
-        let x = JSON.stringify(res.recordset)
-        localStorage.setItem('yearID', x)
-        this.yearActive = res.recordset.filter((o: any) => o.setActive === 'Y')
-        this.yearActive = this.yearActive[0]
-        GlobalConstants._yearid = res.recordset
+        // console.log('res yearactive', res)
+        this.yearActive = res.recordset[0]
+        // เก็บค่าปีที่ active ไว้ที่ตัวแปร
         GlobalConstants.yearCr = this.yearActive.yearCr
         GlobalConstants.yearTh = this.yearActive.yearTh
         GlobalConstants.yearLabel = this.yearActive.yearDesc
@@ -143,7 +141,19 @@ export class Tab1Page {
         this.yearCr = GlobalConstants.yearCr
         this.yearTh = GlobalConstants.yearTh
         this.yearDesc = GlobalConstants.yearLabel
-        console.log('yearCr: ', this.yearCr)
+      }
+    })
+  }
+
+  // ตั้งค่าปีที่ใช้งาน จาก api from table yearid
+  async yearID() {
+    await this.brdsql.yearId().subscribe({
+      next: (res: any) => {
+        this.yearData = res.recordset
+        let x = JSON.stringify(res.recordset)
+        localStorage.setItem('yearID', x)
+        // เก็บค่าปีที่ active ไว้ที่ตัวแปร
+        GlobalConstants._yearid = res.recordset
       }
     })
   }
@@ -155,6 +165,9 @@ export class Tab1Page {
       x = JSON.parse(x)
       x = x.filter((o: any) => o.yearCr == e.target.value)
       // console.log('year filter', x)
+      GlobalConstants.yearCr = x[0].yearCr
+      GlobalConstants.yearTh = x[0].yearTh
+      GlobalConstants.yearLabel = x[0].yearDesc
       this.yearCr = x[0].yearCr
       this.yearTh = x[0].yearTh
       this.yearDesc = x[0].yearDesc

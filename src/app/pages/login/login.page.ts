@@ -47,10 +47,11 @@ export class LoginPage implements OnInit {
   async loadToken() {
     const token = await Storage.get({ key: TOKEN_KEY });
     if (token && token.value) {
-      // console.log('set token: ', token.value);
+      console.log('have token');
       this.token = token.value;
       this.isAuthenticated.next(true);
     } else {
+      console.log('no token');
       this.isAuthenticated.next(false);
     }
   }
@@ -95,11 +96,14 @@ export class LoginPage implements OnInit {
     await loading.present();
 
     this.authService.login(this.credentials.value).subscribe(
+      // if login success
       async (res: any) => {
+        console.log('res OK', res)
         await loading.dismiss();
         this.router.navigateByUrl('/tabs', { replaceUrl: true });
       },
       async (res) => {
+        console.log('res No K', res)
         await loading.dismiss();
         this.swalAlert.swalAlertAnimate('!!ไม่สำเร็จ', 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง..กรุณาลองใหม่อีกครั้ง', 'warning')
       }
@@ -109,10 +113,12 @@ export class LoginPage implements OnInit {
 
   // Easy access for form fields
   get username() {
+    console.log('get username')
     return this.credentials.get('username');
   }
 
   get password() {
+    console.log('get password')
     return this.credentials.get('password');
   }
 

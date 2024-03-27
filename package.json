@@ -34,7 +34,7 @@
     "@capacitor/ios": "5.2.3",
     "@capacitor/keyboard": "5.0.6",
     "@capacitor/local-notifications": "^5.0.6",
-    "@capacitor/network": "^5.0.6",
+    "@capacitor/network": "^5.0.7",
     "@capacitor/push-notifications": "^5.0.6",
     "@capacitor/splash-screen": "^5.0.6",
     "@capacitor/status-bar": "5.0.6",
@@ -53,7 +53,7 @@
     "ngx-gauge": "^9.0.0",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.10.1",
-    "swiper": "^11.0.5",
+    "swiper": "^11.0.7",
     "tslib": "^2.3.0",
     "xlsx": "^0.18.5",
     "zone.js": "~0.13.0"

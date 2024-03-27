@@ -1,5 +1,5 @@
-<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false&callback=initMap">
-</script>
+<!-- <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false&callback=initMap">
+</script> -->
 
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
@@ -7,49 +7,6 @@
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
     <ion-title>วัดแปลงอ้อย</ion-title>
-  </ion-toolbar>
-  <!-- <ion-button>
-    <ion-icon (click)="goBack()" slot="icon-only" name="arrow-back"></ion-icon>
-  </ion-button> -->
-  <ion-buttons slot="end">
-    <ion-back-button></ion-back-button>
-  </ion-buttons>
-  <ion-toolbar color="medium" class="padding-top">
-    <ion-buttons slot="secondary">
-      <ion-button (click)="measurePlot()">
-        <ion-icon slot="icon-only" name="locate-outline"></ion-icon>
-      </ion-button>
-      <ion-button (click)="startTracking()" *ngIf="!isTracking">
-        <ion-icon slot="icon-only" name="walk-outline"></ion-icon>
-      </ion-button>
-      <ion-button (click)="stopTracking()" *ngIf="isTracking">
-        <ion-icon slot="icon-only" name="stop-circle-outline"></ion-icon>
-      </ion-button>
-      <ion-button id="addMarker" [disabled]="!isTracking">
-        <ion-icon slot="icon-only" name="add-outline"></ion-icon>
-      </ion-button>
-      <!-- <ion-button (click)="setmesure('start')" *ngIf="mesureStatus === 'stop'">
-        <ion-icon name="add"></ion-icon>
-      </ion-button> -->
-      <ion-button id="show-polygon">
-        <ion-icon slot="icon-only" name="checkmark"></ion-icon>
-      </ion-button>
-      <!-- <ion-button (click)="setmesure('wait')" *ngIf="mesureStatus === 'stop'" id="show-polygon">
-        <ion-icon slot="icon-only" name="checkmark"></ion-icon>
-      </ion-button> -->
-      <!-- <ion-button id="show-markers">
-        <ion-icon slot="icon-only" name="location"></ion-icon>
-      </ion-button>
-      <ion-button id="hide-markers">
-        <ion-icon name="eye-off-outline"></ion-icon>
-      </ion-button> -->
-      <ion-button id="delete-markers">
-        <ion-icon slot="icon-only" name="close"></ion-icon>
-      </ion-button>
-      <!-- <ion-button (click)="showMarkerList()">
-        <ion-icon slot="icon-only" name="eye"></ion-icon>
-      </ion-button> -->
-    </ion-buttons>
     <ion-buttons slot="primary">
       <ion-button id="popover-button">
         <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
@@ -123,34 +80,99 @@
         </ng-template>
       </ion-popover>
     </ion-buttons>
-    <ion-title>แผนที่</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+
+  <ion-toolbar color="" class="padding-top">
+
+    <ion-segment value="walk" (ionChange)="segmentChanged($event)">
+      <ion-segment-button value="walk">
+        <ion-icon name="walk-outline"></ion-icon>
+        <ion-label>เดินมาร์ค</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="mark">
+        <ion-icon name="navigate-outline"></ion-icon>
+        <ion-label>มาร์คแผนที่</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <!-- <ion-buttons slot="secondary">
+      <ion-button (click)="measurePlot()">
+        <ion-icon slot="icon-only" name="locate-outline"></ion-icon>
+      </ion-button> -->
+    <!--<ion-button (click)="startTracking()" *ngIf="!isTracking">
+        <ion-icon slot="icon-only" name="walk-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="stopTracking()" *ngIf="isTracking">
+        <ion-icon slot="icon-only" name="stop-circle-outline"></ion-icon>
+      </ion-button>
+      <ion-button id="addMarker" [disabled]="!isTracking">
+        <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+      </ion-button> -->
+    <!-- <ion-button (click)="setmesure('start')" *ngIf="mesureStatus === 'stop'">
+        <ion-icon name="add"></ion-icon>
+      </ion-button> -->
+    <ion-button id="show-markers">
+      <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
+    </ion-button>
+    <ion-button id="hide-markers">
+      <ion-icon slot="icon-only" name="eye-off-outline"></ion-icon>
+    </ion-button>
+    <ion-button id="delete-markers">
+      <ion-icon slot="icon-only" name="close"></ion-icon>
+    </ion-button>
+    <ion-button id="show-polygon">
+      <ion-icon slot="icon-only" name="crop-outline"></ion-icon>
+    </ion-button>
+    <!-- <ion-button (click)="setmesure('wait')" *ngIf="mesureStatus === 'stop'" id="show-polygon">
+        <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+      </ion-button> -->
+    <!-- <ion-button id="show-markers">
+        <ion-icon slot="icon-only" name="location"></ion-icon>
+      </ion-button>
+      <ion-button id="hide-markers">
+        <ion-icon name="eye-off-outline"></ion-icon>
+      </ion-button> -->
+    <!-- <ion-button (click)="showMarkerList()">
+        <ion-icon slot="icon-only" name="eye"></ion-icon>
+      </ion-button> -->
+    <!-- </ion-buttons> -->
+
+    <!-- <ion-title>แผนที่</ion-title> -->
+  </ion-toolbar>
+
+  <!-- <ion-content *ngIf="walkP" class="animate__animated animate__faster" [ngClass]="{animate__slideInRight: !walkP}">
+        <div id="map" style="width: 100%;  height: 100%;"></div>
+      </ion-content>
+
+      <ion-content *ngIf="markP" class="animate__animated animate__faster" [ngClass]="{animate__slideInRight: !markP}">
+        <div id="map" style="width: 100%;  height: 100%;"></div>
+      </ion-content> -->
 
   <div id="map" style="width: 100%;  height: 100%;"></div>
 
 </ion-content>
 
 <ion-footer>
-  <div class="w3-panel">
+  <!-- <div class="w3-panel">
     <ion-card color="warning">
-      <!-- <ion-card-header>
+       <ion-card-header>
         <ion-card-title>Card Title</ion-card-title>
         <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-      </ion-card-header> -->
+      </ion-card-header>
 
       <ion-card-content>
         <ion-list>
           <ion-list-header>now position</ion-list-header>
           <ion-item>{{ marker | json }}</ion-item>
-          <!-- <ion-item *ngFor="let route of previousTracks">
+          <ion-item *ngFor="let route of previousTracks">
             {{ route.finished | date }}, {{ route.path.length }} Waypoints
             <button ion-button clear item-end (click)="showHistoryRoute(route.path)">View Route</button>
-          </ion-item> -->
+          </ion-item>
         </ion-list>
-        <!-- <ion-list>
+        <ion-list>
           <ion-item>
             <ion-label>วิธีวัดแปลง</ion-label>
             <ion-button slot="end" *ngIf="measureMethod === 'walk'">
@@ -164,9 +186,9 @@
             <ion-input class="input1" [(ngModel)]="areacal" label="พื้นที่ (ไร่)" label-placement="พื้นที่ (ไร่)">
             </ion-input>
           </ion-item>
-        </ion-list> -->
+        </ion-list>
       </ion-card-content>
 
     </ion-card>
-  </div>
+  </div> -->
 </ion-footer>

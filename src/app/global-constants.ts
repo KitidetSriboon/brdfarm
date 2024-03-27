@@ -2,8 +2,8 @@
 
 export class GlobalConstants {
     public static appname: string = "brdFarm";
-    public static yearCr: string = "2324";
-    public static yearTh: string = "6667";
+    public static yearCr: string = "2425";
+    public static yearTh: string = "6768";
     public static appversion: string = "1.2.0 Beta";
     public static lastupdate: string = "7 มี.ค.67"
     public static versionDesc = [

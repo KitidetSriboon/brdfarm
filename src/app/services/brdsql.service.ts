@@ -23,10 +23,18 @@ export class BrdsqlService {
     private http: HttpClient
   ) { }
 
-  // ข้อมูลปีการผลิต
+  // ข้อมูลปีการผลิต สำหรับ Select year
   yearId(): Observable<any[]> {
     const url = this.baseSelectUrl
+      // + "s=*&f=appID&w=appid='03'"
       + "s=*&f=yearID&w=1=1 order by yearTh"
+    return this.http.get<any[]>(url)
+  }
+
+  // ข้อมูลปีการผลิต ที่ใช้งานปัจจุบัน สำหรับแอพ brdfarm appid = 03 from cps6263.dbo.appID
+  yearActive(): Observable<any[]> {
+    const url = this.baseSelectUrl
+      + "s=*&f=appID&w=appid='03'"
     return this.http.get<any[]>(url)
   }
 
@@ -206,6 +214,28 @@ export class BrdsqlService {
 
   getstock_data() {
     let url = `https://asia-southeast2-brr-farmluck.cloudfunctions.net/dbcps/select_s_f_w_0?s=stock_id,description,amt_in,amt_out,CntUnitMsr,group_type,per_unit&f=[dbo].[stock]&w=[amt_in]>0or[amt_out]>0`;
+=======
+  // ข้อมูลการเบิกปัจจัยการผลิต
+  getFactor(fmcode: any, year: any) {
+    const url = this.baseSelectUrl
+      + "s=*&"
+      + "f=cps6263.dbo.v_getfactor" + year + "&"
+      + "w=fmcode='" + fmcode + "' order by datepost desc"
+    return this.http.get<any[]>(url)
+  }
+
+  // ข้อมูลหนี้ปีปัจจุุบัน
+  getLoannow(fmcode: any) {
+    const url = this.baseSelectUrl
+      + "s=*&"
+      + "f=cps6263.dbo.v_loanFarmer&"
+      + "w=fmcode_b1='" + fmcode + "'"
+    return this.http.get<any[]>(url)
+  }
+
+  // รายละเอียดหนี้
+  getFnNowDetail(fmcode: any) {
+    const url = "https://asia-southeast2-brr-farmluck.cloudfunctions.net/dbbrr/VW_DOCLIST2_fmcode_w?cardcode=" + fmcode
     return this.http.get<any[]>(url)
   }
 
@@ -260,6 +290,15 @@ export class BrdsqlService {
       + "s=*"
       + "&f=cps6263.dbo.v_sumcpfm" + yearTh
       + "&w=fmcode='" + fmcode + "'"
+    return this.http.get<any[]>(url)
+  }
+
+  // ข้อมูลการค้ำประกัน 
+  getGuarantor(yearTh: any, fmcode: any) {
+    const url = this.baseSelectUrl
+      + "s=*"
+      + "&f=cps6263.dbo.v_promisted" + yearTh
+      + "&w=fmcode_b1='" + fmcode + "'"
     return this.http.get<any[]>(url)
   }
 
