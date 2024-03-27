@@ -420,8 +420,8 @@ export class Tab2Page {
         text: 'ขอปัจจัยฯ',
         icon: 'leaf-outline',
         handler: () => {
-          Swal.fire('อยู่ระหว่างพัฒนา');
-          // this.openFactorPage(mapsql.itid);
+          //Swal.fire('อยู่ระหว่างพัฒนา');
+          this.openFactorPage(mapsql.itid);
         }
       },
       {
