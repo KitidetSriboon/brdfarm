@@ -77,9 +77,9 @@ export class FinancesPage implements OnInit {
         // console.log('getSumcpFm res:', res)
         this.sumcpFm = res.recordset[0]
       }
-      , error(err) {
+      , error: (err) => {
         alert('Error :' + err)
-      }, complete() {
+      }, complete: () => {
         // console.log('getSumcpFm complete')
       },
     })
@@ -125,7 +125,12 @@ export class FinancesPage implements OnInit {
           this.loanThisyear = this.loanFm.Loanleft6768
           this.yearThX = this.yearTh?.substring(0, 2)
         }
+      }, error: (err) => {
+
       }
+      , complete: () => {
+
+      },
     })
     this.LoanDatailNow();
   }
@@ -199,9 +204,9 @@ export class FinancesPage implements OnInit {
         }
         // console.log('res: ', res)
         this.fnData = res.recordset
-      }, error(err) {
+      }, error: (err) => {
 
-      }, complete() {
+      }, complete: () => {
         // console.log('load รายการเบิกเกี้ยว finished')
       },
     })
@@ -214,8 +219,8 @@ export class FinancesPage implements OnInit {
         // console.log('res getfactor : ', res)
         this.factorData = res.recordset
         this.ldingCtrl.closeLoading();
-      }, error(err) {
-      }, complete() {
+      }, error: (err) => {
+      }, complete: () => {
         // console.log('load รายการเบิกเกี้ยว finished')
       },
     })
@@ -229,7 +234,11 @@ export class FinancesPage implements OnInit {
           // console.log('res: ', res)
           this.fnData = res.recordset
           event.target.complete();
-        }
+        }, error: (err) => {
+
+        }, complete: () => {
+
+        },
       })
     }, 2000);
   }

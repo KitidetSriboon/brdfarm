@@ -23,10 +23,18 @@ export class BrdsqlService {
     private http: HttpClient
   ) { }
 
-  // ข้อมูลปีการผลิต
+  // ข้อมูลปีการผลิต สำหรับ Select year
   yearId(): Observable<any[]> {
     const url = this.baseSelectUrl
+      // + "s=*&f=appID&w=appid='03'"
       + "s=*&f=yearID&w=1=1 order by yearTh"
+    return this.http.get<any[]>(url)
+  }
+
+  // ข้อมูลปีการผลิต ที่ใช้งานปัจจุบัน สำหรับแอพ brdfarm appid = 03 from cps6263.dbo.appID
+  yearActive(): Observable<any[]> {
+    const url = this.baseSelectUrl
+      + "s=*&f=appID&w=appid='03'"
     return this.http.get<any[]>(url)
   }
 

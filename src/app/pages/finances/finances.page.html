@@ -43,12 +43,13 @@
           <ion-item [button]="true">
             <ion-icon color="warning" slot="start" name="battery-half" size="large"></ion-icon>
             <ion-label> วงเงินใช้ไป </ion-label>
-            <ion-label class="w3-display-right">0</ion-label>
+            <ion-label class="w3-display-right">{{ calculateTotal(listloanFm) | number : '1.2-2' }}</ion-label>
           </ion-item>
           <ion-item [button]="true">
             <ion-icon color="danger" slot="start" name="battery-dead" size="large"></ion-icon>
             <ion-label> วงเงินคงเหลือ </ion-label>
-            <ion-label class="w3-display-right">0</ion-label>
+            <ion-label class="w3-display-right">
+              {{ sumcpFm.credit_approve - calculateTotal(listloanFm) | number: '1.1-2' }}</ion-label>
           </ion-item>
           <ion-item [button]="true">
             <ion-icon color="primary" slot="start" name="bus"></ion-icon>
