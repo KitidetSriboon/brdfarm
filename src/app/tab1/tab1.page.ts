@@ -79,6 +79,8 @@ export class Tab1Page {
   optionsChart: any;
   chartData?: any = []
 
+  isModalOpen = false;
+
   constructor(
     private menuCtrl: MenuController,
     private acsCtrl: ActionSheetController,
@@ -114,17 +116,25 @@ export class Tab1Page {
   }
 
   ngAfterViewInit() {
-    this.showChart()
-    // setTimeout(() => {
-    // this.barChartMethod();
-    // this.doughnutChartMethod();
-    // this.lineChartMethod();
-    // }, 1000);
+
+  }
+
+  ionViewWillEnter() {
+  }
+
+  ionViewDidLoad() {
+    // ไม่มี error เวลาโหลด Element กราฟ
+    this.showChart();
   }
 
   openUserMenu() {
     this.menuCtrl.enable(true, 'moremenu');
     this.menuCtrl.open('moremenu');
+  }
+
+  setOpen(isOpen: boolean) {
+    this.isModalOpen = isOpen;
+    // (click) = "clickImage('https://storage.cloud.google.com/smartfarm/imges/gradeFarmer6768.jpg')"
   }
 
   // เชคว่า แอพถูกตั้งค่าปีการผลิตไว้อย่างไร ปีไหน
@@ -335,7 +345,7 @@ export class Tab1Page {
   async getSumcpFm() {
     await this.brdsql.getSumcpFm(this.yearTh, this.fmcode).subscribe({
       next: (res: any) => {
-        // console.log('getSumcpFm res:', res)
+        console.log('getSumcpFm res:', res)
         this.sumcpFm = res.recordset[0]
       }
       , error(err) {
@@ -346,6 +356,16 @@ export class Tab1Page {
     })
     this.getCrFm();
   }
+  /*
+    ask_factors  รวมเงินที่เบิกปัจจัย
+    ask_finance รวมเงินที่ขอเกี้ยว
+    sum_ask_fact  รวมเงินที่เบิกปัจจัย+ขอเกี้ยว
+    GradeLoan เกรดสินเชื่อ
+    guaranter วงเงินคนค้ำ
+    sumRealty วงเงินหลักทรัพย์
+    sumAllRealty  วงเงินหลักทรัพย์ + คนค้ำ
+    leftsumRealty  วงเงินคงเหลือ
+  */
 
   // ข้อมูลวงเงินหลักทรัพย์ เช็ค การใช้ เบิกเงิน กับเบิกปัจจัย
   async getCrFm() {

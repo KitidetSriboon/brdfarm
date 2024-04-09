@@ -25,7 +25,8 @@
           <ion-item [button]="true" lines="full">
             <ion-icon color="primary" slot="start" name="battery-full" size="large"></ion-icon>
             <ion-label>วงเงินได้รับ</ion-label>
-            <ion-label class="w3-display-right">{{ sumcpFm.credit_approve | number: '1.1-2' }}</ion-label>
+            <ion-label class="w3-display-right w3-margin-right">{{ sumcpFm.credit_approve | number: '1.1-2' }}
+            </ion-label>
           </ion-item>
           <ion-item lines="full">
             <ion-grid>
@@ -41,21 +42,35 @@
             </ion-grid>
           </ion-item>
           <ion-item [button]="true">
-            <ion-icon color="warning" slot="start" name="battery-half" size="large"></ion-icon>
-            <ion-label> วงเงินใช้ไป </ion-label>
-            <ion-label class="w3-display-right">{{ calculateTotal(listloanFm) | number : '1.2-2' }}</ion-label>
+            <ion-icon color="primary" slot="start" name="walk-outline" size="large"></ion-icon>
+            <ion-label>วงเงินตามกิจกรรม</ion-label>
+            <ion-label class="w3-display-right w3-margin-right">{{ sumcpFm.guaranter | number: '1.1-2' }}</ion-label>
+          </ion-item>
+          <ion-item [button]="true">
+            <ion-icon color="primary" slot="start" name="people-outline" size="large"></ion-icon>
+            <ion-label>วงเงินคนค้ำ</ion-label>
+            <ion-label class="w3-display-right w3-margin-right">{{ sumcpFm.guaranter | number: '1.1-2' }}</ion-label>
+          </ion-item>
+          <ion-item [button]="true">
+            <ion-icon color="primary" slot="start" name="bus-outline" size="large"></ion-icon>
+            <ion-label>วงเงินหลักทรัพย์</ion-label>
+            <ion-label class="w3-display-right w3-margin-right">{{ sumcpFm.sumRealty | number: '1.1-2' }}</ion-label>
+          </ion-item>
+          <ion-item [button]="true">
+            <ion-icon color="primary" slot="start" name="documents-outline" size="large"></ion-icon>
+            <ion-label>วงเงินคนค้ำ+หลักทรัพย์</ion-label>
+            <ion-label class="w3-display-right w3-margin-right">{{ sumcpFm.sumAllRealty | number: '1.1-2' }}</ion-label>
+          </ion-item>
+          <ion-item [button]="true">
+            <ion-icon color="success" slot="start" name="battery-half" size="large"></ion-icon>
+            <ion-label>วงเงินใช้ไป</ion-label>
+            <ion-label class="w3-display-right w3-margin-right">{{ sumcpFm.sum_ask_fact | number: '1.1-2' }}</ion-label>
           </ion-item>
           <ion-item [button]="true">
             <ion-icon color="danger" slot="start" name="battery-dead" size="large"></ion-icon>
-            <ion-label> วงเงินคงเหลือ </ion-label>
-            <ion-label class="w3-display-right">
-              {{ sumcpFm.credit_approve - calculateTotal(listloanFm) | number: '1.1-2' }}</ion-label>
-          </ion-item>
-          <ion-item [button]="true">
-            <ion-icon color="primary" slot="start" name="bus"></ion-icon>
-            <ion-label> หลักทรัพย์ประเมิน </ion-label>
-            <ion-label class="w3-display-right">{{ crFm.sumRealty | number: '1.1-2' }}</ion-label>
-            <!-- <ion-label slot="end">{{ crFm.guaranter | number: '1.1-2' }}</ion-label> -->
+            <ion-label>วงเงินคงเหลือ</ion-label>
+            <ion-label class="w3-display-right w3-margin-right">{{ sumcpFm.leftsumRealty | number: '1.1-2' }}
+            </ion-label>
           </ion-item>
           <div class="card card-outline card-primary collapsed-card">
             <div class="card-header">
@@ -164,7 +179,7 @@
                 </thead>
                 <tbody *ngIf="listloanFm">
                   <tr *ngFor="let item of listloanFm ">
-                    <td>{{ item.StartDeductSugDate | date: 'dd/MM/yyyy' }}</td>
+                    <td>{{ item.docdate | date: 'dd/MM/yyyy' }}</td>
                     <td>{{ item.loandesc }}</td>
                     <td class="">{{ item.balance | number: '1.2-2' }}</td>
                   </tr>

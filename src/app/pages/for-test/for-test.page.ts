@@ -156,8 +156,8 @@ export class ForTestPage implements OnInit {
       // 1. create map
       const map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
         center: upos,
-        zoom: 16,
-        mapTypeId: 'roadmap',
+        zoom: 18,
+        mapTypeId: 'satellite',
         // mapId: "test_map_id",
       });
 

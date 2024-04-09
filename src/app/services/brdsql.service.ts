@@ -153,7 +153,7 @@ export class BrdsqlService {
       case 'edit':
         urlUpdate = urlUpdate + "t=dbIntech.dbo.p_farmer&"
           + "s=groundlevel='" + f.groundlevel + "',hardSoilBlast='" + f.hardSoilBlast
-          + "',seedclear='" + f.seedclear + "',groove=" + f.groove + ",naturalfertilizer='" + f.naturalfertilizer
+          + "',seedclear='" + f.seedclear + "',groove=" + f.groove + ",naturalfertilizer='" + f.naturalfertilizer + ",NaturalFertilizerRatio='" + f.naturalFertilizerRatio
           + "',fertilizerRatio=" + f.fertilizerRatio + ",fertilizerFormula='" + f.fertilizerFormula
           + "',pipeup='" + f.pipeup + "',GerminationPercent=" + f.germinationpercent + ",GerminationPercent_date=getdate()"
           + ",ton=" + f.ton_fm + ",tonm" + m + "=" + f.ton_fm + ",ton_last='" + m + "',update_date=getdate()&"
@@ -163,10 +163,10 @@ export class BrdsqlService {
         break;
       case 'insert':
         urlInsert = urlInsert + "t=dbIntech.dbo.p_farmer&"
-          + "c=itid, year, groundlevel, hardSoilBlast, seedclear, groove, naturalfertilizer, fertilizerRatio, fertilizerFormula,"
+          + "c=itid, year, groundlevel, hardSoilBlast, seedclear, groove, naturalfertilizer,NaturalFertilizerRatio, fertilizerRatio, fertilizerFormula,"
           + "pipeup, GerminationPercent, GerminationPercent_date, ton, tonm" + m + ", ton_last, update_date&"
           + "v='" + f.itid + "', '" + f.yearid + "', '" + f.groundlevel + "', '" + f.hardSoilBlast + "','" + f.seedclear
-          + "'," + f.groove + ",'" + f.naturalfertilizer + "'," + f.fertilizerRatio + ",'" + f.fertilizerFormula
+          + "'," + f.groove + ",'" + f.naturalfertilizer + "'," + f.naturalFertilizerRatio + "," + f.fertilizerRatio + ",'" + f.fertilizerFormula
           + "','" + f.pipeup + "'," + f.germinationpercent + ",getdate()," + f.ton_fm + "," + f.ton_fm + "," + m + ",getdate()"
         console.log('url insert', urlInsert)
         return this.http.get<any[]>(urlInsert)
@@ -199,10 +199,12 @@ export class BrdsqlService {
       + "&w=[YearID]='" + year + "'and[itid]='" + itid + "'";
     return this.http.get<any[]>(url);
   }
+
   getData_factor_itid(year: any, itid: string): Observable<any[]> {
     const url = `https://asia-southeast2-brr-farmluck.cloudfunctions.net/dbcps/select_s_f_w_0?s=*&f=[cps6263].[dbo].[v_getfactor]&w=[YearID]='${year}'and[itid]='${itid}'`;
     return this.http.get<any[]>(url);
   }
+
   // ข้อมูลการขอสินเชื่อของชาวไร่
   getFnFarmer(fmcode: any, yearTh: any) {
     const url = this.baseSelectUrl
@@ -214,7 +216,9 @@ export class BrdsqlService {
 
   getstock_data() {
     let url = `https://asia-southeast2-brr-farmluck.cloudfunctions.net/dbcps/select_s_f_w_0?s=stock_id,description,amt_in,amt_out,CntUnitMsr,group_type,per_unit&f=[dbo].[stock]&w=[amt_in]>0or[amt_out]>0`;
-=======
+    return this.http.get<any[]>(url)
+  }
+
   // ข้อมูลการเบิกปัจจัยการผลิต
   getFactor(fmcode: any, year: any) {
     const url = this.baseSelectUrl

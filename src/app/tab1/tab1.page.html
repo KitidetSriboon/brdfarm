@@ -404,9 +404,43 @@
           <ion-card-title style="margin-bottom: 3%;" color="dark">ข้อมูลด้านสินเชื่อ</ion-card-title>
           <ion-list>
             <ion-item [button]="true" lines="full">
+              <ion-icon color="primary" slot="start" name="person-outline" size="large"></ion-icon>
+              <ion-label>
+                เกรดชาวไร่
+                <a href="https://storage.cloud.google.com/smartfarm/imges/gradeFarmer6768.jpg" target="_blank">?</a>
+                <!-- <a (click)="setOpen(true)"> ? </a> -->
+                <ion-modal [isOpen]="isModalOpen">
+                  <ng-template>
+                    <ion-header>
+                      <ion-toolbar>
+                        <ion-title>เงื่อนไขการจ่ายเงินส่งเสริม</ion-title>
+                        <ion-buttons slot="end">
+                          <ion-button (click)="setOpen(false)">ปิด</ion-button>
+                        </ion-buttons>
+                      </ion-toolbar>
+                    </ion-header>
+                    <ion-content class="ion-padding">
+                      <ion-img src="https://storage.cloud.google.com/smartfarm/imges/gradeFarmer6768.jpg" alt="">
+                      </ion-img>
+                    </ion-content>
+                  </ng-template>
+                </ion-modal>
+              </ion-label>
+              <span class="w3-badge w3-large w3-green w3-display-right  w3-margin-right"
+                *ngIf="sumcpFm.GradeLoan == '1'">
+                {{ sumcpFm.GradeLoan }} </span>
+              <span class="w3-badge w3-large w3-yellow w3-display-right  w3-margin-right"
+                *ngIf="sumcpFm.GradeLoan == '2'"> {{ sumcpFm.GradeLoan }} </span>
+              <span class="w3-badge w3-large w3-red w3-display-right  w3-margin-right" *ngIf="sumcpFm.GradeLoan == '3'">
+                {{ sumcpFm.GradeLoan }} </span>
+              <!-- <ion-badge color="primary" class="w3-display-right txtLarge">A </ion-badge> -->
+              <!-- <ion-label class="w3-display-right">{{ sumcpFm.GradeLoan }} A </ion-label> -->
+            </ion-item>
+            <ion-item [button]="true" lines="full">
               <ion-icon color="primary" slot="start" name="battery-full" size="large"></ion-icon>
               <ion-label>วงเงินได้รับ</ion-label>
-              <ion-label class="w3-display-right">{{ sumcpFm.credit_approve | number: '1.1-2' }}</ion-label>
+              <ion-label class="w3-display-right w3-margin-right">{{ sumcpFm.credit_approve | number: '1.1-2' }}
+              </ion-label>
             </ion-item>
             <ion-item lines="full">
               <ion-grid>
@@ -422,14 +456,29 @@
               </ion-grid>
             </ion-item>
             <ion-item [button]="true">
-              <ion-icon color="warning" slot="start" name="battery-half" size="large"></ion-icon>
+              <ion-icon color="primary" slot="start" name="people-outline" size="large"></ion-icon>
+              <ion-label>วงเงินคนค้ำ</ion-label>
+              <ion-label class="w3-display-right">{{ sumcpFm.guaranter | number: '1.1-2' }}</ion-label>
+            </ion-item>
+            <ion-item [button]="true">
+              <ion-icon color="primary" slot="start" name="bus-outline" size="large"></ion-icon>
+              <ion-label>วงเงินหลักทรัพย์</ion-label>
+              <ion-label class="w3-display-right">{{ sumcpFm.sumRealty | number: '1.1-2' }}</ion-label>
+            </ion-item>
+            <ion-item [button]="true">
+              <ion-icon color="primary" slot="start" name="documents-outline" size="large"></ion-icon>
+              <ion-label>วงเงินคนค้ำ+หลักทรัพย์</ion-label>
+              <ion-label class="w3-display-right">{{ sumcpFm.sumAllRealty | number: '1.1-2' }}</ion-label>
+            </ion-item>
+            <ion-item [button]="true">
+              <ion-icon color="success" slot="start" name="battery-half" size="large"></ion-icon>
               <ion-label>วงเงินใช้ไป</ion-label>
-              <ion-label class="w3-display-right">0</ion-label>
+              <ion-label class="w3-display-right">{{ sumcpFm.sum_ask_fact | number: '1.1-2' }}</ion-label>
             </ion-item>
             <ion-item [button]="true">
               <ion-icon color="danger" slot="start" name="battery-dead" size="large"></ion-icon>
               <ion-label>วงเงินคงเหลือ</ion-label>
-              <ion-label class="w3-display-right">0</ion-label>
+              <ion-label class="w3-display-right">{{ sumcpFm.leftsumRealty | number: '1.1-2' }}</ion-label>
             </ion-item>
             <ion-item [button]="true">
               <ion-icon color="primary" slot="start" name="bus"></ion-icon>

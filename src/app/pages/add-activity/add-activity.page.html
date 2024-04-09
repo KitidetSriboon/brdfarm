@@ -110,11 +110,14 @@
             <ion-select-option *ngFor="let item of organicType" [value]="item.id">{{ item.descript }}
             </ion-select-option>
           </ion-select>
+          <ion-input class="inputBGBW" type="number" [(ngModel)]="naturalFertilizerRatio"
+            formControlName="naturalFertilizerRatio" label="ใส่อัตรา กก./ไร่" placeholder="เช่น 500" min="0" max="5000">
+          </ion-input>
         </ion-item>
         <!-- ปุ๋ยเคมี -->
         <ion-item [color]="cl_fertilizerRatio" class="w3-round-large divMg-5">
           <ion-select (ionChange)="ck_chemical($event)" formControlName="fertilizerRatio" [(ngModel)]="fertilizerRatio"
-            label="6.อัตราการใส่ปุ๋ยเคมี" placeholder="เลือก">
+            label="6.ปุ๋ยเคมีรอบ1" placeholder="เลือก">
             <ion-select-option disabled>++อัตรา กก./ไร่++</ion-select-option>
             <ion-select-option value="49">น้อยกว่า50 กก./ไร่</ion-select-option>
             <ion-select-option value="50">50</ion-select-option>

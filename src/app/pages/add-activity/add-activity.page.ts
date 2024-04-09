@@ -54,6 +54,7 @@ export class AddActivityPage implements OnInit {
   tg_seedclear: boolean = false; // Default value
   groove = 0
   naturalfertilizer = ""
+  naturalFertilizerRatio = 0
   fertilizerRatio = 0
   fertilizerFormula = ""
   showChemicalFormula = false;
@@ -116,6 +117,7 @@ export class AddActivityPage implements OnInit {
             seedclear: [this.cpActivitydata.seedclear],  // การคัดพันธุ์อ้อย สะอาด
             groove: [this.cpActivitydata.groove,],  // ระยะรอง ซม.
             naturalfertilizer: [this.cpActivitydata.NaturalFertilizer,],  // ประเภทปุ๋ยอินทรีย์ที่ใส่
+            naturalFertilizerRatio: [this.cpActivitydata.naturalFertilizerRatio,],  // อัตราปุ๋ยอินทรีย์ที่ใส่
             fertilizerRatio: [this.cpActivitydata.fertilizerRatio,],  // อัตราปุ๋ยเคมีที่ใส่
             fertilizerFormula: [this.cpActivitydata.fertilizerFormula,],  // สูตรปุ๋ยเคมี
             pipeup: [this.cpActivitydata.pipeup,],  // การพูนโคน
@@ -141,6 +143,7 @@ export class AddActivityPage implements OnInit {
             seedclear: [''],  // การคัดพันธุ์อ้อย สะอาด
             groove: [0, [Validators.min(0), Validators.max(300)]],  // ระยะรอง ซม.
             naturalfertilizer: ['',],  // ประเภทปุ๋ยอินทรีย์ที่ใส่
+            naturalFertilizerRatio: [0,],  // อัตราปุ๋ยอินทรีย์ที่ใส่
             fertilizerRatio: [0,],  // อัตราปุ๋ยเคมีที่ใส่
             fertilizerFormula: ['',],  // สูตรปุ๋ยเคมี
             pipeup: ['',],  // การพูนโคน
@@ -169,6 +172,7 @@ export class AddActivityPage implements OnInit {
     if (ckdata) {
       ckdata = JSON.parse(ckdata)
       this.organicType = ckdata
+      // console.log('organicType :', this.organicType)
     } else {
       let x: any;
       await this.brdsql.getOrganicType().subscribe({

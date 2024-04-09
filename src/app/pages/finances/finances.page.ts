@@ -129,10 +129,9 @@ export class FinancesPage implements OnInit {
 
       }
       , complete: () => {
-
+        this.LoanDatailNow();
       },
     })
-    this.LoanDatailNow();
   }
 
   // รายละเอียดหนี้แต่ละปี
@@ -179,10 +178,10 @@ export class FinancesPage implements OnInit {
     await this.brdsql.getFnNowDetail(this.fmcode).subscribe({
       next: (res: any) => {
         data = res
-        // console.log('data res : ', data)
         data = data.filter((o: any) => o.year === year)
         data.sort((a: any, b: any) => a.docdate - b.docdate); // b - a for reverse sort
         this.listloanFm = data
+        // console.log('listloanFm : ', data)
       }, complete: () => {
         this.ldingCtrl.closeLoading();
       }, error: (err) => {
