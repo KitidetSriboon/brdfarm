@@ -1,0 +1,21 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>รายงานปัญหาแปลงอ้อย</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <div *ngIf="cpdata" class="w3-panel w3-pale-blue w3-leftbar w3-rightbar w3-border-blue">
+    <br>
+    <p>หมายเลขแปลง {{cpdata.intlandno}}</p>
+    <p>{{cpdata.fmname}}</p>
+    <p>แปลง {{cpdata.CaneTypeName}} พื้นที่ {{cpdata.landvalue | number}} ไร่</p>
+
+    <ion-loading *ngIf="isLoading" message="Loading..." spinner="circles"></ion-loading>
+
+  </div>
+</ion-content>

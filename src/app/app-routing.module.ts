@@ -49,6 +49,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/factor/factor.module').then(m => m.FactorPageModule)
   },
   {
+    path: 'report-problem/:itid',
+    loadChildren: () => import('./pages/report-problem/report-problem.module').then(m => m.ReportProblemPageModule)
+  },
+  {
     path: 't-upload',
     loadChildren: () => import('./pages/t-upload/t-upload.module').then(m => m.TUploadPageModule)
   },
@@ -59,8 +63,13 @@ const routes: Routes = [
   },
   {
     path: 'finances',
-    loadChildren: () => import('./pages/finances/finances.module').then( m => m.FinancesPageModule)
+    loadChildren: () => import('./pages/finances/finances.module').then(m => m.FinancesPageModule)
+  },
+  {
+    path: 'report-problem',
+    loadChildren: () => import('./pages/report-problem/report-problem.module').then(m => m.ReportProblemPageModule)
   }
+
 ];
 @NgModule({
   imports: [

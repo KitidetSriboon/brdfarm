@@ -425,6 +425,13 @@ export class Tab2Page {
         }
       },
       {
+        text: 'แจ้งปัญหา',
+        icon: 'chatbox-ellipses-outline',
+        handler: () => {
+          this.openProblemPage(mapsql.itid);
+        }
+      },
+      {
         text: 'ยกเลิก',
         icon: 'close',
         role: 'cancel',
@@ -476,6 +483,16 @@ export class Tab2Page {
       }
     };
     this.router.navigate(['/factor', itid], navigationExtras);
+  }
+
+  // เปิดหน้า แจ้งปัญหา
+  async openProblemPage(itid: string) {
+    let navigationExtras: NavigationExtras = {
+      queryParams: {
+        special: itid
+      }
+    };
+    this.router.navigate(['/report-problem', itid], navigationExtras);
   }
 
   // แสดงข้อมูลกิจกรรมแปลง
