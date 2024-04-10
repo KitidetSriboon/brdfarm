@@ -20,9 +20,10 @@ const TOKEN_KEY = 'my-token';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
+
   credentials!: FormGroup;
-  isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  token = '';
+  // isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  // token = '';
   public swiper!: Swiper;
 
   constructor(
@@ -31,10 +32,10 @@ export class LoginPage implements OnInit {
     private alertController: AlertController,
     private router: Router,
     private loadingController: LoadingController,
-    private swalAlert: AlertService,
+    private altServ: AlertService,
     private brdsql: BrdsqlService,
   ) {
-    this.loadToken();
+    // this.loadToken();
   }
 
   ngOnInit() {
@@ -44,70 +45,70 @@ export class LoginPage implements OnInit {
     });
   }
 
-  async loadToken() {
-    const token = await Storage.get({ key: TOKEN_KEY });
-    if (token && token.value) {
-      console.log('have token');
-      this.token = token.value;
-      this.isAuthenticated.next(true);
-    } else {
-      console.log('no token');
-      this.isAuthenticated.next(false);
-    }
-  }
+  // async loadToken() {
+  //   const token = await Storage.get({ key: TOKEN_KEY });
+  //   if (token && token.value) {
+  //     console.log('have token');
+  //     this.token = token.value;
+  //     this.isAuthenticated.next(true);
+  //   } else {
+  //     console.log('no token');
+  //     this.isAuthenticated.next(false);
+  //   }
+  // }
 
   async login() {
 
-    // console.log('form :', f.username, f.password)
-
-    // return this.http.post(`https://reqres.in/api/login`, credentials).pipe(
-    //   map((data: any) => data.token),
-    //   switchMap((token) => {
-    //     return from(Storage.set({ key: TOKEN_KEY, value: token }));
-    //   }),
-    //   tap((_) => {
-    //     this.isAuthenticated.next(true);
-    //   })
-    // );
-    // }
-
-    // await this.brdsql.login(f.username, f.password).subscribe({
-    //   next: (res: any) => {
-    //     console.log('login res: ', res)
-    //     if (res.rowsAffected == 0) {
-    //       this.swalAlert.swalAlertAnimate('!!ไม่สำเร็จ', 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง..กรุณาลองใหม่อีกครั้ง', 'warning')
-    //     }
-    //     let data = res.recordset[0]
-    //     let fmname = data.fmname
-    //     this.swalAlert.swalAlertAnimate('เข้าระบบสำเร็จ', 'สวัสดี คุณ' + fmname, 'info')
-    //     return (Storage.set({ key: TOKEN_KEY, value: data.fm_token }))
-    //     this.isAuthenticated.next(true);
-    //     this.router.navigateByUrl('/tabs', { replaceUrl: true });
-    //   },
-    //   complete() {
-    //     // this.isAuthenticated.next(true);
-    //   },
-    //   error(err) {
-
-    //   },
-    // })
-
+    // code from https://devdactic.com/ionic-5-navigation-with-login
     const loading = await this.loadingController.create();
     await loading.present();
 
     this.authService.login(this.credentials.value).subscribe(
-      // if login success
-      async (res: any) => {
-        console.log('res OK', res)
+      async (res) => {
         await loading.dismiss();
         this.router.navigateByUrl('/tabs', { replaceUrl: true });
       },
       async (res) => {
-        console.log('res No K', res)
         await loading.dismiss();
-        this.swalAlert.swalAlertAnimate('!!ไม่สำเร็จ', 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง..กรุณาลองใหม่อีกครั้ง', 'warning')
+        this.altServ.swalAlertAnimate('!!ผิดพลาด', 'ชื่อผู้ใช้หรือรหัสผ่าน ไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง', 'warning')
       }
-    );
+
+      // +++++++++++ End code from https://devdactic.com/ionic-5-navigation-with-login +++++++++++++++
+
+      // next: (res: any) => {
+      //   console.log('login res: ', res)
+      //   if (res.rowsAffected == 0) {
+      //     this.swalAlert.swalAlertAnimate('!!ไม่สำเร็จ', 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง..กรุณาลองใหม่อีกครั้ง', 'warning')
+      //   }
+      //   let data = res.recordset[0]
+      //   let fmname = data.fmname
+      //   this.swalAlert.swalAlertAnimate('เข้าระบบสำเร็จ', 'สวัสดี คุณ' + fmname, 'info')
+      //   Storage.set({ key: TOKEN_KEY, value: 'true' });
+      //   this.isAuthenticated.next(true);
+      //   this.router.navigateByUrl('/tabs', { replaceUrl: true });
+      // },
+      // complete: () => {
+      //   loading.dismiss();
+      // },
+      // error: (err) => {
+      //   this.swalAlert.swalAlertAnimate('!!ไม่สำเร็จ', 'เกิดความผิดพลาดบางประการ..กรุณาลองใหม่อีกครั้ง', 'warning')
+      // },
+    )
+
+    // this.authService.login(this.credentials.value).subscribe(
+    //   // if login success
+    //   async (res: any) => {
+    //     console.log('res OK', res)
+    //     await loading.dismiss();
+    //     await Storage.set({ key: TOKEN_KEY, value: 'true' });
+    //     this.router.navigateByUrl('/tabs', { replaceUrl: true });
+    //   },
+    //   async (res) => {
+    //     console.log('res No K', res)
+    //     await loading.dismiss();
+    //     this.swalAlert.swalAlertAnimate('!!ไม่สำเร็จ', 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง..กรุณาลองใหม่อีกครั้ง', 'warning')
+    //   }
+    // );
 
   }
 

@@ -37,7 +37,7 @@
         <ion-item [color]="cl_groundlevel" class="w3-round-large divMg-5">
           <ion-toggle [enableOnOffLabels]="true" [(ngModel)]="tg_groundlevel" (ionChange)="ck_groundlevel($event)"
             justify="space-between" formControlName="groundlevel">
-            1.ระดับพื้นที่
+            1.ระดับพื้นที่ ได้คุณภาพ
             <ion-text class="txtBlue" id="click-groundlevel">?</ion-text>
           </ion-toggle>
           <ion-popover trigger="click-groundlevel" triggerAction="click">
@@ -55,7 +55,7 @@
         <ion-item [color]="cl_hardSoilBlast" class="w3-round-large divMg-5">
           <ion-toggle [enableOnOffLabels]="true" (ionChange)="ck_hardSoilBlast($event)" justify="space-between"
             formControlName="hardSoilBlast" [(ngModel)]="tg_hardSoilBlast">
-            2.ระเบิดดินดาน
+            2.ระเบิดดินดาน มากกว่า40Cm.
             <ion-text class="txtBlue" id="click-hardSoilBlast">?</ion-text>
           </ion-toggle>
           <ion-popover trigger="click-hardSoilBlast" triggerAction="click">
@@ -73,7 +73,7 @@
         <ion-item [color]="cl_seedclear" class="w3-round-large divMg-5">
           <ion-toggle [enableOnOffLabels]="true" alignment="center" (ionChange)="ck_seedclear($event)"
             formControlName="seedclear" [(ngModel)]="tg_seedclear">
-            3.การคัดพันธุ์
+            3.การคัดพันธุ์ สะอาด
             <ion-text class="txtBlue" id="click-seedclear">?</ion-text>
           </ion-toggle>
           <ion-popover trigger="click-seedclear" triggerAction="click">
@@ -89,8 +89,8 @@
         </ion-item>
         <!-- ระยะร่อง -->
         <ion-item [color]="cl_groove" class="w3-round-large divMg-5">
-          <ion-select (ionChange)="ck_groove($event)" formControlName="groove" [(ngModel)]="groove" label="4.ระยะร่อง"
-            placeholder="เลือก">
+          <ion-select (ionChange)="ck_groove($event)" formControlName="groove" [(ngModel)]="groove"
+            label="4.ระยะร่อง >160cm." placeholder="เลือก">
             <ion-select-option value="139">น้อยกว่า 140 ซม.</ion-select-option>
             <ion-select-option value="140">140 ซม.</ion-select-option>
             <ion-select-option value="150">150 ซม.</ion-select-option>
@@ -110,8 +110,10 @@
             <ion-select-option *ngFor="let item of organicType" [value]="item.id">{{ item.descript }}
             </ion-select-option>
           </ion-select>
-          <ion-input class="inputBGBW" type="number" [(ngModel)]="naturalFertilizerRatio"
-            formControlName="naturalFertilizerRatio" label="ใส่อัตรา กก./ไร่" placeholder="เช่น 500" min="0" max="5000">
+          <hr>
+          <ion-input *ngIf="showFertRatio" class="inputBGBW divPadding-5" type="number"
+            [(ngModel)]="naturalFertilizerRatio" formControlName="naturalFertilizerRatio" label="ใส่อัตรา กก./ไร่"
+            (keypress)="ckFertRationOver($event)" placeholder="เช่น 500" min="0" max="5000">
           </ion-input>
         </ion-item>
         <!-- ปุ๋ยเคมี -->

@@ -304,7 +304,7 @@ export class AddActivityPage implements OnInit {
   // การปรับพื้นที่แปลง
   ck_groundlevel(e: any) {
     let x = e.detail.checked
-    console.log('toggle event.detail.checked ', e.detail.checked);
+    // console.log('toggle event.detail.checked ', e.detail.checked);
     switch (x) {
       case true:
         this.cl_groundlevel = "success"
@@ -379,6 +379,14 @@ export class AddActivityPage implements OnInit {
   }
 
   // การใส่ปุ๋ยอินทรีย์
+  showFertRatio = false;
+  ckFertRationOver(e: any) {
+    console.log('e :', e);
+    console.log('ckFertRationOver', e.target.value);
+    // Handle the keyup event and value here
+    // console.log('Keyup event triggered with value:', value);
+  }
+
   ck_NaturalFertilizer(e: any) {
     let x = e.detail.value
     x = x.toString()
@@ -391,6 +399,7 @@ export class AddActivityPage implements OnInit {
         this.cl_NaturalFertilizer = "warning"
         break;
       default:
+        this.showFertRatio = true;
         this.cl_NaturalFertilizer = "success"
         break;
     }
@@ -400,7 +409,7 @@ export class AddActivityPage implements OnInit {
   ck_chemical(e: any) {
     let x = e.detail.value
     x = parseInt(x)
-    console.log('อัตรการใส่ปุ๋ยเคมี', x)
+    // console.log('อัตรการใส่ปุ๋ยเคมี', x)
     switch (true) {
       case (x >= 100):
         this.cl_fertilizerRatio = "success"

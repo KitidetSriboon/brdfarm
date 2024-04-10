@@ -12,10 +12,12 @@ const TOKEN_KEY = 'my-token';
   providedIn: 'root'
 })
 export class AuthenticationService {
-  isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  // Init with null to filter out the first value in a guard!
+  isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(!null);
   token = '';
   baseSelectUrl = "https://asia-southeast2-brr-farmluck.cloudfunctions.net/dbcps/select_s_f_w?"
-  fmdata: any = []
+  // fmdata: any = []
 
   constructor(private http: HttpClient, private brdsql: BrdsqlService) {
     this.loadToken();
