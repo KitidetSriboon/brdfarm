@@ -113,13 +113,74 @@
           <hr>
           <ion-input *ngIf="showFertRatio" class="inputBGBW divPadding-5" type="number"
             [(ngModel)]="naturalFertilizerRatio" formControlName="naturalFertilizerRatio" label="ใส่อัตรา กก./ไร่"
-            (keypress)="ckFertRationOver($event)" placeholder="เช่น 500" min="0" max="5000">
+            (ionChange)="ckFertRationOver($event)" placeholder="เช่น 500" min="0" max="5000">
           </ion-input>
         </ion-item>
         <!-- ปุ๋ยเคมี -->
-        <ion-item [color]="cl_fertilizerRatio" class="w3-round-large divMg-5">
-          <ion-select (ionChange)="ck_chemical($event)" formControlName="fertilizerRatio" [(ngModel)]="fertilizerRatio"
-            label="6.ปุ๋ยเคมีรอบ1" placeholder="เลือก">
+        <ion-item [color]="cl_fertilizer1Ratio" class="w3-round-large divMg-5">
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-text>6.ปุ๋ยเคมี</ion-text>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-select (ionChange)="ck_chemical1Formula($event)" formControlName="fertilizer1Formula"
+                  [(ngModel)]="fertilizer1Formula" label="- สูตรปุ๋ยเคมีรอบ1">
+                  <ion-select-option disabled>++สูตรปุ๋ยเคมี1++</ion-select-option>
+                  <ion-select-option *ngFor="let item of chemicalType" [value]="item.id">{{ item.descript }}
+                  </ion-select-option>
+                </ion-select>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-input *ngIf="showChemical1Formula" class="inputBGBW divPadding-5" type="number"
+                  [(ngModel)]="fertilizer1Ratio" formControlName="fertilizer1Ratio" label="ใส่อัตรา กก./ไร่"
+                  (ionChange)="ckFertRationOver($event)" placeholder="เช่น 50" min="0" max="200">
+                </ion-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-select (ionChange)="ck_chemical2Formula($event)" formControlName="fertilizer2Formula"
+                  [(ngModel)]="fertilizer2Formula" label="- สูตรปุ๋ยเคมีรอบ2">
+                  <ion-select-option disabled>++สูตรปุ๋ยเคมี2++</ion-select-option>
+                  <ion-select-option *ngFor="let item of chemicalType" [value]="item.id">{{ item.descript }}
+                  </ion-select-option>
+                </ion-select>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-input *ngIf="showChemical2Formula" class="inputBGBW divPadding-5" type="number"
+                  [(ngModel)]="fertilizer2Ratio" formControlName="fertilizer2Ratio" label="ใส่อัตรา กก./ไร่"
+                  (ionChange)="ckFertRationOver($event)" placeholder="เช่น 50" min="0" max="200">
+                </ion-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-select (ionChange)="ck_chemical3Formula($event)" formControlName="fertilizer3Formula"
+                  [(ngModel)]="fertilizer3Formula" label="- สูตรปุ๋ยเคมีรอบ3">
+                  <ion-select-option disabled>++สูตรปุ๋ยเคมี3++</ion-select-option>
+                  <ion-select-option *ngFor="let item of chemicalType" [value]="item.id">{{ item.descript }}
+                  </ion-select-option>
+                </ion-select>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-input *ngIf="showChemical3Formula" class="inputBGBW divPadding-5" type="number"
+                  [(ngModel)]="fertilizer3Ratio" formControlName="fertilizer3Ratio" label="ใส่อัตรา กก./ไร่"
+                  (ionChange)="ckFertRationOver($event)" placeholder="เช่น 50" min="0" max="200">
+                </ion-input>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <!-- <ion-select (ionChange)="ck_chemical1($event)" formControlName="fertilizer1Ratio"
+            [(ngModel)]="fertilizer1Ratio" label="6.ปุ๋ยเคมีรอบ1" placeholder="เลือก">
             <ion-select-option disabled>++อัตรา กก./ไร่++</ion-select-option>
             <ion-select-option value="49">น้อยกว่า50 กก./ไร่</ion-select-option>
             <ion-select-option value="50">50</ion-select-option>
@@ -128,13 +189,8 @@
             <ion-select-option value="125">125</ion-select-option>
             <ion-select-option value="150">150</ion-select-option>
             <ion-select-option value="151">มากกว่า150 กก./ไร่</ion-select-option>
-          </ion-select>
-          <ion-select *ngIf="showChemicalFormula" (ionChange)="ck_chemicalFormula($event)"
-            formControlName="fertilizerFormula" [(ngModel)]="fertilizerFormula" label="- สูตรปุ๋ยเคมีที่ใส่">
-            <ion-select-option disabled>++อัตรา กก./ไร่++</ion-select-option>
-            <ion-select-option *ngFor="let item of chemicalType" [value]="item.id">{{ item.descript }}
-            </ion-select-option>
-          </ion-select>
+          </ion-select> -->
+
         </ion-item>
         <!-- การพูนโคน -->
         <ion-item [color]="cl_pipeup" class="w3-round-large divMg-5">
@@ -355,9 +411,20 @@
           </ion-text>
         </ion-item>
         <!-- ปุ๋ยเคมี -->
-        <ion-item [color]="cl_fertilizerRatio" class="w3-round-large divMg-5">
-          <ion-select (ionChange)="ck_chemical($event)" formControlName="fertilizerRatio" [(ngModel)]="fertilizerRatio"
-            label="6.อัตราการใส่ปุ๋ยเคมี" placeholder="เลือก">
+        <ion-item [color]="9" class="w3-round-large divMg-5">
+          <ion-select *ngIf="showChemical1Formula" (ionChange)="ck_chemical1Formula($event)"
+            formControlName="fertilizer1Formula" [(ngModel)]="cpActivitydata.fertilizer1Formula" label="-
+            สูตรปุ๋ยเคมีที่ใส่">
+            <ion-select-option disabled>++อัตรา กก./ไร่++</ion-select-option>
+            <ion-select-option *ngFor="let item of chemicalType" [value]="item.id">{{ item.descript }}
+            </ion-select-option>
+          </ion-select>
+          <ion-input class="inputBGBW divPadding-5" type="number" [(ngModel)]="cpActivitydata.fertilizer1Ratio"
+            formControlName="fertilizer1Ratio" label="ใส่อัตรา กก./ไร่" (ionChange)="ckFertRationOver($event)"
+            placeholder="เช่น 50" min="0" max="200">
+          </ion-input>
+          <!-- <ion-select (ionChange)="ck_chemical1($event)" formControlName="fertilizer1Ratio"
+            [(ngModel)]="fertilizer1Ratio" label="6.อัตราการใส่ปุ๋ยเคมี1" placeholder="เลือก">
             <ion-select-option disabled>++อัตรา กก./ไร่++</ion-select-option>
             <ion-select-option value="49">น้อยกว่า50 กก./ไร่</ion-select-option>
             <ion-select-option value="50">50</ion-select-option>
@@ -366,15 +433,10 @@
             <ion-select-option value="125">125</ion-select-option>
             <ion-select-option value="150">150</ion-select-option>
             <ion-select-option value="151">มากกว่า150 กก./ไร่</ion-select-option>
-          </ion-select>
-          <ion-text class="w3-sand showDesc w3-border w3-round-xlarge">{{ cpActivitydata.fertilizerRatio }}
+          </ion-select> -->
+          <ion-text class="w3-sand showDesc w3-border w3-round-xlarge">{{ cpActivitydata.fertilizer1Ratio }}
           </ion-text>
-          <ion-select *ngIf="showChemicalFormula" (ionChange)="ck_chemicalFormula($event)"
-            formControlName="fertilizerFormula" [(ngModel)]="fertilizerFormula" label="- สูตรปุ๋ยเคมีที่ใส่">
-            <ion-select-option disabled>++อัตรา กก./ไร่++</ion-select-option>
-            <ion-select-option *ngFor="let item of chemicalType" [value]="item.id">{{ item.descript }}
-            </ion-select-option>
-          </ion-select>
+
           <!-- <ion-text class="w3-sand showDesc w3-border w3-round-xlarge">{{ cpActivitydata.chemicalDesc }}
           </ion-text> -->
         </ion-item>

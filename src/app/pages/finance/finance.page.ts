@@ -120,7 +120,7 @@ export class FinancePage implements OnInit {
   }
 
   checkOver(e: any) {
-    //console.log('checkOver value: ', e.target.value)
+    // console.log('e.target.value: ', e.target.value)
     let y = this.thItid.credit_left
     let x = e.target.value//.replace(',', '');
     //this.thItid.money_amt = (x);
@@ -128,7 +128,7 @@ export class FinancePage implements OnInit {
       this.swal1('error', 'คุณป้อนจำนวนเงินที่ขอ เกินกว่าวงเงินคงเหลือ..')
       this.thItid.money_amt = y;
     }
-    console.log('x:', x, ', y:', y);
+    // console.log('x:', x, ', y:', y);
   }
 
   saveApplyFn() {

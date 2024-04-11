@@ -154,7 +154,9 @@ export class BrdsqlService {
         urlUpdate = urlUpdate + "t=dbIntech.dbo.p_farmer&"
           + "s=groundlevel='" + f.groundlevel + "',hardSoilBlast='" + f.hardSoilBlast
           + "',seedclear='" + f.seedclear + "',groove=" + f.groove + ",naturalfertilizer='" + f.naturalfertilizer + ",NaturalFertilizerRatio='" + f.naturalFertilizerRatio
-          + "',fertilizerRatio=" + f.fertilizerRatio + ",fertilizerFormula='" + f.fertilizerFormula
+          + "',fertilizer1Ratio=" + f.fertilizer1Ratio + ",fertilizer1Formula='" + f.fertilizer1Formula
+          + "',fertilizer2Ratio=" + f.fertilizer2Ratio + ",fertilizer2Formula='" + f.fertilizer2Formula
+          + "',fertilizer3Ratio=" + f.fertilizer3Ratio + ",fertilizer3Formula='" + f.fertilizer3Formula
           + "',pipeup='" + f.pipeup + "',GerminationPercent=" + f.germinationpercent + ",GerminationPercent_date=getdate()"
           + ",ton=" + f.ton_fm + ",tonm" + m + "=" + f.ton_fm + ",ton_last='" + m + "',update_date=getdate()&"
           + "w=itid='" + f.itid + "'"
@@ -163,10 +165,12 @@ export class BrdsqlService {
         break;
       case 'insert':
         urlInsert = urlInsert + "t=dbIntech.dbo.p_farmer&"
-          + "c=itid, year, groundlevel, hardSoilBlast, seedclear, groove, naturalfertilizer,NaturalFertilizerRatio, fertilizerRatio, fertilizerFormula,"
+          + "c=itid, year, groundlevel, hardSoilBlast, seedclear, groove, naturalfertilizer,NaturalFertilizerRatio,"
+          + "fertilizer1Ratio, fertilizer1Formula, fertilizer2Ratio, fertilizer2Formula, fertilizer3Ratio, fertilizer3Formula, "
           + "pipeup, GerminationPercent, GerminationPercent_date, ton, tonm" + m + ", ton_last, update_date&"
           + "v='" + f.itid + "', '" + f.yearid + "', '" + f.groundlevel + "', '" + f.hardSoilBlast + "','" + f.seedclear
-          + "'," + f.groove + ",'" + f.naturalfertilizer + "'," + f.naturalFertilizerRatio + "," + f.fertilizerRatio + ",'" + f.fertilizerFormula
+          + "'," + f.groove + ",'" + f.naturalfertilizer + "'," + f.naturalFertilizerRatio
+          + "," + f.fertilizer1Ratio + ",'" + f.fertilizer1Formula + "'," + f.fertilizer2Ratio + ",'" + f.fertilizer2Formula + "'," + f.fertilizer3Ratio + ",'" + f.fertilizer3Formula
           + "','" + f.pipeup + "'," + f.germinationpercent + ",getdate()," + f.ton_fm + "," + f.ton_fm + "," + m + ",getdate()"
         console.log('url insert', urlInsert)
         return this.http.get<any[]>(urlInsert)
