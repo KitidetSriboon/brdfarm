@@ -4,12 +4,12 @@ export class GlobalConstants {
     public static appname: string = "brdFarm";
     public static yearCr: string = "2425";
     public static yearTh: string = "6768";
-    public static appversion: string = "1.2.0 Beta";
-    public static lastupdate: string = "7 มี.ค.67"
+    public static appversion: string = "1.5.0 Beta";
+    public static lastupdate: string = "18 เม.ย.67"
     public static versionDesc = [
-        { "subject": "1.ขอเกี้ยวออนไลน์" },
-        { "subject": "2.เมนูสินเชื่อ ดู/ติดตาม รายการขอเกี้ยว" },
-        // { "subject": "3.เมนู ฤดูหีบอ้อย" },
+        { "subject": "1.ขอเกี้ยวออนไลน์, ขอปัจจัยฯ" },
+        { "subject": "2.เมนูสินเชื่อ แสดงวงเงินสินเชื่อ,ยอดหนี้ปีต่างๆ,ดู/ติดตามรายการขอเกี้ยว/ปัจจัย" },
+        { "subject": "3.อัพเดตฟอร์มบันทึกกิจกรรมแปลง" },
     ];
     public static yeardata: any = [];
     public static fmdata: any = [];

@@ -6,9 +6,9 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 import { BrdsqlService } from 'src/app/services/brdsql.service';
 import { FirebaseService } from 'src/app/services/firebase.service';
-import { GlobalConstants } from 'src/app/global-constants';
-import { yearCr, yearTh, yearLabel } from 'src/app/global-constants';
+import { yearCr, yearTh, yearLabel, GlobalConstants } from 'src/app/global-constants';
 import { AlertService } from 'src/app/services/alert.service';
+import { IonicSelectableComponent } from 'ionic-selectable';
 
 @Component({
   selector: 'app-add-activity',
@@ -23,6 +23,8 @@ export class AddActivityPage implements OnInit {
   cpActivitydata?: any = [];
   organicType?: any = [];
   chemicalType?: any = [];
+  groupcutData?: any = [];
+  groupMaintenanceData?: any = [];
   frm_addcpact!: FormGroup;
   frm_editcpact!: FormGroup;
   frm_insert?: boolean
@@ -73,9 +75,11 @@ export class AddActivityPage implements OnInit {
   pipeup = ""
   germinationpercent = 0
   wastedSpaceRai = 0
-  Cutseed = 0
+  cutseed = 0
   ton_lost = 0
   ton_fm = 0
+  groupcuted = ""
+  groupMaintenance = ""
   fminput = {
     "la": 0,
     "cst": 0,
@@ -104,7 +108,7 @@ export class AddActivityPage implements OnInit {
     cp_data = localStorage.getItem('cpfmdata')
     cp_data = JSON.parse(cp_data)
     cp_data = cp_data.filter((o: any) => o.itid === this.itid)
-    console.log('cpdata filter :', cp_data)
+    // console.log('cpdata filter :', cp_data)
     this.cpdata = cp_data[0];
     this.perTon = cp_data.ton_last_fm
     this.yearid = this.cpdata.year
@@ -112,14 +116,14 @@ export class AddActivityPage implements OnInit {
     // เชคว่า เคยมีการบันทึกข้อมูลไว้แล้วหรือไม่จาก itid
     this.brdsql.cpActivityFm(this.itid).subscribe({
       next: (res: any) => {
-        console.log('res cpActivityFm ', res)
+        // console.log('res cpActivityFm ', res)
         if (res && res.recordset.length !== 0) {
           this.frm_edit = true
           this.formType = 'edit'
           console.log('frm_edit', this.frm_edit)
           this.cpActivitydata = res.recordset[0]
           this.ck_fmacOK(this.cpActivitydata);
-          console.log('cpActivityFm ', this.cpActivitydata)
+          // console.log('cpActivityFm ', this.cpActivitydata)
 
           this.frm_editcpact = fb.group({
             itid: [this.cpActivitydata.itid,],
@@ -129,7 +133,7 @@ export class AddActivityPage implements OnInit {
             seedclear: [this.cpActivitydata.seedclear],  // การคัดพันธุ์อ้อย สะอาด
             groove: [this.cpActivitydata.groove,],  // ระยะรอง ซม.
             naturalfertilizer: [this.cpActivitydata.NaturalFertilizer,],  // ประเภทปุ๋ยอินทรีย์ที่ใส่
-            naturalFertilizerRatio: [this.cpActivitydata.naturalFertilizerRatio,],  // อัตราปุ๋ยอินทรีย์ที่ใส่
+            naturalFertilizerRatio: [this.cpActivitydata.NaturalFertilizerRatio,],  // อัตราปุ๋ยอินทรีย์ที่ใส่
             fertilizer1Ratio: [this.cpActivitydata.fertilizer1Ratio,], // อัตราปุ๋ยเคมี1
             fertilizer1Formula: [this.cpActivitydata.fertilizer1Formula,],  // สูตรปุ๋ยเคมี1
             fertilizer2Ratio: [this.cpActivitydata.fertilizer1Ratio,], // อัตราปุ๋ยเคมี2
@@ -140,8 +144,10 @@ export class AddActivityPage implements OnInit {
             germinationpercent: [this.cpActivitydata.GerminationPercent,],  // %การงอก
             ton_fm: [this.cpActivitydata.ton_In_Month, [Validators.min(0), Validators.max(35)]],  // ตันประเมิน
             wastedSpaceRai: [this.cpActivitydata.wastedSpaceRai,],  // พท.สูญเสียของแปลง (ไร่)
-            Cutseed: [this.cpActivitydata.Cutseed,],  // ตันพันธุ์
+            cutseed: [this.cpActivitydata.cutseed,],  // ตันพันธุ์
             ton_lost: [this.cpActivitydata.ton_lost,],  // ตันสูญเสียจากการตัด
+            groupcuted: [this.cpActivitydata.groupcuted,],  // รหัสกลุ่มตัด
+            groupMaintenance: [this.cpActivitydata.groupMaintenance,],  // รหัสกลุ่มบำรุง
           })
 
           // console.log('form value on load ', this.frm_editcpact.value)
@@ -170,8 +176,10 @@ export class AddActivityPage implements OnInit {
             germinationpercent: [0,],  // %การงอก
             ton_fm: [0, [Validators.min(0), Validators.max(35)]],  // ตันประเมิน
             wastedSpaceRai: [0,],  // พท.สูญเสียของแปลง (ไร่)
-            Cutseed: [0,],  // ตันพันธุ์
+            cutseed: [0,],  // ตันพันธุ์
             ton_lost: [0,],  // ตันสูญเสียจากการตัด
+            groupcuted: ['',],  // กลุ่มตัด
+            groupMaintenance: ['',],  // กลุ่มบำรุง
           })
           console.log('form load ', this.frm_addcpact.value)
         }
@@ -183,6 +191,7 @@ export class AddActivityPage implements OnInit {
   ngOnInit() {
     this.getOrgaincType()
     this.getChemicalType()
+    this.getGroupCut();
   }
 
   // ปุ๋ยอินทรีย์สำหรับ select naturalfertilizer
@@ -231,6 +240,29 @@ export class AddActivityPage implements OnInit {
     }
   }
 
+  // กลุ่มตัดหรับ select groupcut
+  async getGroupCut() {
+    let ckdata = localStorage.getItem('groupcut')
+    if (ckdata) {
+      ckdata = JSON.parse(ckdata)
+      this.groupcutData = ckdata
+      // console.log('groupcut in local :', this.groupcutData)
+    } else {
+      let x: any;
+      await this.brdsql.getGroupCut().subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.groupcutData = res.recordset
+            // console.log('groupcut from api :', this.groupcutData)
+            x = res.recordset
+            x = JSON.stringify(x)
+            localStorage.setItem('groupcut', x)
+          }
+        }
+      })
+    }
+  }
+
   // ปรับสีกิจกรรมทำแล้ว สีเขียว
   ck_fmacOK(data: any) {
     let x = data
@@ -258,9 +290,12 @@ export class AddActivityPage implements OnInit {
     }
     if (data.NaturalFertilizer == 0 || data.NaturalFertilizer == null) {
       this.naturalfertilizer = x.NaturalFertilizer
-    } else {
+    } else if (data.NaturalFertilizer >= 500) {
       this.naturalfertilizer = x.NaturalFertilizer
       this.cl_NaturalFertilizer = 'success'
+    } else {
+      this.naturalfertilizer = x.NaturalFertilizer
+      // this.cl_NaturalFertilizer = 'success'
     }
     if (data.fertilizer1Ratio >= 50) {
       // console.log('fertilizerRatio >=100')
@@ -281,7 +316,7 @@ export class AddActivityPage implements OnInit {
       this.fertilizer2Ratio = x.fertilizer2Ratio
       this.cl_fertilizer2Ratio = 'success'
     } else {
-      console.log('fertilizer2Ratio <50')
+      // console.log('fertilizer2Ratio <50')
       this.fertilizer2Ratio = x.fertilizer2Ratio
     }
     if (data.fertilizer2Formula == '0' || data.fertilizer2Formula == null) {
@@ -295,7 +330,7 @@ export class AddActivityPage implements OnInit {
       this.fertilizer3Ratio = x.fertilizer3Ratio
       this.cl_fertilizer3Ratio = 'success'
     } else {
-      console.log('fertilizer3Ratio <50')
+      // console.log('fertilizer3Ratio <50')
       this.fertilizer3Ratio = x.fertilizer3Ratio
     }
     if (data.fertilizer3Formula == '0' || data.fertilizer3Formula == null) {
@@ -321,10 +356,10 @@ export class AddActivityPage implements OnInit {
     let ctype = ""
     if (this.frm_edit == true) {
       ctype = data.canetype.trim()
-      console.log('ctype data', ctype)
+      // console.log('ctype data', ctype)
     } else {
       ctype = this.cpdata.canetype.trim()
-      console.log('ctype cpdata', ctype)
+      // console.log('ctype cpdata', ctype)
     }
     ctype = ctype.substring(0, 2)
     switch (true) {
@@ -426,9 +461,19 @@ export class AddActivityPage implements OnInit {
     }
   }
 
+  // ตรวจสอบอัตราปุ๋ยอินทรีย์ที่ใส่ ที่คีย์ไม่เกิน 5000 กก/ไร่
+  // showNaturalFertRatio = false;
+  ckNaturalFertOver(e: any) {
+    console.log('e.target.value ', e.target.value);
+    if (e.target.value > 5000) {
+      this.altSv.swalAlertAnimate('แจ้งเตือน', 'อัตราปุ๋ยอินทรีย์ กำหนดไม่เกิน 5,000 กก./ไร่ในการใส่แต่ละครั้ง กรุณาตรวจสอบ', 'warning')
+      this.naturalFertilizerRatio = 0;
+    }
+  }
+
   // ตรวจสอบอัตราเคมี1 ที่คีย์ไม่เกิน 200 กก/ไร่
   showFertRatio = false;
-  ckFertRationOver(e: any): number {
+  ckFertRationOver(e: any) {
     console.log('e.target.value ', e.target.value);
     if (e.target.value > 200) {
       this.altSv.swalAlertAnimate('แจ้งเตือน', 'อัตราปุ๋ยเคมี กำหนดไม่เกิน 200 กก./ไร่ในการใส่แต่ละครั้ง กรุณาตรวจสอบ', 'warning')
@@ -448,19 +493,28 @@ export class AddActivityPage implements OnInit {
   }
 
   ck_NaturalFertilizer(e: any) {
-    let x = e.detail.value
-    x = x.toString()
+    let x: number = e.detail.value
+    // x = x.toString()
     console.log('การใส่ปุ๋ยอินทรีย์', x)
-    switch (x) {
-      case '0':
+    switch (true) {
+      case (x > 0 && x < 500):
+        console.log('case >0 < 500', x)
+        this.showFertRatio = true;
         this.cl_NaturalFertilizer = "warning"
         break;
+      case (x >= 500):
+        console.log('case >=500', x)
+        this.showFertRatio = true;
+        this.cl_NaturalFertilizer = "success"
+        break;
       case '' || null:
+        console.log('case null', x)
         this.cl_NaturalFertilizer = "warning"
         break;
       default:
-        this.showFertRatio = true;
-        this.cl_NaturalFertilizer = "success"
+        console.log('default', x)
+        this.showFertRatio = false;
+        this.cl_NaturalFertilizer = "warning"
         break;
     }
   }
@@ -495,6 +549,7 @@ export class AddActivityPage implements OnInit {
         this.showChemical1Formula = true;
         break;
       case (x > 0 && x < 50):
+        this.cl_FertilizerRound1 = "warning"
         this.showChemical1Formula = true;
         break;
       case '' || null:
@@ -528,7 +583,7 @@ export class AddActivityPage implements OnInit {
     }
   }
 
-  // สูตร ปุ๋ยเคมี1 ที่ใส่ ต้อง =>50 กก.
+  // สูตร ปุ๋ยเคมี3 ที่ใส่ ต้อง =>50 กก.
   ck_chemical3Formula(e: any) {
     let x = e.detail.value
     x = parseInt(x)
@@ -600,7 +655,7 @@ export class AddActivityPage implements OnInit {
     this.perTon = event.target.value;
     console.log('ประเมิน', this.perTon)
     this.fminput.la = parseFloat(f.wastedSpaceRai)
-    this.fminput.cst = parseFloat(f.Cutseed)
+    this.fminput.cst = parseFloat(f.cutseed)
     this.fminput.lc = parseFloat(f.ton_lost)
     let toned: number = 0;
     let arealeft: number = 0;
@@ -642,6 +697,24 @@ export class AddActivityPage implements OnInit {
         this.cl_tonfm = 'warning'
         break;
     }
+  }
+
+  // กลุ่มตัด
+  ckGroupcuted(e: any) {
+    console.log('e.target.value ', e.target.value);
+    // if (e.target.value > 200) {
+    //   this.altSv.swalAlertAnimate('แจ้งเตือน', 'อัตราปุ๋ยเคมี กำหนดไม่เกิน 200 กก./ไร่ในการใส่แต่ละครั้ง กรุณาตรวจสอบ', 'warning')
+    //   this.fertilizer1Ratio = 0
+    // }
+  }
+
+  // กลุ่มบำรุง
+  ckGroupMaintenance(e: any) {
+    console.log('e.target.value ', e.target.value);
+    // if (e.target.value > 200) {
+    //   this.altSv.swalAlertAnimate('แจ้งเตือน', 'อัตราปุ๋ยเคมี กำหนดไม่เกิน 200 กก./ไร่ในการใส่แต่ละครั้ง กรุณาตรวจสอบ', 'warning')
+    //   this.fertilizer1Ratio = 0
+    // }
   }
 
   // test
@@ -706,6 +779,16 @@ export class AddActivityPage implements OnInit {
 
       },
     })
+  }
+
+  // ตัวเลือกกลุ่มตัด
+  selectGroupcut(event: {
+    component: IonicSelectableComponent;
+    value: any;
+  }) {
+    this.groupcuted = '';
+    const arr = event.value;
+    this.groupcuted = arr.groupcode;
   }
 
   isFormValid(): boolean {

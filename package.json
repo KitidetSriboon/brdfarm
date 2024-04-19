@@ -54,6 +54,7 @@
     "cordova-sqlite-storage": "^6.1.0",
     "file-saver": "^2.0.5",
     "firebase": "^9.16.0",
+    "ionic-selectable": "^4.9.0",
     "ionicons": "^7.0.0",
     "ngx-gauge": "^9.0.0",
     "rxjs": "~7.8.0",

@@ -56,6 +56,16 @@ export class BrdsqlService {
     return this.http.get<any[]>(url);
   }
 
+  // ข้อมูลกลุ่มตัด  select groupcode,groupname,fmname from cps6263.dbo.vw_headGroupCutting order by groupname
+  getGroupCut(): Observable<any[]> {
+    const url = this.baseSelectUrl
+      + "s=groupcode,groupname,fmname"
+      + "&f=CPS6263.dbo.vw_headGroupCutting"
+      + "&w=1=1 order by groupname";
+    return this.http.get<any[]>(url);
+  }
+  // ข้อมูลกลุ่มบำรุง
+
   // ดึงข้ออมูลชาวไร่ แบบใช้ Promise All
   // async getAllFarmData(fmcode: string, year: string) {
   //   try {
@@ -153,12 +163,14 @@ export class BrdsqlService {
       case 'edit':
         urlUpdate = urlUpdate + "t=dbIntech.dbo.p_farmer&"
           + "s=groundlevel='" + f.groundlevel + "',hardSoilBlast='" + f.hardSoilBlast
-          + "',seedclear='" + f.seedclear + "',groove=" + f.groove + ",naturalfertilizer='" + f.naturalfertilizer + ",NaturalFertilizerRatio='" + f.naturalFertilizerRatio
-          + "',fertilizer1Ratio=" + f.fertilizer1Ratio + ",fertilizer1Formula='" + f.fertilizer1Formula
+          + "',seedclear='" + f.seedclear + "',groove=" + f.groove + ",naturalfertilizer='" + f.naturalfertilizer + "',NaturalFertilizerRatio=" + f.naturalFertilizerRatio
+          + ",fertilizer1Ratio=" + f.fertilizer1Ratio + ",fertilizer1Formula='" + f.fertilizer1Formula
           + "',fertilizer2Ratio=" + f.fertilizer2Ratio + ",fertilizer2Formula='" + f.fertilizer2Formula
           + "',fertilizer3Ratio=" + f.fertilizer3Ratio + ",fertilizer3Formula='" + f.fertilizer3Formula
           + "',pipeup='" + f.pipeup + "',GerminationPercent=" + f.germinationpercent + ",GerminationPercent_date=getdate()"
-          + ",ton=" + f.ton_fm + ",tonm" + m + "=" + f.ton_fm + ",ton_last='" + m + "',update_date=getdate()&"
+          + ",ton=" + f.ton_fm + ",tonm" + m + "=" + f.ton_fm + ",ton_last='" + m
+          + "',wastedSpaceRai=" + f.wastedSpaceRai + ",cutseed=" + f.cutseed + ",ton_lost=" + f.ton_lost
+          + ",groupcuted='" + f.groupcuted + "',groupMaintenance='" + f.groupMaintenance + "',update_date=getdate()&"
           + "w=itid='" + f.itid + "'"
         console.log('urlUpdate', urlUpdate)
         return this.http.get<any[]>(urlUpdate)
@@ -167,11 +179,12 @@ export class BrdsqlService {
         urlInsert = urlInsert + "t=dbIntech.dbo.p_farmer&"
           + "c=itid, year, groundlevel, hardSoilBlast, seedclear, groove, naturalfertilizer,NaturalFertilizerRatio,"
           + "fertilizer1Ratio, fertilizer1Formula, fertilizer2Ratio, fertilizer2Formula, fertilizer3Ratio, fertilizer3Formula, "
-          + "pipeup, GerminationPercent, GerminationPercent_date, ton, tonm" + m + ", ton_last, update_date&"
+          + "pipeup, GerminationPercent, GerminationPercent_date, ton, tonm" + m + ", ton_last, wastedSpaceRai, cutseed, ton_lost,groupcuted, groupMaintenance, update_date&"
           + "v='" + f.itid + "', '" + f.yearid + "', '" + f.groundlevel + "', '" + f.hardSoilBlast + "','" + f.seedclear
           + "'," + f.groove + ",'" + f.naturalfertilizer + "'," + f.naturalFertilizerRatio
           + "," + f.fertilizer1Ratio + ",'" + f.fertilizer1Formula + "'," + f.fertilizer2Ratio + ",'" + f.fertilizer2Formula + "'," + f.fertilizer3Ratio + ",'" + f.fertilizer3Formula
-          + "','" + f.pipeup + "'," + f.germinationpercent + ",getdate()," + f.ton_fm + "," + f.ton_fm + "," + m + ",getdate()"
+          + "','" + f.pipeup + "'," + f.germinationpercent + ",getdate()," + f.ton_fm + "," + f.ton_fm + "," + m + ","
+          + f.wastedSpaceRai + "," + f.cutseed + "," + f.ton_lost + ",'" + f.groupcuted + "','" + f.groupMaintenance + "',getdate()"
         console.log('url insert', urlInsert)
         return this.http.get<any[]>(urlInsert)
         break;

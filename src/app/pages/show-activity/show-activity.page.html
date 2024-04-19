@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
     <ion-title>
-      <ion-icon name="walk"></ion-icon> กิจกรรมแปลง
+      <ion-icon name="walk"></ion-icon> สรุปกิจกรรมแปลง
     </ion-title>
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
@@ -28,11 +28,11 @@
   <div class="divMg-5">
     <ion-grid>
       <ion-row>
-        <ion-col class="el-center ion-text-cednter">
+        <ion-col class="el-center ion-text-center">
           <div class="w3-panel w3-pale-green w3-bottombar w3-border-green">
             <p>พท.เสียหาย {{ cpActivityData.wastedSpaceRai }} ไร่ คงเหลือจริง
               {{ cpActivityData.landvalue-cpActivityData.wastedSpaceRai }}
-              ไร่ ตัดพันธุ์ {{ cpActivityData.Cutseed }} ตัน สุญเสีย {{ cpActivityData.ton_lost }} ตัน</p>
+              ไร่ ตัดพันธุ์ {{ cpActivityData.cutseed }} ตัน สุญเสีย {{ cpActivityData.ton_lost }} ตัน</p>
           </div>
         </ion-col>
       </ion-row>
@@ -209,7 +209,23 @@
         {{ cpActivityData.ton_last_fm }}
       </ion-col>
     </ion-row>
-
+    <ion-row class="w3-pale-red w3-xlarge">
+      <ion-col class="ion-text-center">
+        <ion-icon name="wallet-outline"></ion-icon> วงเงินได้รับ {{ cpActivityData.credit_amount | number }}
+      </ion-col>
+      <!-- <div class="w3-tag w3-xxlarge w3-orange">วงเงินได้รับ {{ cpActivityData.credit_amount | number }}</div> -->
+      <!-- <ion-col size="2" class="ion-text-left w3-center">
+         <ion-icon *ngIf="cpActivityData.credit_amount > 0" color="success" name="checkmark-circle"></ion-icon>
+        <ion-icon *ngIf="cpActivityData.credit_amount = 0" color="warning" name="close-circle"> 
+        </ion-icon>
+      </ion-col>
+      <ion-col size="6">
+        วงเงินได้รับ
+      </ion-col>
+      <ion-col size="4" class="ion-text-center gfSriracha txtBlue">
+        {{ cpActivityData.credit_amount | number }}
+      </ion-col> -->
+    </ion-row>
     <ion-row style="border-bottom: 1px solid #0003;">
       <ion-col class="w3-center">
         <ion-text class="txtSmall" color="medium">ข้อมูล ณ วันที่ {{ cpActivityData.update_date_th }}</ion-text>
