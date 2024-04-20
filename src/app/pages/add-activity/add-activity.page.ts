@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalController, LoadingController, ToastController, AlertController, NavController } from '@ionic/angular';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 import { BrdsqlService } from 'src/app/services/brdsql.service';
@@ -9,6 +9,8 @@ import { FirebaseService } from 'src/app/services/firebase.service';
 import { yearCr, yearTh, yearLabel, GlobalConstants } from 'src/app/global-constants';
 import { AlertService } from 'src/app/services/alert.service';
 import { IonicSelectableComponent } from 'ionic-selectable';
+// import { Observable, Subscription, debounceTime } from 'rxjs';
+// import { FilterPipe } from 'src/app/pipes/filter.pipe';
 
 @Component({
   selector: 'app-add-activity',
@@ -23,7 +25,7 @@ export class AddActivityPage implements OnInit {
   cpActivitydata?: any = [];
   organicType?: any = [];
   chemicalType?: any = [];
-  groupcutData?: any = [];
+  groupcutfilter?: any = [];
   groupMaintenanceData?: any = [];
   frm_addcpact!: FormGroup;
   frm_editcpact!: FormGroup;
@@ -87,6 +89,9 @@ export class AddActivityPage implements OnInit {
     "arealeft": 0,
     "tonleft": 0,
   }
+
+  groupcutData = [{ groupcode: '', groupname: '', fmname: '' }];
+  public results = [...this.groupcutData];
 
   constructor(
     private route: ActivatedRoute,
@@ -186,12 +191,25 @@ export class AddActivityPage implements OnInit {
       }
     })
 
+    this.getGroupCut();
+
   }
 
   ngOnInit() {
     this.getOrgaincType()
     this.getChemicalType()
-    this.getGroupCut();
+  }
+
+  // groupcutInitial = []; //initialize your countriesInitial array emptyy
+  // searchGroupString = ''; // initialize your searchCountryString string empty
+  showGroupSelect = false;
+  handleInput(event: any) {
+    console.log('user key..', event)
+    if (event == null || event == '') {
+      this.results = [];
+    }
+    this.showGroupSelect = true;
+    this.results = this.groupcutData.filter((d) => d.groupname.toLowerCase().indexOf(event) > -1);
   }
 
   // ปุ๋ยอินทรีย์สำหรับ select naturalfertilizer
@@ -242,11 +260,12 @@ export class AddActivityPage implements OnInit {
 
   // กลุ่มตัดหรับ select groupcut
   async getGroupCut() {
-    let ckdata = localStorage.getItem('groupcut')
+    let ckdata: any
+    ckdata = localStorage.getItem('groupcut')
     if (ckdata) {
       ckdata = JSON.parse(ckdata)
       this.groupcutData = ckdata
-      // console.log('groupcut in local :', this.groupcutData)
+      // console.log('groupcutData :', this.groupcutData)
     } else {
       let x: any;
       await this.brdsql.getGroupCut().subscribe({

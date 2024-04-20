@@ -56,6 +56,7 @@
     "firebase": "^9.16.0",
     "ionic-selectable": "^4.9.0",
     "ionicons": "^7.0.0",
+    "ng2-search-filter": "^0.5.1",
     "ngx-gauge": "^9.0.0",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.6.13",

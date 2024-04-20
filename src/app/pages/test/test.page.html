@@ -8,31 +8,25 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-accordion-group>
-    <ion-accordion value="first">
-      <ion-item slot="header" color="primary">
-        <ion-icon name="logo-angular"></ion-icon>
-        <ion-label>First Accordion</ion-label>
-      </ion-item>
-      <div class="ion-padding" slot="content">First Content</div>
-    </ion-accordion>
-    <ion-accordion value="second">
-      <ion-item slot="header" color="success">
-        <ion-label>Second Accordion</ion-label>
-      </ion-item>
-      <div class="ion-padding" slot="content">Second Content</div>
-    </ion-accordion>
-    <ion-accordion value="third">
-      <ion-item slot="header" color="warning">
-        <ion-label>Third Accordion</ion-label>
-      </ion-item>
-      <div class="ion-padding" slot="content">Third Content</div>
-    </ion-accordion>
-    <ion-accordion value="four">
-      <ion-item slot="header" color="medium">
-        <ion-label>four Accordion</ion-label>
-      </ion-item>
-      <div class="ion-padding" slot="content">four Content</div>
-    </ion-accordion>
-  </ion-accordion-group>
+
+  <ion-searchbar (ionInput)="handleInput($event.detail.value)"></ion-searchbar>
+
+  <ion-list>
+    <ion-item *ngFor="let item of results">
+      {{ item.groupcode }} - {{ item.groupname }}
+    </ion-item>
+  </ion-list>
+
+  <!-- <ion-segment (ionChange)="filterItems($event.detail.value)">
+    <ion-segment-button value="Category A">
+      Category A
+    </ion-segment-button>
+    <ion-segment-button value="Category B">
+      Category B
+    </ion-segment-button>
+    <ion-segment-button value="Category C">
+      Category C
+    </ion-segment-button>
+  </ion-segment> -->
+
 </ion-content>

@@ -21,11 +21,14 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { NgxGaugeModule } from 'ngx-gauge';
 import { FinancesPipe } from './pages/finances.pipe';
 
+// import { Ng2SearchPipeModule } from 'ng2-search-filter';
+// import { FilterPipe } from './pipes/filter.pipe'
 @NgModule({
   declarations: [
     AppComponent,
     ThaidatePipe,
-    FinancesPipe
+    FinancesPipe,
+    // FilterPipe
   ],
   imports: [
     BrowserModule,
@@ -39,6 +42,7 @@ import { FinancesPipe } from './pages/finances.pipe';
     AngularFireModule.initializeApp(environment.firebase),
     // AngularFireAuthModule,
     NgxGaugeModule,
+    // Ng2SearchPipeModule,
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

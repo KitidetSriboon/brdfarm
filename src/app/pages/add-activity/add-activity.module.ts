@@ -7,16 +7,19 @@ import { IonicModule } from '@ionic/angular';
 import { AddActivityPageRoutingModule } from './add-activity-routing.module';
 
 import { AddActivityPage } from './add-activity.page';
-
+// import { Ng2SearchPipeModule } from 'ng2-search-filter'
+// import { FilterPipe } from 'src/app/pipes/filter.pipe';
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
+    // Ng2SearchPipeModule,
     // IonicSelectableModule,
-    AddActivityPageRoutingModule
+    AddActivityPageRoutingModule,
+    // FilterPipe,
   ],
-  declarations: [AddActivityPage]
+  declarations: [AddActivityPage,]
 })
 export class AddActivityPageModule { }

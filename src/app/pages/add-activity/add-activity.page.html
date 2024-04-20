@@ -622,27 +622,37 @@
           </ion-grid>
         </ion-item>
         <!-- กลุ่มตัด -->
-        <ion-item class="w3-round-large divMg-5">
-          <!-- <ionic-selectable *ngIf="groupcutData.length > 0" [items]="groupcutData" itemValueField="groupcode"
-            itemTextField="groupname" [canSearch]="true" searchPlaceholder="ค้นชื่อกลุ่มตัด" closeButtonSlot="end"
-            closeButtonText="ยกเลิก" (onChange)="selectGroupcut($event)">
-          </ionic-selectable> -->
-          <ion-input class="inputBGBW divPadding-5" [(ngModel)]="cpActivitydata.groupcuted" formControlName="groupcuted"
-            label="รหัสกลุ่มตัดX" placeholder="เช่น 011301" maxlength="6">
-          </ion-input>
+        <ion-item color="medium" class="w3-round-large divMg-5">
+
+          <ion-grid>
+            <ion-row class="divPadding-5">
+              <ion-col>
+                <ion-text>10.กลุ่มตัดอ้อย</ion-text>
+                <ion-text class="w3-sand showDesc w3-border w3-round-xlarge">{{ cpActivitydata.groupname }}
+                </ion-text>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+          <ion-searchbar (ionInput)="handleInput($event.detail.value)" color="clear" [debounce]="1000"
+            placeholder="1.คีย์ชื่อกลุ่ม..">
+          </ion-searchbar>
+
+          <ion-select *ngIf="showGroupSelect" formControlName="groupcuted" label="2.เลือกกลุ่มตัด"
+            placeholder="เลือกกลุ่มตัด">
+            <ion-select-option *ngFor="let item of results" [value]="item.groupcode">{{item.groupname}}
+            </ion-select-option>
+          </ion-select>
+          <!-- <ion-list>
+            <ion-item *ngFor="let item of results">
+              {{ item.groupcode }} - {{ item.groupname }}
+            </ion-item>
+          </ion-list> -->
+
         </ion-item>
         <!-- กลุ่มบำรุง -->
         <ion-item class="w3-round-large divMg-5">
-          <!-- <ion-select (ionChange)="ck_NaturalFertilizer($event)" formControlName="groupMaintenance"
-            [(ngModel)]="groupMaintenance" label="10.กลุ่มบำรุง" placeholder="เลือก">
-            <ion-select-option disabled>++รายชื่อกลุ่มบำรุง++</ion-select-option>
-            <ion-select-option *ngFor="let item of organicType" [value]="item.id">{{ item.descript }}
-            </ion-select-option>
-          </ion-select> -->
-          <ion-input class="inputBGBW divPadding-5" [(ngModel)]="cpActivitydata.groupMaintenance"
-            formControlName="groupMaintenance" label="เลือกกลุ่มบำรุง" (ionChange)="ckFertRationOver($event)"
-            placeholder="เช่น 011301" maxlength="6">
-          </ion-input>
+
         </ion-item>
 
         <ion-grid style="margin-top: 10px;">
