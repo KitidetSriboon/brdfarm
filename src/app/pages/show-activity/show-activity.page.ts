@@ -57,13 +57,17 @@ export class ShowActivityPage implements OnInit {
     console.log('ionViewDidEnter')
   }
 
-  getDataActivity() {
-    this.brdsql.getActivityDataFm(this.itid).subscribe({
+  async getDataActivity() {
+    console.log('getDataActivity')
+    await this.brdsql.getActivityDataFm(this.itid).subscribe({
       next: (res: any) => {
-        this.cpActivityData = res.recordset[0];
-        this.yearDesc = this.cpActivityData.year
-        // console.log('groundlevel ', this.cpActivityData.groundlevel)
-        console.log('cpActivityData :', this.cpActivityData)
+        // console.log('res api:', res)
+        if (res.recordset.length != 0) {
+          this.cpActivityData = res.recordset[0];
+          this.yearDesc = this.cpActivityData.year
+          // console.log('cpActivityData with api :', this.cpActivityData)
+        }
+        // console.log('not data from api :', this.cpActivityData)
       }
     });
   }

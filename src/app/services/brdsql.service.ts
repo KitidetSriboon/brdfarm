@@ -59,12 +59,19 @@ export class BrdsqlService {
   // ข้อมูลกลุ่มตัด  select groupcode,groupname,fmname from cps6263.dbo.vw_headGroupCutting order by groupname
   getGroupCut(): Observable<any[]> {
     const url = this.baseSelectUrl
-      + "s=groupcode,groupname,fmname"
-      + "&f=CPS6263.dbo.vw_headGroupCutting"
-      + "&w=1=1 order by groupname";
+      + "s=groupcode,groupname,h_fmname as fmname"
+      + "&f=CPS6263.dbo.v_groupCode_HM"
+      + "&w=category = 'H' order by groupname";
     return this.http.get<any[]>(url);
   }
   // ข้อมูลกลุ่มบำรุง
+  getGroupM(): Observable<any[]> {
+    const url = this.baseSelectUrl
+      + "s=groupcode,groupname,h_fmname as fmname"
+      + "&f=CPS6263.dbo.v_groupCode_HM"
+      + "&w=category = 'M' order by groupname";
+    return this.http.get<any[]>(url);
+  }
 
   // ดึงข้ออมูลชาวไร่ แบบใช้ Promise All
   // async getAllFarmData(fmcode: string, year: string) {
@@ -337,16 +344,16 @@ export class BrdsqlService {
     const url = this.baseSelectUrl
       + "s=id,descript&"
       + "f=CPS6263.dbo.organic&"
-      + "w=descript <> '' order by id"
+      + "w=onweb = '1' order by descript"
     return this.http.get<any[]>(url)
   }
 
-  //ปุ๋ยเคมี select * from CPS6263.dbo.chemical where isactive = 1 order by descript
+  //ปุ๋ยเคมี select * from CPS6263.dbo.chemical where onweb = 1 order by descript
   getChemicalType() {
     const url = this.baseSelectUrl
       + "s=id,descript&"
       + "f=CPS6263.dbo.chemical&"
-      + "w=isactive = 1 order by descript"
+      + "w=onweb = '1' order by descript"
     return this.http.get<any[]>(url)
   }
 

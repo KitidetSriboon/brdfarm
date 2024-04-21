@@ -8,7 +8,13 @@
     </ion-buttons>
   </ion-toolbar>
 
-  <div class="info divMg-5">
+  <div class="info divMg-5" *ngIf="cpActivityData.length == 0">
+    <ion-text color="danger">
+      <p style="margin-left: 5%; margin: 0;">!!..แปลงนี้ยังไม่มีการบันทึกกิจกรรม</p>
+    </ion-text>
+  </div>
+
+  <div class="info divMg-5" *ngIf="cpActivityData.length != 0">
     <!-- <p style="margin: 0;">
         <ion-icon name="person-outline"></ion-icon>กิจกรรมแปลงของท่าน
       </p> -->
@@ -25,7 +31,7 @@
     </ion-text>
   </div>
 
-  <div class="divMg-5">
+  <div class="divMg-5" *ngIf="cpActivityData.length != 0">
     <ion-grid>
       <ion-row>
         <ion-col class="el-center ion-text-center">
@@ -50,7 +56,7 @@
 
 <ion-content [fullscreen]="true">
 
-  <ion-grid class="divMg-5">
+  <ion-grid class="divMg-5" *ngIf="cpActivityData.length != 0">
     <ion-row class="ion-text-center" style="border-bottom: 1px solid; font-size: 18px; font-weight: 900;">
       <ion-col size="2" class="ion-text-left">
         <ion-icon color="success" name="checkmark-circle"></ion-icon>
@@ -141,9 +147,11 @@
     </ion-row>
     <ion-row style="border-bottom: 1px solid #0003;">
       <ion-col size="2" class="ion-text-left w3-center">
-        <ion-icon *ngIf="cpActivityData.fertilizerFormula !== '0' || cpActivityData.fertilizerFormula !== null"
+        <ion-icon
+          *ngIf="cpActivityData.fertilizer1Ratio+cpActivityData.fertilizer2Ratio+cpActivityData.fertilizer3Ratio >= 100"
           color="success" name="checkmark-circle"></ion-icon>
-        <ion-icon *ngIf="cpActivityData.fertilizerFormula == '0' || cpActivityData.fertilizerFormula == null"
+        <ion-icon
+          *ngIf="cpActivityData.fertilizer1Ratio+cpActivityData.fertilizer2Ratio+cpActivityData.fertilizer3Ratio < 100"
           color="warning" name="close-circle">
         </ion-icon>
       </ion-col>
@@ -151,7 +159,7 @@
         ปุ๋ยเคมีตามผลผลิต
       </ion-col>
       <ion-col size="4" class="ion-text-center gfSriracha txtBlue">
-        {{ cpActivityData.fertilizerRatio }}
+        {{ cpActivityData.fertilizer1Ratio + cpActivityData.fertilizer2Ratio + cpActivityData.fertilizer3Ratio }}
       </ion-col>
     </ion-row>
     <ion-row style="border-bottom: 1px solid #0003;">
@@ -207,6 +215,36 @@
       </ion-col>
       <ion-col class="ion-text-center gfSriracha txtBlue">
         {{ cpActivityData.ton_last_fm }}
+      </ion-col>
+    </ion-row>
+    <ion-row style="border-bottom: 1px solid #0003;">
+      <ion-col size="2" class="ion-text-left w3-center">
+        <ion-icon *ngIf="cpActivityData.groupcuted != null || cpActivityData.groupcuted != ''" color="success"
+          name="checkmark-circle"></ion-icon>
+        <ion-icon *ngIf="cpActivityData.groupcuted == null || cpActivityData.groupcuted == ''" color="warning"
+          name="close-circle">
+        </ion-icon>
+      </ion-col>
+      <ion-col size="6">
+        กลุ่มตัดอ้อย
+      </ion-col>
+      <ion-col size="4" class="ion-text-center gfSriracha txtBlue">
+        {{ cpActivityData.groupnameC }}
+      </ion-col>
+    </ion-row>
+    <ion-row style="border-bottom: 1px solid #0003;">
+      <ion-col size="2" class="ion-text-left w3-center">
+        <ion-icon *ngIf="cpActivityData.groupMaintenance != null || cpActivityData.groupMaintenance != ''"
+          color="success" name="checkmark-circle"></ion-icon>
+        <ion-icon *ngIf="cpActivityData.groupMaintenance == null || cpActivityData.groupMaintenance == ''"
+          color="warning" name="close-circle">
+        </ion-icon>
+      </ion-col>
+      <ion-col size="6">
+        กลุ่มบำรุงอ้อย
+      </ion-col>
+      <ion-col size="4" class="ion-text-center gfSriracha txtBlue">
+        {{ cpActivityData.groupnameM }}
       </ion-col>
     </ion-row>
     <ion-row class="w3-pale-red w3-xlarge">

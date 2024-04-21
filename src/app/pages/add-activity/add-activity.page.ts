@@ -54,6 +54,8 @@ export class AddActivityPage implements OnInit {
   cl_pipeup = "warning"
   cl_GerminationPercent = "warning"
   cl_tonfm = "warning"
+  cl_groupC = "warning"  // สีกลุ่มตัด
+  cl_groupM = "warning"  // สีกลุ่มบำรุง
   //ตัวแปร สำหรับ binding ฟอร์มกับ field database
   groundlevel = ""
   tg_groundlevel: boolean = false; // Default value
@@ -91,7 +93,11 @@ export class AddActivityPage implements OnInit {
   }
 
   groupcutData = [{ groupcode: '', groupname: '', fmname: '' }];
+  groupMData = [{ groupcode: '', groupname: '', fmname: '' }];
   public results = [...this.groupcutData];
+  public gm_results = [...this.groupMData];
+  showGroupCSelect = false;
+  showGroupMSelect = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -192,24 +198,32 @@ export class AddActivityPage implements OnInit {
     })
 
     this.getGroupCut();
+    this.getGroupM();
+    this.getOrgaincType()
+    this.getChemicalType()
 
   }
 
   ngOnInit() {
-    this.getOrgaincType()
-    this.getChemicalType()
+
   }
 
-  // groupcutInitial = []; //initialize your countriesInitial array emptyy
-  // searchGroupString = ''; // initialize your searchCountryString string empty
-  showGroupSelect = false;
-  handleInput(event: any) {
+  filterGC(event: any) {
     console.log('user key..', event)
     if (event == null || event == '') {
       this.results = [];
     }
-    this.showGroupSelect = true;
+    this.showGroupCSelect = true;
     this.results = this.groupcutData.filter((d) => d.groupname.toLowerCase().indexOf(event) > -1);
+  }
+
+  filterGM(event: any) {
+    console.log('user key..', event)
+    if (event == null || event == '') {
+      this.gm_results = [];
+    }
+    this.showGroupMSelect = true;
+    this.gm_results = this.groupMData.filter((d) => d.groupname.toLowerCase().indexOf(event) > -1);
   }
 
   // ปุ๋ยอินทรีย์สำหรับ select naturalfertilizer
@@ -261,7 +275,7 @@ export class AddActivityPage implements OnInit {
   // กลุ่มตัดหรับ select groupcut
   async getGroupCut() {
     let ckdata: any
-    ckdata = localStorage.getItem('groupcut')
+    ckdata = localStorage.getItem('groupC')
     if (ckdata) {
       ckdata = JSON.parse(ckdata)
       this.groupcutData = ckdata
@@ -275,7 +289,31 @@ export class AddActivityPage implements OnInit {
             // console.log('groupcut from api :', this.groupcutData)
             x = res.recordset
             x = JSON.stringify(x)
-            localStorage.setItem('groupcut', x)
+            localStorage.setItem('groupC', x)
+          }
+        }
+      })
+    }
+  }
+
+  // กลุ่มบำรุง สำหรับ select groupmaintanance
+  async getGroupM() {
+    let ckdata: any
+    ckdata = localStorage.getItem('groupM')
+    if (ckdata) {
+      ckdata = JSON.parse(ckdata)
+      this.groupMData = ckdata
+      // console.log('groupcutData :', this.groupcutData)
+    } else {
+      let x: any;
+      await this.brdsql.getGroupM().subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.groupMData = res.recordset
+            // console.log('groupcut from api :', this.groupcutData)
+            x = res.recordset
+            x = JSON.stringify(x)
+            localStorage.setItem('groupM', x)
           }
         }
       })
@@ -370,6 +408,18 @@ export class AddActivityPage implements OnInit {
       this.cl_GerminationPercent = 'success'
     } else {
       this.germinationpercent = x.GerminationPercent
+    }
+    if (data.groupcuted != null || data.groupcuted != undefined) {
+      this.groupcuted = x.groupcuted
+      this.cl_groupC = 'success'
+    } else {
+      this.groupcuted = x.groupcuted
+    }
+    if (data.groupMaintenance != null || data.groupMaintenance != undefined) {
+      this.groupMaintenance = x.groupMaintenance
+      this.cl_groupM = 'success'
+    } else {
+      this.groupMaintenance = x.groupMaintenance
     }
     // อ้อยปลูกใหม่ 14 อ้อยตอ 10
     let ctype = ""
@@ -659,6 +709,36 @@ export class AddActivityPage implements OnInit {
       //   break;
       default:
         this.cl_GerminationPercent = "warning"
+        break;
+    }
+  }
+
+  // ตรวจสอบการคีย์กลุ่มตัด
+  ck_GroupC(e: any) {
+    let x = e.detail.value
+    console.log('ck_GroupC', x)
+    switch (x) {
+      case (x = !null || x != undefined):
+        this.cl_groupC = "success"
+        this.groupcuted = x
+        break;
+      default:
+        this.cl_groupC = "warning"
+        break;
+    }
+  }
+
+  // ตรวจสอบการคีย์กลุ่มบำรุง
+  ck_GroupM(e: any) {
+    let x = e.detail.value
+    console.log('ck_GroupM', x)
+    switch (x) {
+      case (x = !null || x != undefined):
+        this.cl_groupM = "success"
+        this.groupMaintenance = x
+        break;
+      default:
+        this.cl_groupM = "warning"
         break;
     }
   }
