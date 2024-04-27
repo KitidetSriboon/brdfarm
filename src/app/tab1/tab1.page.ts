@@ -345,7 +345,7 @@ export class Tab1Page {
   async getSumcpFm() {
     await this.brdsql.getSumcpFm(this.yearTh, this.fmcode).subscribe({
       next: (res: any) => {
-        console.log('getSumcpFm res:', res)
+        // console.log('getSumcpFm res:', res)
         this.sumcpFm = res.recordset[0]
       }
       , error(err) {
@@ -772,6 +772,10 @@ export class Tab1Page {
   async logout() {
     await this.authService.logout(),
       this.router.navigateByUrl('/', { replaceUrl: true })
+  }
+
+  async goProfile() {
+    this.router.navigateByUrl('/profile', { replaceUrl: true })
   }
 
   ngOnDestroy(): void {

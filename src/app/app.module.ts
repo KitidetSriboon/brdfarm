@@ -23,6 +23,7 @@ import { FinancesPipe } from './pages/finances.pipe';
 
 // import { Ng2SearchPipeModule } from 'ng2-search-filter';
 // import { FilterPipe } from './pipes/filter.pipe'
+
 @NgModule({
   declarations: [
     AppComponent,

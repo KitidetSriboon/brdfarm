@@ -86,10 +86,14 @@
           <ion-label>ตั้งค่า</ion-label>
         </ion-item>
         <div class="ion-padding" slot="content">
-          <ion-button fill="clear">
-            <ion-icon name="user-outline"></ion-icon>
-            <ion-label>อยู่ระหว่างพัฒนา</ion-label>
+          <ion-button (click)="goProfile()" fill="outline" expand="full">
+            แก้ไขโปรไฟล์
+            <ion-icon name="person-add-outline" slot="start"></ion-icon>
           </ion-button>
+          <!-- <ion-button (click)="goProfile()" fill="outline" expand="full">
+            <ion-icon name="person-add-outline" slot="start"></ion-icon>
+            <div>แก้ไขโปรไฟล์</div>
+          </ion-button> -->
         </div>
       </ion-accordion>
       <ion-accordion value="app">
@@ -168,8 +172,10 @@
     <div class="img-cov">
       <img src="{{ item.pic_url}}" class="img-dis" />
       <div class="ribbon">
-        <ion-text>{{ item.fmname }}</ion-text>
-        <i></i>
+        <ion-text>
+          {{ item.fmname }}
+        </ion-text>
+        <p class="gfSriracha">ชาวไร่เกรด {{ item.gradeFM1 }}</p>
         <i></i>
         <i></i>
         <i></i>
@@ -178,7 +184,8 @@
         <ion-row>
           <ion-col>
             <ion-icon name="call-outline txtWhite"></ion-icon>
-            <ion-text class="txtWhite">{{ item.TEL }}</ion-text>
+            <ion-text class="txtWhite">{{ item.tel }} <ion-icon (click)="goProfile()" name="create-outline"></ion-icon>
+            </ion-text>
           </ion-col>
         </ion-row>
         <ion-row>
@@ -508,7 +515,19 @@
             <ion-icon name="call-outline"></ion-icon> โทรศัพท์
           </h3>
           <p class="pro-text" color="dark">
-            {{ item.TEL }}
+            {{ item.tel }} sms {{ item.smsnumber }}
+          </p>
+          <h3 class="head-pro">
+            <ion-icon name="share-social-outline"></ion-icon> โซเชียล
+          </h3>
+          <p class="pro-text" color="dark">
+            Line: {{ item.line_id }} Facebook: {{ item.facebook }}
+          </p>
+          <h3 class="head-pro">
+            <ion-icon name="mail-outline"></ion-icon> อีเมล์
+          </h3>
+          <p class="pro-text" color="dark">
+            {{ item.email }}
           </p>
           <h3 class="head-pro">
             <ion-icon name="person-outline"></ion-icon> สมาชิก

@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes, CanLoad } from '@angular/router';
 import { IntroGuard } from './guards/intro.guard';
 import { AutoLoginGuard } from './guards/auto-login.guard';
+import { ProfilePageModule } from './pages/profile/profile.module';
 
 
 const routes: Routes = [
@@ -41,6 +42,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/for-test/for-test.module').then(m => m.ForTestPageModule)
   },
   {
+    path: 'profile/:fmcode',
+    loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfilePageModule)
+  },
+  {
     path: 'finance/:itid',
     loadChildren: () => import('./pages/finance/finance.module').then(m => m.FinancePageModule)
   },
@@ -68,7 +73,12 @@ const routes: Routes = [
   {
     path: 'report-problem',
     loadChildren: () => import('./pages/report-problem/report-problem.module').then(m => m.ReportProblemPageModule)
+  },
+  {
+    path: 'profile',
+    loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfilePageModule)
   }
+
 
 ];
 @NgModule({

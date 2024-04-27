@@ -10,12 +10,13 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 export class FirebaseService {
 
   private basePath = '/audit';
-  private profilePath = '/auditPic/profile';
+  private profilePath = '/farmerapp/profile';
 
   constructor(
     private http: HttpClient,
     private firebase: AngularFireDatabase,
     private fbstorage: AngularFireStorage,
+
   ) { }
 
   // แผนที่แปลงอ้อยตามชายไร่
@@ -130,6 +131,14 @@ export class FirebaseService {
   // อัพโหลดรูปไปที่ Firebase storage
   pushFileToStorage(fileUpload: any, fmcode: any, name: any): Observable<number | undefined> {
     const filePath = `${this.basePath}/${fmcode}/${name}`;
+    const uploadTask = this.fbstorage.upload(filePath, fileUpload);
+    uploadTask.snapshotChanges().pipe().subscribe();
+    return uploadTask.percentageChanges();
+  }
+
+  // อัพโหลดไฟล์ภาพไป Firebase storage
+  pushProfilePict(fileUpload: any, fmcode: any, name: any): Observable<number | undefined> {
+    const filePath = `${this.profilePath}/${fmcode}/${name}`;
     const uploadTask = this.fbstorage.upload(filePath, fileUpload);
     uploadTask.snapshotChanges().pipe().subscribe();
     return uploadTask.percentageChanges();

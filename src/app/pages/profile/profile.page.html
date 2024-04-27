@@ -1,0 +1,87 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title>แก้ไขโปรไฟล์</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="w3-center">
+    <ngx-gauge type="full" [value]="percentage" [thick]="8" backgroundColor="rgba(225,225,225,0)">
+      <ngx-gauge-append>
+
+      </ngx-gauge-append>
+      <ngx-gauge-label>
+
+      </ngx-gauge-label>
+      <ngx-gauge-prepend>
+
+      </ngx-gauge-prepend>
+      <ngx-gauge-value>
+      </ngx-gauge-value>
+    </ngx-gauge>
+    <div class="img-cov">
+      <img [src]="img" class="img-dis" />
+    </div>
+    <ion-fab vertical="start" horizontal="center" style="top: 17%; left: 65%;">
+      <ion-fab-button (click)="cameraOpen()">
+        <ion-icon name="image-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </div>
+
+  <form [formGroup]="frm_editProfile" novalidate>
+    <ion-card *ngIf="fmData">
+      <ion-input formControlName="fmcode" type="hidden" [(ngModel)]="fmcode"></ion-input>
+      <ion-card-content>
+        <ion-item>
+          <h2>
+            ชื่อ : {{ fmData.fmname }}
+          </h2>
+        </ion-item>
+        <ion-item>
+          <!-- <ion-label>เบอร์โทรศัพท์ :</ion-label> -->
+          <ion-input label="เบอร์โทรศัพท์" formControlName="tel" type="text" [(ngModel)]="fmData.tel">
+          </ion-input>
+          <!-- <span slot="error">กรุณาป้อนเบอร์โทร10หลัก</span> -->
+          <span slot="helper">เบอร์โทร มีหลายเบอร์ คั่นด้วย,</span>
+        </ion-item>
+        <ion-item>
+          <ion-input label="เบอร์ sms" formControlName="smsnumber" type="text" [(ngModel)]="fmData.smsnumber"
+            maxlength="10" inputmode="tel">
+          </ion-input>
+          <span slot="helper">เบอร์รับ sms</span>
+        </ion-item>
+        <ion-item>
+          <ion-input label="อีเมล์" formControlName="e_mail" [(ngModel)]="fmData.email" type="email"></ion-input>
+          <span slot="error">รูปแบบอีเมล์ไม่ถูกต้อง</span>
+        </ion-item>
+        <ion-item>
+          <ion-input label="ไลน์ไอดี" label-placement="floating" fill="outline" placeholder="ไลน์ไอดี"
+            formControlName="line_id" [(ngModel)]="fmData.line_id">
+          </ion-input>
+        </ion-item>
+        <!-- <ion-item>
+          <ion-input label="ไลน์ id" formControlName="line_id" [(ngModel)]="fmData.line_id" type="text"></ion-input>
+        </ion-item> -->
+        <ion-item>
+          <ion-input label="เฟซบุคส์ไอดี" label-placement="floating" fill="solid" placeholder="เฟซบุคส์ไอดี"
+            formControlName="facebook" [(ngModel)]="fmData.facebook"></ion-input>
+          <!-- <ion-input label="เฟซบุคส์ id" formControlName="facebook" [(ngModel)]="fmData.facebook" type="text">
+          </ion-input> -->
+        </ion-item>
+        <ion-item>
+          <ion-input label="ไฟล์รูปประจำตัว" formControlName="pic_url" type="text" [(ngModel)]="pic_url" readonly>
+          </ion-input>
+        </ion-item>
+        <ion-button expand="full" [disabled]="!frm_editProfile.valid" (click)="saveEditProfile(frm_editProfile.value)">
+          <ion-icon name="save-outline"></ion-icon> บันทึก
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </form>
+
+</ion-content>

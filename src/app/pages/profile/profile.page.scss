@@ -1,0 +1,18 @@
+.img-dis {
+    object-fit: cover;
+    object-position: top;
+    border-radius: 50%;
+    height: 150px;
+    width: 150px;
+}
+
+.img-cov {
+    padding: 2%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 3;
+    position: absolute;
+    top: 2.3%;
+    left: 29%;
+}

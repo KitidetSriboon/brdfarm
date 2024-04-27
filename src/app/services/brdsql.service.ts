@@ -357,4 +357,13 @@ export class BrdsqlService {
     return this.http.get<any[]>(url)
   }
 
+  // update profile t_farmer
+  updateProfileFarmer(f: any) {
+    const url = this.baseUrlUpdate
+      + "t=cps6263.dbo.t_farmer&"
+      + "s=tel='" + f.tel + "',smsnumber='" + f.smsnumber + "',e_mail='" + f.e_mail + "',line_id='" + f.line_id + "',facebook='" + f.facebook + "',pic_url='" + f.pic_url + "'&"
+      + "w=fmcode_b1 ='" + f.fmcode + "'"
+    return this.http.get<any[]>(url)
+  }
+
 }
