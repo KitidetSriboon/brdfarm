@@ -175,7 +175,7 @@
         <ion-text>
           {{ item.fmname }}
         </ion-text>
-        <p class="gfSriracha">ชาวไร่เกรด {{ item.gradeFM1 }}</p>
+        <p class="gfSriracha txtSmall">ชาวไร่เกรด {{ item.gradeFM1 }}</p>
         <i></i>
         <i></i>
         <i></i>
@@ -184,7 +184,8 @@
         <ion-row>
           <ion-col>
             <ion-icon name="call-outline txtWhite"></ion-icon>
-            <ion-text class="txtWhite">{{ item.tel }} <ion-icon (click)="goProfile()" name="create-outline"></ion-icon>
+            <ion-text class="txtWhite txtSmall">{{ item.tel }} <ion-icon (click)="goProfile()" name="create-outline">
+              </ion-icon>
             </ion-text>
           </ion-col>
         </ion-row>

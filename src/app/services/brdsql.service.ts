@@ -169,7 +169,7 @@ export class BrdsqlService {
     switch (frmType) {
       case 'edit':
         urlUpdate = urlUpdate + "t=dbIntech.dbo.p_farmer&"
-          + "s=groundlevel='" + f.groundlevel + "',hardSoilBlast='" + f.hardSoilBlast
+          + "s=plantdate='" + f.plantdate + "',groundlevel='" + f.groundlevel + "',hardSoilBlast_code='" + f.hardSoilBlast_code
           + "',seedclear='" + f.seedclear + "',groove=" + f.groove + ",naturalfertilizer='" + f.naturalfertilizer + "',NaturalFertilizerRatio=" + f.naturalFertilizerRatio
           + ",fertilizer1Ratio=" + f.fertilizer1Ratio + ",fertilizer1Formula='" + f.fertilizer1Formula
           + "',fertilizer2Ratio=" + f.fertilizer2Ratio + ",fertilizer2Formula='" + f.fertilizer2Formula
@@ -184,10 +184,10 @@ export class BrdsqlService {
         break;
       case 'insert':
         urlInsert = urlInsert + "t=dbIntech.dbo.p_farmer&"
-          + "c=itid, year, groundlevel, hardSoilBlast, seedclear, groove, naturalfertilizer,NaturalFertilizerRatio,"
+          + "c=itid, year, plantdate, groundlevel, hardSoilBlast_code, seedclear, groove, naturalfertilizer,NaturalFertilizerRatio,"
           + "fertilizer1Ratio, fertilizer1Formula, fertilizer2Ratio, fertilizer2Formula, fertilizer3Ratio, fertilizer3Formula, "
           + "pipeup, GerminationPercent, GerminationPercent_date, ton, tonm" + m + ", ton_last, wastedSpaceRai, cutseed, ton_lost,groupcuted, groupMaintenance, update_date&"
-          + "v='" + f.itid + "', '" + f.yearid + "', '" + f.groundlevel + "', '" + f.hardSoilBlast + "','" + f.seedclear
+          + "v='" + f.itid + "', '" + f.yearid + "','" + f.plantdate + "', '" + f.groundlevel + "', '" + f.hardSoilBlast_code + "','" + f.seedclear
           + "'," + f.groove + ",'" + f.naturalfertilizer + "'," + f.naturalFertilizerRatio
           + "," + f.fertilizer1Ratio + ",'" + f.fertilizer1Formula + "'," + f.fertilizer2Ratio + ",'" + f.fertilizer2Formula + "'," + f.fertilizer3Ratio + ",'" + f.fertilizer3Formula
           + "','" + f.pipeup + "'," + f.germinationpercent + ",getdate()," + f.ton_fm + "," + f.ton_fm + "," + m + ","

@@ -33,11 +33,16 @@
         <img src="../../../assets/icon/add-user.png" class="icon-top-right">
       </ion-title>
       <ion-list>
+        <!-- วันปลูก/ตัด -->
+        <ion-item [color]="cl_plantdate" class="w3-round-large divMg-5">
+          <ion-input type="date" [(ngModel)]="plantdate" formControlName="plantdate" label="วันปลูก/ตัด"></ion-input>
+        </ion-item>
         <!-- ระดับพื้นที่ -->
         <ion-item [color]="cl_groundlevel" class="w3-round-large divMg-5">
           <ion-toggle [enableOnOffLabels]="true" [(ngModel)]="tg_groundlevel" (ionChange)="ck_groundlevel($event)"
             justify="space-between" formControlName="groundlevel">
-            1.ระดับพื้นที่ ได้คุณภาพ
+            <ion-text *ngIf="canetype == 'R'">1.ปรับพื้นที่</ion-text>
+            <ion-text *ngIf="canetype == 'T'">1.ทำทางระบายน้ำ</ion-text>
             <ion-text class="txtBlue" id="click-groundlevel">?</ion-text>
           </ion-toggle>
           <ion-popover trigger="click-groundlevel" triggerAction="click">
@@ -45,7 +50,8 @@
               <ion-content>
                 <div class="w3-panel w3-leftbar w3-light-grey">
                   <p class="txtSmall">
-                    <i>"ปรับพื้นที่ ระบายน้ำได้ ราบเรียบ ไม่มีแอ่งน้ำขังภายในแปลง"</i></p>
+                    <i>"อ้อยปลูกใหม่ ปรับพื้นที่ให้เหมาะสม อ้อยตอ ทำทางระบายน้ำ ราบเรียบ ไม่มีแอ่งน้ำขังภายในแปลง"</i>
+                  </p>
                 </div>
               </ion-content>
             </ng-template>
@@ -358,11 +364,22 @@
     <form *ngIf="frm_edit" [formGroup]="frm_editcpact" (ngSubmit)="submit(frm_editcpact.value)" novalidate>
       <ion-title class="w3-center">อัพเดตข้อมูล</ion-title>
       <ion-list>
+        <!-- วันปลูก/ตัด -->
+        <ion-item [color]="cl_plantdate" class="w3-round-large divMg-5">
+          <ion-grid class="divPadding-5 ">
+            <ion-text>วันปลูก/ตัด</ion-text>
+            <ion-text class="w3-sand showDesc w3-border w3-round-xlarge">{{ cpActivitydata.plantdateTh }}
+            </ion-text>
+            <ion-input type="date" [(ngModel)]="cpActivitydata.plantdate" formControlName="plantdate" class="inputBGWB">
+            </ion-input>
+          </ion-grid>
+        </ion-item>
         <!-- ระดับพื้นที่ -->
         <ion-item [color]="cl_groundlevel" class="w3-round-large divMg-5">
           <ion-toggle [enableOnOffLabels]="true" [(ngModel)]="tg_groundlevel" (ionChange)="ck_groundlevel($event)"
             justify="space-between" formControlName="groundlevel">
-            1.ระดับพื้นที่
+            <ion-text *ngIf="canetype == 'R'">1.ปรับพื้นที่</ion-text>
+            <ion-text *ngIf="canetype == 'T'">1.ทำทางระบายน้ำ</ion-text>
             <ion-text class="txtBlue" id="click-groundlevel">?</ion-text>
             <ion-text class="w3-sand showDesc w3-border w3-round-xlarge">{{ cpActivitydata.groundlevelDesc }}
             </ion-text>
@@ -380,23 +397,44 @@
         </ion-item>
         <!-- ระเบิดดินดาน -->
         <ion-item [color]="cl_hardSoilBlast" class="w3-round-large divMg-5">
-          <ion-toggle [enableOnOffLabels]="true" (ionChange)="ck_hardSoilBlast($event)" justify="space-between"
-            formControlName="hardSoilBlast" [(ngModel)]="tg_hardSoilBlast">
+          <ion-grid class="divPadding-5 ">
+            <ion-row>
+              <ion-col class="w3-display-left">
+                <ion-text>2.ระเบิดดาน</ion-text>
+                <ion-text class="w3-sand showDesc w3-border w3-round-xlarge">{{ cpActivitydata.hardSoilBlastDesc }}
+                </ion-text>
+              </ion-col>
+              <ion-col class="w3-display-right ion-padding-end">
+                <ion-select justify="end" (ionChange)="ck_hardSoilBlast($event)" formControlName="hardSoilBlast_code"
+                  [(ngModel)]="cpActivitydata.hardSoilBlast_code">
+                  <ion-select-option value="0">ยังไม่ได้ทำ</ion-select-option>
+                  <ion-select-option value="1">ทำแล้วลึก<40 ซม.</ion-select-option> <ion-select-option value="2">
+                      ทำแล้วลึก>40 ซม.</ion-select-option>
+                </ion-select>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <!-- <ion-toggle [enableOnOffLabels]="true" (ionChange)="ck_hardSoilBlast($event)" justify="space-between"
+            formControlName="hardSoilBlast_code" [(ngModel)]="tg_hardSoilBlast">
             2.ระเบิดดินดาน
             <ion-text class="txtBlue" id="click-hardSoilBlast">?</ion-text>
             <ion-text class="w3-sand showDesc w3-border w3-round-xlarge">{{ cpActivitydata.hardSoilBlastDesc }}
             </ion-text>
-          </ion-toggle>
-          <ion-popover trigger="click-hardSoilBlast" triggerAction="click">
+          </ion-toggle> -->
+          <!-- <ion-popover trigger="click-hardSoilBlast" triggerAction="click">
             <ng-template>
               <ion-content>
                 <div class="w3-panel w3-leftbar w3-light-grey">
                   <p class="txtSmall">
-                    <i>"ระเบิดดินดาน ไม่ทำ/ทำ"</i></p>
+                    <i>"ระเบิดดินดาน ไม่ทำ/ทำ  ,ทำลึก<40cm ,ทำลึก>40cm"</i></p>
                 </div>
               </ion-content>
             </ng-template>
-          </ion-popover>
+          </ion-popover> -->
+          <!-- <div class="ion-padding-start">
+            <ion-input class="inputBGWB" label="ความลึก" maxlength="2" [(ngModel)]="cpActivitydata.hardSoilBlast_size"
+              formControlName="hardSoilBlast_size" (ionChange)="ckhardSoilBlast_sizeOver($event);"></ion-input>
+          </div> -->
         </ion-item>
         <!-- คัดอ้อยพันธุ์ -->
         <ion-item [color]="cl_seedclear" class="w3-round-large divMg-5">

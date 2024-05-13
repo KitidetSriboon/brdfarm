@@ -138,7 +138,8 @@ export class FirebaseService {
 
   // อัพโหลดไฟล์ภาพไป Firebase storage
   pushProfilePict(fileUpload: any, fmcode: any, name: any): Observable<number | undefined> {
-    const filePath = `${this.profilePath}/${fmcode}/${name}`;
+    const filePath = `${this.profilePath}/${name}`;
+    // const filePath = `${this.profilePath}/${fmcode}/${name}`;
     const uploadTask = this.fbstorage.upload(filePath, fileUpload);
     uploadTask.snapshotChanges().pipe().subscribe();
     return uploadTask.percentageChanges();

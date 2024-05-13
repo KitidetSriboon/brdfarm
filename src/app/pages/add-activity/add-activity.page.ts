@@ -38,9 +38,12 @@ export class AddActivityPage implements OnInit {
   perTon?: number = 0;
   ton?: any
   change = true
+  canetype = ""
   // ตัวแปรแสดงสีของแต่ละกิจกรรม
+  cl_plantdate = "warning"  // สีวันที่ปลูก/ตัด
   cl_groundlevel = "warning"
   cl_hardSoilBlast = "warning"
+  cl_hardSoilBlast_code = "warning"
   cl_seedclear = "warning"
   cl_groove = "warning"
   cl_NaturalFertilizer = "warning"
@@ -57,12 +60,16 @@ export class AddActivityPage implements OnInit {
   cl_groupC = "warning"  // สีกลุ่มตัด
   cl_groupM = "warning"  // สีกลุ่มบำรุง
   //ตัวแปร สำหรับ binding ฟอร์มกับ field database
+  plantdate = ""
+  // tg_plantdate = false;
   groundlevel = ""
-  tg_groundlevel: boolean = false; // Default value
+  tg_groundlevel = false; // Default value
   hardSoilBlast = ""
-  tg_hardSoilBlast: boolean = false; // Default value
+  hardSoilBlast_code = ""
+  tg_hardSoilBlast = false; // Default value
+  tg_hardSoilBlast_code = false; // Default value
   seedclear = ""
-  tg_seedclear: boolean = false; // Default value
+  tg_seedclear = false; // Default value
   groove = 0
   naturalfertilizer = ""
   naturalFertilizerRatio = 0
@@ -123,6 +130,7 @@ export class AddActivityPage implements OnInit {
     this.cpdata = cp_data[0];
     this.perTon = cp_data.ton_last_fm
     this.yearid = this.cpdata.year
+    this.canetype = this.cpdata.canetype.substring(2, 1)
 
     // เชคว่า เคยมีการบันทึกข้อมูลไว้แล้วหรือไม่จาก itid
     this.brdsql.cpActivityFm(this.itid).subscribe({
@@ -139,8 +147,10 @@ export class AddActivityPage implements OnInit {
           this.frm_editcpact = fb.group({
             itid: [this.cpActivitydata.itid,],
             yearid: [this.cpActivitydata.year,],  // ปีของแปลงอ้อย
+            plantdate: [this.cpActivitydata.plantdate,],  // วันปลูก/ตัด
             groundlevel: [this.cpActivitydata.groundlevel,],  // การปรับระดับพื้นที่
-            hardSoilBlast: [this.cpActivitydata.hardSoilBlast],  // การระเบิดดาน
+            // hardSoilBlast: [this.cpActivitydata.hardSoilBlast],  // การระเบิดดาน
+            hardSoilBlast_code: [this.cpActivitydata.hardSoilBlast_code],  // การระเบิดดาน
             seedclear: [this.cpActivitydata.seedclear],  // การคัดพันธุ์อ้อย สะอาด
             groove: [this.cpActivitydata.groove,],  // ระยะรอง ซม.
             naturalfertilizer: [this.cpActivitydata.NaturalFertilizer,],  // ประเภทปุ๋ยอินทรีย์ที่ใส่
@@ -171,8 +181,10 @@ export class AddActivityPage implements OnInit {
           this.frm_addcpact = fb.group({
             itid: [cp_data.itid, [Validators.required]],
             yearid: [cp_data.year, [Validators.required]],  // ปีของแปลงอ้อย
+            plantdate: [''],  // วันปลูก/ตัด
             groundlevel: ['',],  // การปรับระดับพื้นที่
-            hardSoilBlast: [''],  // การระเบิดดาน
+            // hardSoilBlast: [''],  // การระเบิดดาน
+            hardSoilBlast_code: ['',],  // การระเบิดดาน 0=ไม่ได้ทำ 1=น้อยกว่า40cm 2=มากกว่า40cm
             seedclear: [''],  // การคัดพันธุ์อ้อย สะอาด
             groove: [0, [Validators.min(0), Validators.max(300)]],  // ระยะรอง ซม.
             naturalfertilizer: ['',],  // ประเภทปุ๋ยอินทรีย์ที่ใส่
@@ -323,16 +335,36 @@ export class AddActivityPage implements OnInit {
   // ปรับสีกิจกรรมทำแล้ว สีเขียว
   ck_fmacOK(data: any) {
     let x = data
-    // console.log('this.wastedSpaceRai', this.wastedSpaceRai)
+
+    const date1 = new Date('2024-01-15');  // กำหนด 15 มค.
+    const date2 = new Date('2024-01-16');
+
+    // const comparisonResult = this.compareDateAndMonth(date1, date2);
+
+    // if (comparisonResult === 0) {
+    //   console.log("Dates are equal in month and date.");
+    // } else if (comparisonResult < 0) {
+    //   console.log("Date 1 is earlier than Date 2.");
+    // } else {
+    //   console.log("Date 1 is later than Date 2.");
+    // }
+
+    if (data.canetype.substring(0, 2) == 'ST' && data.plantdate !== null) {
+      this.plantdate = x.plantdate
+      this.cl_plantdate = 'success'
+    }
+    if (data.canetype.substring(2, 1) == 'R' && data.plantdate !== null && this.compareDateAndMonth(date1, data.plantdate) < 0) {
+      this.plantdate = x.plantdate
+      this.cl_plantdate = 'success'
+    }
     if (data.groundlevel == true) {
       this.groundlevel = x.groundlevel
       this.cl_groundlevel = 'success'
       this.tg_groundlevel = true
     }
-    if (data.hardSoilBlast == true) {
-      this.hardSoilBlast = x.hardSoilBlast
+    if (data.hardSoilBlast_code == '2') {
+      this.hardSoilBlast_code = x.hardSoilBlast_code
       this.cl_hardSoilBlast = 'success'
-      this.tg_hardSoilBlast = true;
     }
     if (data.seedclear == true) {
       this.seedclear = x.seedclear
@@ -478,16 +510,21 @@ export class AddActivityPage implements OnInit {
 
   // การระเบิดดาน
   ck_hardSoilBlast(e: any) {
-    let x = e.detail.checked
+    // let x = e.detail.checked
+    let x = e.detail.value
     // console.log('toggle event.detail.checked ', e.detail.checked);
     switch (x) {
-      case true:
+      case '2':
         this.cl_hardSoilBlast = "success"
-        this.hardSoilBlast = "true"
+        this.hardSoilBlast = "2"
         break;
-      case false:
+      case '1':
         this.cl_hardSoilBlast = "warning"
-        this.hardSoilBlast = "false"
+        this.hardSoilBlast = "1"
+        break;
+      case '0':
+        this.cl_hardSoilBlast = "warning"
+        this.hardSoilBlast = "0"
         break;
       default:
         this.cl_hardSoilBlast = "warning"
@@ -911,6 +948,24 @@ export class AddActivityPage implements OnInit {
       cssClass: 'custom-alert',
     });
     await alert.present();
+  }
+
+  // Function to compare only the date and month of two dates
+  compareDateAndMonth(date1: any, date2: any) {
+    // Extract month and date components
+    const month1 = date1.getMonth();
+    const day1 = date1.getDate();
+    const month2 = date2.getMonth();
+    const day2 = date2.getDate();
+
+    // Compare month and date components
+    if (month1 === month2 && day1 === day2) {
+      return 0; // Dates are equal
+    } else if (month1 < month2 || (month1 === month2 && day1 < day2)) {
+      return -1; // date1 is earlier than date2
+    } else {
+      return 1; // date1 is later than date2
+    }
   }
 
 

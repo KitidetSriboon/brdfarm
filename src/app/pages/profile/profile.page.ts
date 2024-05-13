@@ -107,7 +107,8 @@ export class ProfilePage implements OnInit {
     const photo = await this.base64FromPath(image.webPath);
     const gname = new Date().getTime();
     this.result = this.dataURLtoFile(photo, gname);
-    const filename = gname + '.' + this.result.type.substring(6);
+    const filename = this.fmcode + '.' + this.result.type.substring(6);
+    // const filename = gname + '.' + this.result.type.substring(6);
     this.name = filename;
     reader.readAsDataURL(this.result);
     reader.onload = (_event) => {
@@ -128,7 +129,7 @@ export class ProfilePage implements OnInit {
       },
       complete: () => {
         // const bucket = 'brr-farmluck.appspot.com';
-        const link = 'https://storage.cloud.google.com/brr-farmluck.appspot.com/farmerapp/profile/' + this.fmData.fmcode_b1 + '/' + this.name;
+        const link = 'https://storage.cloud.google.com/brr-farmluck.appspot.com/farmerapp/profile/' + this.name;
         this.pic_url = link;
         console.log('pic_url', this.pic_url);
         // this.updateProfileSql();
