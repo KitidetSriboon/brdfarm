@@ -170,7 +170,7 @@ export class BrdsqlService {
       case 'edit':
         urlUpdate = urlUpdate + "t=dbIntech.dbo.p_farmer&"
           + "s=plantdate='" + f.plantdate + "',groundlevel='" + f.groundlevel + "',hardSoilBlast_code='" + f.hardSoilBlast_code
-          + "',seedclear='" + f.seedclear + "',groove=" + f.groove + ",naturalfertilizer='" + f.naturalfertilizer + "',NaturalFertilizerRatio=" + f.naturalFertilizerRatio
+          + "',seedclear='" + f.seedclear + "',groove=" + f.groove + ",dolomite=" + f.dolomite + ",naturalfertilizer='" + f.naturalfertilizer + "',NaturalFertilizerRatio=" + f.naturalFertilizerRatio
           + ",fertilizer1Ratio=" + f.fertilizer1Ratio + ",fertilizer1Formula='" + f.fertilizer1Formula
           + "',fertilizer2Ratio=" + f.fertilizer2Ratio + ",fertilizer2Formula='" + f.fertilizer2Formula
           + "',fertilizer3Ratio=" + f.fertilizer3Ratio + ",fertilizer3Formula='" + f.fertilizer3Formula
@@ -184,11 +184,11 @@ export class BrdsqlService {
         break;
       case 'insert':
         urlInsert = urlInsert + "t=dbIntech.dbo.p_farmer&"
-          + "c=itid, year, plantdate, groundlevel, hardSoilBlast_code, seedclear, groove, naturalfertilizer,NaturalFertilizerRatio,"
+          + "c=itid, year, plantdate, groundlevel, hardSoilBlast_code, seedclear, groove, dolomite, naturalfertilizer,NaturalFertilizerRatio,"
           + "fertilizer1Ratio, fertilizer1Formula, fertilizer2Ratio, fertilizer2Formula, fertilizer3Ratio, fertilizer3Formula, "
           + "pipeup, GerminationPercent, GerminationPercent_date, ton, tonm" + m + ", ton_last, wastedSpaceRai, cutseed, ton_lost,groupcuted, groupMaintenance, update_date&"
           + "v='" + f.itid + "', '" + f.yearid + "','" + f.plantdate + "', '" + f.groundlevel + "', '" + f.hardSoilBlast_code + "','" + f.seedclear
-          + "'," + f.groove + ",'" + f.naturalfertilizer + "'," + f.naturalFertilizerRatio
+          + "'," + f.groove + "," + f.dolomite + ",'" + f.naturalfertilizer + "'," + f.naturalFertilizerRatio
           + "," + f.fertilizer1Ratio + ",'" + f.fertilizer1Formula + "'," + f.fertilizer2Ratio + ",'" + f.fertilizer2Formula + "'," + f.fertilizer3Ratio + ",'" + f.fertilizer3Formula
           + "','" + f.pipeup + "'," + f.germinationpercent + ",getdate()," + f.ton_fm + "," + f.ton_fm + "," + m + ","
           + f.wastedSpaceRai + "," + f.cutseed + "," + f.ton_lost + ",'" + f.groupcuted + "','" + f.groupMaintenance + "',getdate()"
@@ -356,6 +356,34 @@ export class BrdsqlService {
       + "w=onweb = '1' order by descript"
     return this.http.get<any[]>(url)
   }
+
+  // พันธุ์อ้อย
+  getSeedcane() {
+    const url = this.baseSelectUrl
+      + "s=seedcode,seedname&"
+      + "f=CPS6263.dbo.seedcode&"
+      + "w=1=1 order by seedname"
+    return this.http.get<any[]>(url)
+  }
+
+  // โรคอ้อย
+  getDisease() {
+    const url = this.baseSelectUrl
+      + "s=*&"
+      + "f=CPS6263.dbo.Disease&"
+      + "w=1=1 order by descript"
+    return this.http.get<any[]>(url)
+  }
+
+  // แมลงอ้อย
+  getInsect() {
+    const url = this.baseSelectUrl
+      + "s=insect,insectdesc&"
+      + "f=CPS6263.dbo.insect&"
+      + "w=1=1 order by insectdesc"
+    return this.http.get<any[]>(url)
+  }
+
 
   // update profile t_farmer
   updateProfileFarmer(f: any) {

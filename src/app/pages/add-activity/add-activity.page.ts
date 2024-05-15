@@ -25,6 +25,9 @@ export class AddActivityPage implements OnInit {
   cpActivitydata?: any = [];
   organicType?: any = [];
   chemicalType?: any = [];
+  diseaseData?: any = [];
+  insectData?: any = [];
+  seedcane?: any = [];
   groupcutfilter?: any = [];
   groupMaintenanceData?: any = [];
   frm_addcpact!: FormGroup;
@@ -45,7 +48,9 @@ export class AddActivityPage implements OnInit {
   cl_hardSoilBlast = "warning"
   cl_hardSoilBlast_code = "warning"
   cl_seedclear = "warning"
+  cl_seedcode = "warning"
   cl_groove = "warning"
+  cl_dolomite = "warning"
   cl_NaturalFertilizer = "warning"
   cl_FertilizerRound1 = "warning"
   cl_FertilizerRound2 = "warning"
@@ -53,7 +58,8 @@ export class AddActivityPage implements OnInit {
   cl_fertilizer1Ratio = "warning"
   cl_fertilizer2Ratio = "warning"
   cl_fertilizer3Ratio = "warning"
-  // cl_fertilizer1Formula = "warning"
+  cl_disease = "warning"
+  cl_insect = "warning"
   cl_pipeup = "warning"
   cl_GerminationPercent = "warning"
   cl_tonfm = "warning"
@@ -69,8 +75,10 @@ export class AddActivityPage implements OnInit {
   tg_hardSoilBlast = false; // Default value
   tg_hardSoilBlast_code = false; // Default value
   seedclear = ""
+  seedcode = ""
   tg_seedclear = false; // Default value
   groove = 0
+  dolomite = 0  // อัตราการใส่โดโลไมท์
   naturalfertilizer = ""
   naturalFertilizerRatio = 0
   fertilizer1Ratio = 0
@@ -82,7 +90,10 @@ export class AddActivityPage implements OnInit {
   showChemical1Formula = false;
   showChemical2Formula = false;
   showChemical3Formula = false;
-  tg_pipeup: boolean = false; // Default value
+  tg_pipeup = false; // Default value
+  tg_disease = false
+  disease = ""
+  insect = ""
   pipeup = ""
   germinationpercent = 0
   wastedSpaceRai = 0
@@ -151,8 +162,10 @@ export class AddActivityPage implements OnInit {
             groundlevel: [this.cpActivitydata.groundlevel,],  // การปรับระดับพื้นที่
             // hardSoilBlast: [this.cpActivitydata.hardSoilBlast],  // การระเบิดดาน
             hardSoilBlast_code: [this.cpActivitydata.hardSoilBlast_code],  // การระเบิดดาน
+            seedcode: [this.cpActivitydata.seedcode],  // รหัสพันธุ์อ้อย
             seedclear: [this.cpActivitydata.seedclear],  // การคัดพันธุ์อ้อย สะอาด
             groove: [this.cpActivitydata.groove,],  // ระยะรอง ซม.
+            dolomite: [this.cpActivitydata.dolomite,],  // อัตราการใส่โดโลไมท์
             naturalfertilizer: [this.cpActivitydata.NaturalFertilizer,],  // ประเภทปุ๋ยอินทรีย์ที่ใส่
             naturalFertilizerRatio: [this.cpActivitydata.NaturalFertilizerRatio,],  // อัตราปุ๋ยอินทรีย์ที่ใส่
             fertilizer1Ratio: [this.cpActivitydata.fertilizer1Ratio,], // อัตราปุ๋ยเคมี1
@@ -161,6 +174,7 @@ export class AddActivityPage implements OnInit {
             fertilizer2Formula: [this.cpActivitydata.fertilizer1Formula,],  // สูตรปุ๋ยเคมี2
             fertilizer3Ratio: [this.cpActivitydata.fertilizer1Ratio,], // อัตราปุ๋ยเคมี3
             fertilizer3Formula: [this.cpActivitydata.fertilizer1Formula,],  // สูตรปุ๋ยเคมี3
+            disease: [this.cpActivitydata.disease,],  // โรคอ้อย
             pipeup: [this.cpActivitydata.pipeup,],  // การพูนโคน
             germinationpercent: [this.cpActivitydata.GerminationPercent,],  // %การงอก
             ton_fm: [this.cpActivitydata.ton_In_Month, [Validators.min(0), Validators.max(35)]],  // ตันประเมิน
@@ -186,7 +200,9 @@ export class AddActivityPage implements OnInit {
             // hardSoilBlast: [''],  // การระเบิดดาน
             hardSoilBlast_code: ['',],  // การระเบิดดาน 0=ไม่ได้ทำ 1=น้อยกว่า40cm 2=มากกว่า40cm
             seedclear: [''],  // การคัดพันธุ์อ้อย สะอาด
+            seedcode: [''],  // รหัสพันธุ์อ้อย
             groove: [0, [Validators.min(0), Validators.max(300)]],  // ระยะรอง ซม.
+            dolomite: [0,],  // อัตราการใส่โดโลไมท์
             naturalfertilizer: ['',],  // ประเภทปุ๋ยอินทรีย์ที่ใส่
             naturalFertilizerRatio: [0,],  // อัตราปุ๋ยอินทรีย์ที่ใส่
             fertilizer1Ratio: [0,],  // อัตราปุ๋ยเคมี1
@@ -195,6 +211,7 @@ export class AddActivityPage implements OnInit {
             fertilizer1Formula: ['',],  // สูตรปุ๋ยเคมี1
             fertilizer2Formula: ['',],  // สูตรปุ๋ยเคมี2
             fertilizer3Formula: ['',],  // สูตรปุ๋ยเคมี3
+            disease: ['',],  // โรคอ้อย
             pipeup: ['',],  // การพูนโคน
             germinationpercent: [0,],  // %การงอก
             ton_fm: [0, [Validators.min(0), Validators.max(35)]],  // ตันประเมิน
@@ -213,6 +230,9 @@ export class AddActivityPage implements OnInit {
     this.getGroupM();
     this.getOrgaincType()
     this.getChemicalType()
+    this.getSeedcode()
+    this.getDisease()
+    this.getInsect()
 
   }
 
@@ -278,6 +298,72 @@ export class AddActivityPage implements OnInit {
             localStorage.setItem('chemical', x)
             this.chemicalType = x
             // console.log('chemicalType', this.chemicalType)
+          }
+        }
+      })
+    }
+  }
+
+  // พันธุ์อ้อย
+  async getSeedcode() {
+    // console.log('getOrgaincType')
+    let ckdata = localStorage.getItem('seedcode')
+    if (ckdata) {
+      ckdata = JSON.parse(ckdata)
+      this.seedcane = ckdata
+      // console.log('chemicalType', this.chemicalType)
+    } else {
+      let x: any;
+      await this.brdsql.getSeedcane().subscribe({
+        next: (res: any) => {
+          if (res) {
+            x = res.recordset
+            x = JSON.stringify(x)
+            localStorage.setItem('seedcode', x)
+            this.seedcane = x
+            // console.log('chemicalType', this.chemicalType)
+          }
+        }
+      })
+    }
+  }
+
+  //โรค
+  async getDisease() {
+    let ckdata = localStorage.getItem('disease')
+    if (ckdata) {
+      ckdata = JSON.parse(ckdata)
+      this.diseaseData = ckdata
+    } else {
+      let x: any;
+      await this.brdsql.getDisease().subscribe({
+        next: (res: any) => {
+          if (res) {
+            x = res.recordset
+            x = JSON.stringify(x)
+            localStorage.setItem('disease', x)
+            this.diseaseData = x
+          }
+        }
+      })
+    }
+  }
+
+  // แมลง
+  async getInsect() {
+    let ckdata = localStorage.getItem('insect')
+    if (ckdata) {
+      ckdata = JSON.parse(ckdata)
+      this.insectData = ckdata
+    } else {
+      let x: any;
+      await this.brdsql.getInsect().subscribe({
+        next: (res: any) => {
+          if (res) {
+            x = res.recordset
+            x = JSON.stringify(x)
+            localStorage.setItem('insect', x)
+            this.insectData = x
           }
         }
       })
@@ -377,6 +463,10 @@ export class AddActivityPage implements OnInit {
     } else {
       this.groove = x.groove
     }
+    if (data.dolomite > 0) {
+      this.dolomite = x.dolomite
+      this.cl_dolomite = 'success'
+    }
     if (data.NaturalFertilizer == 0 || data.NaturalFertilizer == null) {
       this.naturalfertilizer = x.NaturalFertilizer
     } else if (data.NaturalFertilizer >= 500) {
@@ -427,6 +517,16 @@ export class AddActivityPage implements OnInit {
       this.cl_FertilizerRound3 = 'success'
     } else {
       this.fertilizer3Formula = x.fertilizer3Formula
+    }
+    if (data.disease == '0') {
+      this.disease = x.disease
+      this.cl_disease = 'success'
+      // this.tg_disease = true;
+    }
+    if (data.insect == '0') {
+      this.insect = x.insect
+      this.cl_insect = 'success'
+      // this.tg_insect = true;
     }
     if (data.pipeup == true) {
       this.pipeup = x.pipeup
@@ -567,6 +667,19 @@ export class AddActivityPage implements OnInit {
     }
   }
 
+  // ใส่โดโลไมท์
+  ck_dolomite(e: any) {
+    let x: number = e.detail.value
+    switch (true) {
+      case (x > 0):
+        this.cl_dolomite = "success"
+        break;
+      default:
+        this.cl_dolomite = "warning"
+        break;
+    }
+  }
+
   // ตรวจสอบอัตราปุ๋ยอินทรีย์ที่ใส่ ที่คีย์ไม่เกิน 5000 กก/ไร่
   // showNaturalFertRatio = false;
   ckNaturalFertOver(e: any) {
@@ -598,19 +711,42 @@ export class AddActivityPage implements OnInit {
     }
   }
 
+  ck_NaturalFertilizerSelect(e: any) {
+    let x: any = e.detail.value
+    switch (true) {
+      case (x !== 0):
+        console.log('user seleccted', x)
+        this.showFertRatio = true;
+        this.cl_NaturalFertilizer = "success"
+        break;
+      case '' || null:
+        console.log('case null', x)
+        this.showFertRatio = false;
+        this.cl_NaturalFertilizer = "warning"
+        break;
+      case (x == 0):
+        console.log('case 0', x)
+        this.showFertRatio = false;
+        this.cl_NaturalFertilizer = "warning"
+        break;
+      default:
+        console.log('default', x)
+        this.showFertRatio = false;
+        this.cl_NaturalFertilizer = "warning"
+        break;
+    }
+  }
+
   ck_NaturalFertilizer(e: any) {
     let x: number = e.detail.value
-    // x = x.toString()
-    console.log('การใส่ปุ๋ยอินทรีย์', x)
+    console.log('อัตราการใส่ปุ๋ยอินทรีย์', x)
     switch (true) {
       case (x > 0 && x < 500):
         console.log('case >0 < 500', x)
-        this.showFertRatio = true;
         this.cl_NaturalFertilizer = "warning"
         break;
       case (x >= 500):
         console.log('case >=500', x)
-        this.showFertRatio = true;
         this.cl_NaturalFertilizer = "success"
         break;
       case '' || null:
@@ -619,6 +755,23 @@ export class AddActivityPage implements OnInit {
         break;
       default:
         console.log('default', x)
+        this.cl_NaturalFertilizer = "warning"
+        break;
+    }
+  }
+
+  // ck seedcode
+  ck_seedcode(e: any) {
+    let x: any = e.detail.value
+    console.log('รหัสพันธุ์', x)
+    switch (true) {
+      case (x !== null || x !== ''):
+        console.log('มีการเลือก', x)
+        this.showFertRatio = true;
+        this.cl_NaturalFertilizer = "warning"
+        break;
+      default:
+        console.log('ว่าง หรือ null', x)
         this.showFertRatio = false;
         this.cl_NaturalFertilizer = "warning"
         break;
@@ -707,6 +860,45 @@ export class AddActivityPage implements OnInit {
         break;
       default:
         this.cl_FertilizerRound3 = "warning"
+        break;
+    }
+  }
+
+  // ck_ โรคอ้อย
+  ck_disease(e: any) {
+    let x: any = e.detail.value
+    console.log('ck_disease value ', x)
+    switch (true) {
+      case (x == 0):
+        console.log('ไม่มีโรค', x)
+        this.cl_disease = "success"
+        break;
+      case (x == null || x == ''):
+        console.log('null ว่าง', x)
+        this.cl_disease = "warning"
+        break;
+      default:
+        console.log('อื่นๆ', x)
+        this.cl_disease = "warning"
+        break;
+    }
+  }
+
+  // ck_ แมลงอ้อย
+  ck_insect(e: any) {
+    let x: any = e.detail.value
+    switch (true) {
+      case (x == 0):
+        console.log('ไม่มีแมลง', x)
+        this.cl_insect = "success"
+        break;
+      case (x == null || x == ''):
+        console.log('null ว่าง', x)
+        this.cl_insect = "warning"
+        break;
+      default:
+        console.log('อื่นๆ ', x)
+        this.cl_insect = "warning"
         break;
     }
   }
