@@ -214,9 +214,18 @@ export class Tab2Page {
   }
 
   async getUserLocation() {
+    let x: any = localStorage.getItem('lastpos')
+    if (x) {
+      console.log('พบตำแหน่งล่าสุดที่บันทึกไว้')
+      x = JSON.parse(x)
+      this.upos.lat = x.lat
+      this.upos.lng = x.lng
+    }
     await this.geosv.getCurrentCoordinate().then((res: any) => {
+      console.log('ไม่พบตำแหน่งล่าสุดที่บันทึกไว้ เรียกตำแหน่งปัจจุบันจาก GPS')
       this.upos.lat = res.coords.latitude;
       this.upos.lng = res.coords.longitude;
+      localStorage.setItem('lastpos', JSON.stringify(this.upos))
       // console.log('userPosition: ', this.upos.lat, this.upos.lng)
     })
   }

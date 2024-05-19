@@ -170,11 +170,11 @@ export class BrdsqlService {
       case 'edit':
         urlUpdate = urlUpdate + "t=dbIntech.dbo.p_farmer&"
           + "s=plantdate='" + f.plantdate + "',groundlevel='" + f.groundlevel + "',hardSoilBlast_code='" + f.hardSoilBlast_code
-          + "',seedclear='" + f.seedclear + "',groove=" + f.groove + ",dolomite=" + f.dolomite + ",naturalfertilizer='" + f.naturalfertilizer + "',NaturalFertilizerRatio=" + f.naturalFertilizerRatio
+          + "',seedcode='" + f.seedcode.trim() + "',seedclear='" + f.seedclear + "',groove=" + f.groove + ",dolomite=" + f.dolomite + ",naturalfertilizer='" + f.naturalfertilizer + "',NaturalFertilizerRatio=" + f.naturalFertilizerRatio
           + ",fertilizer1Ratio=" + f.fertilizer1Ratio + ",fertilizer1Formula='" + f.fertilizer1Formula
           + "',fertilizer2Ratio=" + f.fertilizer2Ratio + ",fertilizer2Formula='" + f.fertilizer2Formula
           + "',fertilizer3Ratio=" + f.fertilizer3Ratio + ",fertilizer3Formula='" + f.fertilizer3Formula
-          + "',pipeup='" + f.pipeup + "',GerminationPercent=" + f.germinationpercent + ",GerminationPercent_date=getdate()"
+          + "',disease='" + f.disease + "',insect='" + f.insect + "',pipeup='" + f.pipeup + "',GerminationPercent=" + f.germinationpercent + ",GerminationPercent_date=getdate()"
           + ",ton=" + f.ton_fm + ",tonm" + m + "=" + f.ton_fm + ",ton_last='" + m
           + "',wastedSpaceRai=" + f.wastedSpaceRai + ",cutseed=" + f.cutseed + ",ton_lost=" + f.ton_lost
           + ",groupcuted='" + f.groupcuted + "',groupMaintenance='" + f.groupMaintenance + "',update_date=getdate()&"
@@ -184,13 +184,13 @@ export class BrdsqlService {
         break;
       case 'insert':
         urlInsert = urlInsert + "t=dbIntech.dbo.p_farmer&"
-          + "c=itid, year, plantdate, groundlevel, hardSoilBlast_code, seedclear, groove, dolomite, naturalfertilizer,NaturalFertilizerRatio,"
+          + "c=itid, year, plantdate, groundlevel, hardSoilBlast_code, seedcode, seedclear, groove, dolomite, naturalfertilizer,NaturalFertilizerRatio,"
           + "fertilizer1Ratio, fertilizer1Formula, fertilizer2Ratio, fertilizer2Formula, fertilizer3Ratio, fertilizer3Formula, "
-          + "pipeup, GerminationPercent, GerminationPercent_date, ton, tonm" + m + ", ton_last, wastedSpaceRai, cutseed, ton_lost,groupcuted, groupMaintenance, update_date&"
-          + "v='" + f.itid + "', '" + f.yearid + "','" + f.plantdate + "', '" + f.groundlevel + "', '" + f.hardSoilBlast_code + "','" + f.seedclear
+          + "disease, insect, pipeup, GerminationPercent, GerminationPercent_date, ton, tonm" + m + ", ton_last, wastedSpaceRai, cutseed, ton_lost,groupcuted, groupMaintenance, update_date&"
+          + "v='" + f.itid + "', '" + f.yearid + "','" + f.plantdate + "', '" + f.groundlevel + "', '" + f.hardSoilBlast_code + "','" + f.seedcode.trim() + "','" + f.seedclear
           + "'," + f.groove + "," + f.dolomite + ",'" + f.naturalfertilizer + "'," + f.naturalFertilizerRatio
           + "," + f.fertilizer1Ratio + ",'" + f.fertilizer1Formula + "'," + f.fertilizer2Ratio + ",'" + f.fertilizer2Formula + "'," + f.fertilizer3Ratio + ",'" + f.fertilizer3Formula
-          + "','" + f.pipeup + "'," + f.germinationpercent + ",getdate()," + f.ton_fm + "," + f.ton_fm + "," + m + ","
+          + "','" + f.disease + "','" + f.insect + "','" + f.pipeup + "'," + f.germinationpercent + ",getdate()," + f.ton_fm + "," + f.ton_fm + "," + m + ","
           + f.wastedSpaceRai + "," + f.cutseed + "," + f.ton_lost + ",'" + f.groupcuted + "','" + f.groupMaintenance + "',getdate()"
         console.log('url insert', urlInsert)
         return this.http.get<any[]>(urlInsert)

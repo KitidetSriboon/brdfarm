@@ -11,6 +11,7 @@ import { AlertService } from 'src/app/services/alert.service';
 import { IonicSelectableComponent } from 'ionic-selectable';
 // import { Observable, Subscription, debounceTime } from 'rxjs';
 // import { FilterPipe } from 'src/app/pipes/filter.pipe';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-activity',
@@ -102,6 +103,10 @@ export class AddActivityPage implements OnInit {
   ton_fm = 0
   groupcuted = ""
   groupMaintenance = ""
+  groupC = [];
+  groupM = [];
+  groupCname = ''
+  groupMname = ''
   fminput = {
     "la": 0,
     "cst": 0,
@@ -142,6 +147,7 @@ export class AddActivityPage implements OnInit {
     this.perTon = cp_data.ton_last_fm
     this.yearid = this.cpdata.year
     this.canetype = this.cpdata.canetype.substring(2, 1)
+    // console.log('canetype: ', this.canetype)
 
     // เชคว่า เคยมีการบันทึกข้อมูลไว้แล้วหรือไม่จาก itid
     this.brdsql.cpActivityFm(this.itid).subscribe({
@@ -152,8 +158,8 @@ export class AddActivityPage implements OnInit {
           this.formType = 'edit'
           console.log('frm_edit', this.frm_edit)
           this.cpActivitydata = res.recordset[0]
+          console.log('cpActivityFm ', this.cpActivitydata)
           this.ck_fmacOK(this.cpActivitydata);
-          // console.log('cpActivityFm ', this.cpActivitydata)
 
           this.frm_editcpact = fb.group({
             itid: [this.cpActivitydata.itid,],
@@ -175,6 +181,7 @@ export class AddActivityPage implements OnInit {
             fertilizer3Ratio: [this.cpActivitydata.fertilizer1Ratio,], // อัตราปุ๋ยเคมี3
             fertilizer3Formula: [this.cpActivitydata.fertilizer1Formula,],  // สูตรปุ๋ยเคมี3
             disease: [this.cpActivitydata.disease,],  // โรคอ้อย
+            insect: [this.cpActivitydata.insect,],  // แมลงอ้อย
             pipeup: [this.cpActivitydata.pipeup,],  // การพูนโคน
             germinationpercent: [this.cpActivitydata.GerminationPercent,],  // %การงอก
             ton_fm: [this.cpActivitydata.ton_In_Month, [Validators.min(0), Validators.max(35)]],  // ตันประเมิน
@@ -212,6 +219,7 @@ export class AddActivityPage implements OnInit {
             fertilizer2Formula: ['',],  // สูตรปุ๋ยเคมี2
             fertilizer3Formula: ['',],  // สูตรปุ๋ยเคมี3
             disease: ['',],  // โรคอ้อย
+            insect: ['',],  // แมลงอ้อย
             pipeup: ['',],  // การพูนโคน
             germinationpercent: [0,],  // %การงอก
             ton_fm: [0, [Validators.min(0), Validators.max(35)]],  // ตันประเมิน
@@ -240,6 +248,46 @@ export class AddActivityPage implements OnInit {
 
   }
 
+  ionViewWillEnter() {
+    // console.log('ionViewWillEnter')
+    let x: any = localStorage.getItem('groupcut')
+    let m: any = localStorage.getItem('groupmt')
+    if (x) {
+      x = JSON.parse(x)
+      this.groupcuted = x[0].groupcode
+      this.groupCname = x[0].groupname
+      this.results = x
+    }
+    if (m) {
+      m = JSON.parse(m)
+      this.groupMaintenance = m[0].groupcode
+      this.groupMname = m[0].groupname
+      this.gm_results = m
+    }
+  }
+
+  ionViewDidEnter() {
+    // console.log('ionViewDidEnter')
+    // let x: any = localStorage.getItem('groupcut')
+    // if (x) {
+    //   x = JSON.parse(x)
+    //   console.log('JSON.parse(x)', x)
+    //   this.groupcuted = x.groupcode
+    //   console.log('groupcuted: ', this.groupcuted)
+    // }
+    // if (x) { 
+    //   this.groupC.groupcode = x.groupcode
+    // }
+  }
+
+  ionViewWillLeave() {
+    // console.log('ionViewWillLeave')
+  }
+
+  ionViewDidLeave() {
+    // console.log('ionViewDidLeave')
+  }
+
   filterGC(event: any) {
     console.log('user key..', event)
     if (event == null || event == '') {
@@ -247,6 +295,7 @@ export class AddActivityPage implements OnInit {
     }
     this.showGroupCSelect = true;
     this.results = this.groupcutData.filter((d) => d.groupname.toLowerCase().indexOf(event) > -1);
+    console.log('group filter :', this.results)
   }
 
   filterGM(event: any) {
@@ -420,169 +469,180 @@ export class AddActivityPage implements OnInit {
 
   // ปรับสีกิจกรรมทำแล้ว สีเขียว
   ck_fmacOK(data: any) {
+    // console.log('ตรวจสอบกิจกรรมแต่ละอย่าง เพื่อกำหนดสี..')
     let x = data
 
-    const date1 = new Date('2024-01-15');  // กำหนด 15 มค.
-    const date2 = new Date('2024-01-16');
+    // อ้อยปลูกใหม่ ต้องก่อน 15 มค.
+    if (data.canetype.substring(2, 1) == 'R' && data.plantdate !== null) {
+      const date1 = new Date('2024-01-15');    // กำหนด 15 มค.
+      const date2 = new Date(x.plantdate);    // วันปลูก
+      // const date2 = new Date('2024-02-29');    // วันปลูก
+      const year1 = date1.getFullYear();
+      const year2 = date2.getFullYear();
 
-    // const comparisonResult = this.compareDateAndMonth(date1, date2);
+      if (year1 > year2) {
+        // console.log('ปีปัจจุบัน มากกว่า ปีวันปลูก OK ผ่าน');
+        this.cl_plantdate = 'success'
+        this.plantdate = x.plantdate
+      } else if (year1 < year2) {
+        // console.log('ปีปัจจุบัน น้อยกว่า ปีวันปลูก');
+      } else {
+        // console.log('ปีปัจจุบัน เป็นปีเดียวกับ ปีวันปลูก');
+        let x: any = this.compareDateAndMonth(date1, date2)
+        // console.log('จำนวนวันจาก 15 มค. และ วันปลูก', x)
+        switch (x) {
+          case 0:
+            // console.log('วันปลูก เท่ากับ 15 มค.')
+            this.plantdate = x.plantdate
+            this.cl_plantdate = 'success'
+            break;
+          case 1:
+            // console.log('วันปลูก ภายใน 15 มค. OK')
+            this.plantdate = x.plantdate
+            this.cl_plantdate = 'success'
+            break;
+          default:
+            // console.log('วันปลูก เกิน 15 มค. !!No..')
+            this.cl_plantdate = 'warning'
+            break;
+        }
+      }
+    }
 
-    // if (comparisonResult === 0) {
-    //   console.log("Dates are equal in month and date.");
-    // } else if (comparisonResult < 0) {
-    //   console.log("Date 1 is earlier than Date 2.");
-    // } else {
-    //   console.log("Date 1 is later than Date 2.");
-    // }
-
-    if (data.canetype.substring(0, 2) == 'ST' && data.plantdate !== null) {
+    // อ้อยตก ต้องมีวันตัด
+    if (data.canetype.substring(2, 1) == 'T' && data.plantdate !== null) {
       this.plantdate = x.plantdate
       this.cl_plantdate = 'success'
     }
-    if (data.canetype.substring(2, 1) == 'R' && data.plantdate !== null && this.compareDateAndMonth(date1, data.plantdate) < 0) {
-      this.plantdate = x.plantdate
-      this.cl_plantdate = 'success'
-    }
+
+    // ปรับพื้นที่
     if (data.groundlevel == true) {
       this.groundlevel = x.groundlevel
       this.cl_groundlevel = 'success'
       this.tg_groundlevel = true
     }
+
+    // ระเบิดดาน
     if (data.hardSoilBlast_code == '2') {
       this.hardSoilBlast_code = x.hardSoilBlast_code
       this.cl_hardSoilBlast = 'success'
+    }
+
+    // พันธุ์อ้อย
+    if (data.seedcode !== '' || data.seedcode !== null) {
+
+      console.log('seedcode: ', x.seedcode.toString())
+      this.seedcode = x.seedcode.toString()
+      this.cl_seedcode = 'success'
     }
     if (data.seedclear == true) {
       this.seedclear = x.seedclear
       this.cl_seedclear = 'success'
       this.tg_seedclear = true;
     }
+
+    // ระยะร่อง
     if (data.groove >= 160) {
-      this.groove = x.groove
+      this.groove = x.groove.toString()
       this.cl_groove = 'success'
-    } else {
-      this.groove = x.groove
     }
-    if (data.dolomite > 0) {
-      this.dolomite = x.dolomite
+
+    // โดโลไมท์
+    this.dolomite = x.dolomite.toString()
+    if (data.dolomite >= 50) {
       this.cl_dolomite = 'success'
     }
-    if (data.NaturalFertilizer == 0 || data.NaturalFertilizer == null) {
-      this.naturalfertilizer = x.NaturalFertilizer
-    } else if (data.NaturalFertilizer >= 500) {
-      this.naturalfertilizer = x.NaturalFertilizer
+
+    // ปุ๋ยอินทรีย์
+    this.naturalfertilizer = x.naturalFertilizer.toString()
+    this.naturalFertilizerRatio = x.naturalFertilizerRatio.toString()
+    if (data.naturalFertilizerRatio >= 500) {
       this.cl_NaturalFertilizer = 'success'
     } else {
-      this.naturalfertilizer = x.NaturalFertilizer
-      // this.cl_NaturalFertilizer = 'success'
+      this.cl_NaturalFertilizer = 'warning'
     }
-    if (data.fertilizer1Ratio >= 50) {
-      // console.log('fertilizerRatio >=100')
-      this.fertilizer1Ratio = x.fertilizer1Ratio
-      this.cl_fertilizer1Ratio = 'success'
-    } else {
-      console.log('fertilizer1Ratio <50')
-      this.fertilizer1Ratio = x.fertilizer1Ratio
-    }
-    if (data.fertilizer1Formula == '0' || data.fertilizer1Formula == null) {
-      this.fertilizer1Formula = x.fertilizer1Formula
+
+    //ปุ๋ยเคมี
+    this.fertilizer1Formula = x.fertilizer1Formula.toString()
+    this.fertilizer2Formula = x.fertilizer2Formula.toString()
+    this.fertilizer3Formula = x.fertilizer3Formula.toString()
+    this.fertilizer1Ratio = x.fertilizer1Ratio.toString()
+    this.fertilizer2Ratio = x.fertilizer2Ratio.toString()
+    this.fertilizer3Ratio = x.fertilizer3Ratio.toString()
+
+    let chemicalSum: number = Number(data.fertilizer1Ratio) + Number(data.fertilizer2Ratio) + Number(data.fertilizer3Ratio)
+    // console.log('chemicalSum ', chemicalSum)
+
+    if (chemicalSum >= 150) {
       this.cl_FertilizerRound1 = 'success'
-    } else {
-      this.fertilizer1Formula = x.fertilizer1Formula
     }
-    if (data.fertilizer2Ratio >= 50) {
-      // console.log('fertilizerRatio >=100')
-      this.fertilizer2Ratio = x.fertilizer2Ratio
-      this.cl_fertilizer2Ratio = 'success'
-    } else {
-      // console.log('fertilizer2Ratio <50')
-      this.fertilizer2Ratio = x.fertilizer2Ratio
-    }
-    if (data.fertilizer2Formula == '0' || data.fertilizer2Formula == null) {
-      this.fertilizer2Formula = x.fertilizer2Formula
-      this.cl_FertilizerRound2 = 'success'
-    } else {
-      this.fertilizer2Formula = x.fertilizer2Formula
-    }
-    if (data.fertilizer3Ratio >= 50) {
-      // console.log('fertilizerRatio >=100')
-      this.fertilizer3Ratio = x.fertilizer3Ratio
-      this.cl_fertilizer3Ratio = 'success'
-    } else {
-      // console.log('fertilizer3Ratio <50')
-      this.fertilizer3Ratio = x.fertilizer3Ratio
-    }
-    if (data.fertilizer3Formula == '0' || data.fertilizer3Formula == null) {
-      this.fertilizer3Formula = x.fertilizer3Formula
-      this.cl_FertilizerRound3 = 'success'
-    } else {
-      this.fertilizer3Formula = x.fertilizer3Formula
-    }
-    if (data.disease == '0') {
-      this.disease = x.disease
-      this.cl_disease = 'success'
-      // this.tg_disease = true;
-    }
-    if (data.insect == '0') {
-      this.insect = x.insect
-      this.cl_insect = 'success'
-      // this.tg_insect = true;
-    }
-    if (data.pipeup == true) {
-      this.pipeup = x.pipeup
-      this.cl_pipeup = 'success'
-      this.tg_pipeup = true;
-    } else {
-      this.pipeup = x.pipeup
-    }
-    if (data.GerminationPercent >= 90) {
-      this.germinationpercent = x.GerminationPercent
-      this.cl_GerminationPercent = 'success'
-    } else {
-      this.germinationpercent = x.GerminationPercent
-    }
-    if (data.groupcuted != null || data.groupcuted != undefined) {
-      this.groupcuted = x.groupcuted
-      this.cl_groupC = 'success'
-    } else {
-      this.groupcuted = x.groupcuted
-    }
-    if (data.groupMaintenance != null || data.groupMaintenance != undefined) {
-      this.groupMaintenance = x.groupMaintenance
-      this.cl_groupM = 'success'
-    } else {
-      this.groupMaintenance = x.groupMaintenance
-    }
-    // อ้อยปลูกใหม่ 14 อ้อยตอ 10
-    let ctype = ""
-    if (this.frm_edit == true) {
-      ctype = data.canetype.trim()
-      // console.log('ctype data', ctype)
-    } else {
-      ctype = this.cpdata.canetype.trim()
-      // console.log('ctype cpdata', ctype)
-    }
-    ctype = ctype.substring(0, 2)
+
+    // พื้นที่ - พื้นที่เสียหาย x ตัดพันธุ์+ตันสูญเสียจากการตัด = ปริมาณตันประเมิน
+    let caneleft: number = ((Number(data.landvalue) - Number(data.wastedSpaceRai)) * Number(data.ton_last_fm)) - (Number(data.ton_lost) + Number(data.cutseed))
+    // console.log('caneleft ', parseInt(caneleft.toString()))
+    this.ton = parseInt(caneleft.toString())
+
+    // ประเมินอ้อย อ้อยใหม่14 อ้อยตอ 10
     switch (true) {
-      case (ctype == 'ER' && data.ton_last_fm >= 14):
+      case (this.canetype == 'R' && data.ton_last_fm >= 14):
         this.cl_tonfm = 'success'
         break;
-      case (ctype == 'SR' && data.ton_last_fm >= 14):
+      case (this.canetype == 'R' && data.ton_last_fm >= 14):
         this.cl_tonfm = 'success'
         break;
-      case (ctype == 'ST' && data.ton_last_fm >= 10):
+      case (this.canetype == 'T' && data.ton_last_fm >= 10):
         this.cl_tonfm = 'success'
         break;
       default:
         this.ton_fm = x.ton_last_fm
         break;
     }
-    // if (data.ton_last_fm > 0) {
-    //   this.tonfm = x.ton_last_fm
-    //   this.cl_tonfm = 'success'
+
+    // โรคอ้อย
+    if (data.disease == '0') {
+      this.disease = x.disease
+      this.cl_disease = 'success'
+    }
+
+    // แมลงอ้อย
+    if (data.insect == '0') {
+      this.insect = x.insect
+      this.cl_insect = 'success'
+    }
+
+    // การพูนโคน
+    // if (data.pipeup == true) {
+    //   this.pipeup = x.pipeup
+    //   this.cl_pipeup = 'success'
+    //   this.tg_pipeup = true;
     // } else {
-    //   this.tonfm = x.ton_last_fm
+    //   this.pipeup = x.pipeup
     // }
+
+    // เปอร์เซ็นต์การงอก
+    // if (data.GerminationPercent >= 90) {
+    //   this.germinationpercent = x.GerminationPercent
+    //   this.cl_GerminationPercent = 'success'
+    // } else {
+    //   this.germinationpercent = x.GerminationPercent
+    // }
+
+    // กลุ่มตัด
+    if (data.groupcuted != null || data.groupcuted != undefined) {
+      this.groupcuted = x.groupcuted
+      this.cl_groupC = 'success'
+    } else {
+      this.groupcuted = x.groupcuted
+    }
+
+    // กลุ่มบำรุง
+    if (data.groupMaintenance != null || data.groupMaintenance != undefined) {
+      this.groupMaintenance = x.groupMaintenance
+      this.cl_groupM = 'success'
+    } else {
+      this.groupMaintenance = x.groupMaintenance
+    }
+
   }
 
   // การปรับพื้นที่แปลง
@@ -797,22 +857,37 @@ export class AddActivityPage implements OnInit {
     }
   }
 
+  // ปุ๋ยเคมี รอบ 1 2 3 รวมกันได้ 150 OK
+  ck_chemical(e: any) {
+    let y: number = Number(this.fertilizer1Ratio) + Number(this.fertilizer2Ratio) + Number(this.fertilizer3Ratio)
+    console.log('chemical ratio is:', y)
+    if (y >= 150) {
+      this.cl_FertilizerRound1 = "success"
+    }
+  }
+
   // สูตร ปุ๋ยเคมี1 ที่ใส่ ต้อง =>50 กก.
   ck_chemical1Formula(e: any) {
     let x = e.detail.value
     x = parseInt(x)
-    console.log('x is :', x)
+    let y: any = Number(this.fertilizer1Ratio) + Number(this.fertilizer2Ratio) + Number(this.fertilizer3Ratio)
+    console.log('chemical ratio is:', y)
+    if (y >= 150) {
+      this.cl_FertilizerRound1 = "success"
+    } else {
+      this.cl_FertilizerRound1 = "warning"
+    }
     switch (true) {
       case (x >= 50):
-        this.cl_FertilizerRound1 = "success"
+        // this.cl_FertilizerRound1 = "success"
         this.showChemical1Formula = true;
         break;
       case (x > 0 && x < 50):
-        this.cl_FertilizerRound1 = "warning"
+        // this.cl_FertilizerRound1 = "warning"
         this.showChemical1Formula = true;
         break;
       case '' || null:
-        this.cl_FertilizerRound1 = "warning"
+        // this.cl_FertilizerRound1 = "warning"
         break;
       default:
         this.cl_FertilizerRound1 = "warning"
@@ -824,7 +899,13 @@ export class AddActivityPage implements OnInit {
   ck_chemical2Formula(e: any) {
     let x = e.detail.value
     x = parseInt(x)
-    console.log('x is :', x)
+    let y: number = this.fertilizer1Ratio + this.fertilizer2Ratio + this.fertilizer3Ratio
+    console.log('chemical ratio is:', y)
+    if (y >= 150) {
+      this.cl_FertilizerRound1 = "success"
+    } else {
+      this.cl_FertilizerRound1 = "warning"
+    }
     switch (true) {
       case (x >= 50):
         this.cl_FertilizerRound2 = "success"
@@ -846,7 +927,13 @@ export class AddActivityPage implements OnInit {
   ck_chemical3Formula(e: any) {
     let x = e.detail.value
     x = parseInt(x)
-    console.log('x is :', x)
+    let y: number = this.fertilizer1Ratio + this.fertilizer2Ratio + this.fertilizer3Ratio
+    console.log('chemical ratio is:', y)
+    if (y >= 150) {
+      this.cl_FertilizerRound1 = "success"
+    } else {
+      this.cl_FertilizerRound1 = "warning"
+    }
     switch (true) {
       case (x >= 50):
         this.cl_FertilizerRound3 = "success"
@@ -945,7 +1032,7 @@ export class AddActivityPage implements OnInit {
   // ตรวจสอบการคีย์กลุ่มตัด
   ck_GroupC(e: any) {
     let x = e.detail.value
-    console.log('ck_GroupC', x)
+    // console.log('ck_GroupC', x)
     switch (x) {
       case (x = !null || x != undefined):
         this.cl_groupC = "success"
@@ -957,10 +1044,60 @@ export class AddActivityPage implements OnInit {
     }
   }
 
+  setGroupC(e: any) {
+    let g: any = e.detail.value
+    let y: any = localStorage.getItem('groupC')
+    if (y) {
+      y = JSON.parse(y)
+      y = y.filter((o: any) => o.groupcode === g)
+      // console.log('group filter: ', y)
+      localStorage.setItem('groupcut', JSON.stringify(y))
+    }
+  }
+
+  getAutoGroupC() {
+    this.showGroupCSelect = true
+    let x: any = localStorage.getItem('groupcut')
+
+    if (x) {
+      x = JSON.parse(x)
+      this.results = x
+      // console.log('group old: ', x)
+      this.groupcuted = x[0].groupcode
+      this.groupCname = x[0].groupname
+      // console.log('groupcode: ', this.groupcuted)
+    }
+  }
+
+  setGroupM(e: any) {
+    let g: any = e.detail.value
+    let y: any = localStorage.getItem('groupM')
+    if (y) {
+      y = JSON.parse(y)
+      y = y.filter((o: any) => o.groupcode === g)
+      // console.log('group filter: ', y)
+      localStorage.setItem('groupmt', JSON.stringify(y))
+    }
+  }
+
+  getAutoGroupM() {
+    this.showGroupMSelect = true
+    let x: any = localStorage.getItem('groupmt')
+
+    if (x) {
+      x = JSON.parse(x)
+      this.gm_results = x
+      // console.log('group old: ', x)
+      this.groupMaintenance = x[0].groupcode
+      this.groupMname = x[0].groupname
+      // console.log('groupcode: ', this.groupcuted)
+    }
+  }
+
   // ตรวจสอบการคีย์กลุ่มบำรุง
   ck_GroupM(e: any) {
     let x = e.detail.value
-    console.log('ck_GroupM', x)
+    // console.log('ck_GroupM', x)
     switch (x) {
       case (x = !null || x != undefined):
         this.cl_groupM = "success"
@@ -1158,6 +1295,17 @@ export class AddActivityPage implements OnInit {
     } else {
       return 1; // date1 is later than date2
     }
+
+    // const comparisonResult = this.compareDateAndMonth(date1, date2);
+
+    // if (comparisonResult === 0) {
+    //   console.log("Dates are equal in month and date.");
+    // } else if (comparisonResult < 0) {
+    //   console.log("Date 1 is earlier than Date 2.");
+    // } else {
+    //   console.log("Date 1 is later than Date 2.");
+    // }
+
   }
 
 
