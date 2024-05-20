@@ -16,6 +16,10 @@
         <ng-template>
           <ion-content>
             <ion-list>
+              <ion-item (click)="getGeolocation()" [button]="true" [detail]="false" id="reloadmap">
+                <ion-icon aria-hidden="true" name="locate-outline" slot="start"></ion-icon>
+                <ion-label>โหลดใหม่</ion-label>
+              </ion-item>
               <ion-item [button]="true" [detail]="false" id="measure-method">
                 <ion-icon aria-hidden="true" name="walk" slot="start"></ion-icon>
                 <ion-label>วิธีวัดแปลง</ion-label>
@@ -115,18 +119,27 @@
     <!-- <ion-button (click)="setmesure('start')" *ngIf="mesureStatus === 'stop'">
         <ion-icon name="add"></ion-icon>
       </ion-button> -->
-    <ion-button id="show-markers">
+    <!-- <ion-button id="show-markers">
       <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
-    </ion-button>
-    <ion-button id="hide-markers">
+    </ion-button> -->
+    <!-- <ion-button id="hide-markers">
       <ion-icon slot="icon-only" name="eye-off-outline"></ion-icon>
-    </ion-button>
-    <ion-button id="delete-markers">
-      <ion-icon slot="icon-only" name="close"></ion-icon>
-    </ion-button>
-    <ion-button id="show-polygon">
-      <ion-icon slot="icon-only" name="crop-outline"></ion-icon>
-    </ion-button>
+    </ion-button> -->
+    <ion-grid style="margin-bottom: 10px;">
+      <ion-row>
+        <ion-col class="ion-text-center">
+          <ion-button expland="full" shape="round" id="show-polygon">
+            <ion-icon name="crop-outline"></ion-icon> คำนวณพื้นที่
+          </ion-button>
+        </ion-col>
+        <ion-col class="ion-text-center">
+          <ion-button expland="full" shape="round" id="delete-markers">
+            <ion-icon name="close"></ion-icon> ลบ
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
     <!-- <ion-button (click)="setmesure('wait')" *ngIf="mesureStatus === 'stop'" id="show-polygon">
         <ion-icon slot="icon-only" name="checkmark"></ion-icon>
       </ion-button> -->

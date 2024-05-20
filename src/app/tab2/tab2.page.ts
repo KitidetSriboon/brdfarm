@@ -70,7 +70,8 @@ export class Tab2Page {
   }
 
   ionViewWillEnter() {
-    console.log('tab2 ionViewWillEnter:');
+    // console.log('tab2 ionViewWillEnter:');
+    this.getUserLocation()
     // let x = this.mapFbFm
     // if (x.legth == 0) {
     //   this.getUserLocation();
@@ -78,12 +79,12 @@ export class Tab2Page {
   }
 
   ionViewDidEnter() {
-    console.log('tab2 ionViewDidEnter:');
+    // console.log('tab2 ionViewDidEnter:');
     // this.draw();
   }
 
   ionViewWillLeave() {
-    console.log('tab2 ionViewWillLeave:');
+    // console.log('tab2 ionViewWillLeave:');
   }
 
   ngAfterViewInit(): void {
@@ -116,13 +117,13 @@ export class Tab2Page {
       map_data = JSON.parse(map_data)
       this.fmdata = fm_data;
       this.mapFbFm = map_data;
-      this.getUserLocation();
+      // this.getUserLocation();
 
       setTimeout(() => {
         this.draw();
       }, 500)
       // Any calls to load data go here
-      e.target.complete();
+      // e.target.complete();
     }, 1000);
   }
 
@@ -214,15 +215,16 @@ export class Tab2Page {
   }
 
   async getUserLocation() {
-    let x: any = localStorage.getItem('lastpos')
-    if (x) {
-      console.log('พบตำแหน่งล่าสุดที่บันทึกไว้')
-      x = JSON.parse(x)
-      this.upos.lat = x.lat
-      this.upos.lng = x.lng
-    }
+    // let x: any = localStorage.getItem('lastpos')
+    // if (x) {
+    //   console.log('พบตำแหน่งล่าสุดที่บันทึกไว้')
+    //   x = JSON.parse(x)
+    //   this.upos.lat = x.lat
+    //   this.upos.lng = x.lng
+    // } else { }
+
     await this.geosv.getCurrentCoordinate().then((res: any) => {
-      console.log('ไม่พบตำแหน่งล่าสุดที่บันทึกไว้ เรียกตำแหน่งปัจจุบันจาก GPS')
+      // console.log('ไม่พบตำแหน่งล่าสุดที่บันทึกไว้ เรียกตำแหน่งปัจจุบันจาก GPS')
       this.upos.lat = res.coords.latitude;
       this.upos.lng = res.coords.longitude;
       localStorage.setItem('lastpos', JSON.stringify(this.upos))

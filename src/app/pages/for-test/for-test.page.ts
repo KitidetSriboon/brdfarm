@@ -83,26 +83,13 @@ export class ForTestPage implements OnInit {
     this.geosv.getCurrentCoordinate().then((res: any) => {
       this.upos.lat = res.coords.latitude
       this.upos.lng = res.coords.longitude
+      // console.log('upos: ', this.upos)
     }).catch((e: any) => {
       console.log('error :', e)
     }).finally(() => {
-      console.log('finally getGeolocation')
-      this.loadmap1()
-      // this.measurePlot()
-    })
-  }
-
-  // get user location now
-  async getlocation() {
-    this.presentToast('middle', 'กำลังเรียกพิกัดของคุณ...', 'locate')
-    this.geosv.getCurrentCoordinate().then((res: any) => {
-      this.upos.lat = res.coords.latitude
-      this.upos.lng = res.coords.longitude
-    }).catch((e: any) => {
-      console.log('error :', e)
-    }).finally(() => {
+      this.dismissToast()
       // console.log('finally getGeolocation')
-      // this.loadmap()
+      this.loadmap1()
       // this.measurePlot()
     })
   }
@@ -145,7 +132,8 @@ export class ForTestPage implements OnInit {
   async loadmap1() {
     // add marker from https://developers.google.com/maps/documentation/javascript/examples/marker-remove
     await this.loader.load().then(() => {
-      let upos = { lat: 15.092554245899915, lng: 103.1328318432994 }
+      // let upos = { lat: 15.092554245899915, lng: 103.1328318432994 }
+      let upos = this.upos
       let markers: google.maps.Marker[] = [];
       let markerlist = this.markerList
       let bermudaTriangle: google.maps.Polygon
@@ -176,15 +164,15 @@ export class ForTestPage implements OnInit {
       //   title: 'KTD'
       // })
 
+      // document
+      //   .getElementById("show-markers")!
+      //   .addEventListener("click", showMarkers);
+      // document
+      //   .getElementById("hide-markers")!
+      //   .addEventListener("click", hideMarkers);
       document
         .getElementById("delete-markers")!
         .addEventListener("click", deleteMarkers);
-      document
-        .getElementById("show-markers")!
-        .addEventListener("click", showMarkers);
-      document
-        .getElementById("hide-markers")!
-        .addEventListener("click", hideMarkers);
       document
         .getElementById("show-polygon")!
         .addEventListener("click", showPolygon);
@@ -243,7 +231,7 @@ export class ForTestPage implements OnInit {
 
       // แสดงขอบเขตแปลงที่วัด และคำนวณพื้นที่
       function showPolygon() {
-        if (markerlist.length > 3) {
+        if (markerlist.length >= 3) {
           // mesureStatus = 'stop'
           bermudaTriangle = new google.maps.Polygon({
             paths: markerlist,
@@ -260,11 +248,11 @@ export class ForTestPage implements OnInit {
           setTimeout(() => {
             // mesureStatus = 'stop'
             let area = google.maps.geometry.spherical.computeArea(bermudaTriangle.getPath())
-            console.log('area: ', area)
+            // console.log('area: ', area)
             area = area / 1600
             areax = area
             console.log('area rai : ', areax)
-            alert('area rai:' + areax.toFixed(2))
+            alert('พื้นที่(ไร่):' + areax.toFixed(2))
             // return area;
           }, 500);
         } else {
@@ -275,7 +263,6 @@ export class ForTestPage implements OnInit {
       function hidePolygon() {
         bermudaTriangle.setMap(null);
       }
-
 
     })
   }
@@ -571,6 +558,10 @@ export class ForTestPage implements OnInit {
       icon: icon,
     });
     toast.present();
+  }
+
+  async dismissToast() {
+    await this.toastCtrl.dismiss();
   }
 
   msMethod(t: string) {

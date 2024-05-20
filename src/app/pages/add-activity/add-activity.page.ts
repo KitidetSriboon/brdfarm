@@ -156,9 +156,9 @@ export class AddActivityPage implements OnInit {
         if (res && res.recordset.length !== 0) {
           this.frm_edit = true
           this.formType = 'edit'
-          console.log('frm_edit', this.frm_edit)
+          // console.log('frm_edit', this.frm_edit)
           this.cpActivitydata = res.recordset[0]
-          console.log('cpActivityFm ', this.cpActivitydata)
+          // console.log('cpActivityFm ', this.cpActivitydata)
           this.ck_fmacOK(this.cpActivitydata);
 
           this.frm_editcpact = fb.group({
@@ -197,7 +197,7 @@ export class AddActivityPage implements OnInit {
         } else {
           this.frm_insert = true;
           this.formType = 'insert'
-          console.log('frm_insert', this.frm_insert)
+          // console.log('frm_insert', this.frm_insert)
           let cp_data = this.cpdata
           this.frm_addcpact = fb.group({
             itid: [cp_data.itid, [Validators.required]],
@@ -254,14 +254,14 @@ export class AddActivityPage implements OnInit {
     let m: any = localStorage.getItem('groupmt')
     if (x) {
       x = JSON.parse(x)
-      this.groupcuted = x[0].groupcode
-      this.groupCname = x[0].groupname
+      this.groupcuted = x[0].groupcode.toString()
+      this.groupCname = x[0].groupname.toString()
       this.results = x
     }
     if (m) {
       m = JSON.parse(m)
-      this.groupMaintenance = m[0].groupcode
-      this.groupMname = m[0].groupname
+      this.groupMaintenance = m[0].groupcode.toString()
+      this.groupMname = m[0].groupname.toString()
       this.gm_results = m
     }
   }
@@ -471,19 +471,18 @@ export class AddActivityPage implements OnInit {
   ck_fmacOK(data: any) {
     // console.log('ตรวจสอบกิจกรรมแต่ละอย่าง เพื่อกำหนดสี..')
     let x = data
+    this.plantdate = x.plantdate
 
     // อ้อยปลูกใหม่ ต้องก่อน 15 มค.
     if (data.canetype.substring(2, 1) == 'R' && data.plantdate !== null) {
       const date1 = new Date('2024-01-15');    // กำหนด 15 มค.
       const date2 = new Date(x.plantdate);    // วันปลูก
-      // const date2 = new Date('2024-02-29');    // วันปลูก
       const year1 = date1.getFullYear();
       const year2 = date2.getFullYear();
 
       if (year1 > year2) {
         // console.log('ปีปัจจุบัน มากกว่า ปีวันปลูก OK ผ่าน');
         this.cl_plantdate = 'success'
-        this.plantdate = x.plantdate
       } else if (year1 < year2) {
         // console.log('ปีปัจจุบัน น้อยกว่า ปีวันปลูก');
       } else {
@@ -493,12 +492,10 @@ export class AddActivityPage implements OnInit {
         switch (x) {
           case 0:
             // console.log('วันปลูก เท่ากับ 15 มค.')
-            this.plantdate = x.plantdate
             this.cl_plantdate = 'success'
             break;
           case 1:
             // console.log('วันปลูก ภายใน 15 มค. OK')
-            this.plantdate = x.plantdate
             this.cl_plantdate = 'success'
             break;
           default:
@@ -530,8 +527,6 @@ export class AddActivityPage implements OnInit {
 
     // พันธุ์อ้อย
     if (data.seedcode !== '' || data.seedcode !== null) {
-
-      console.log('seedcode: ', x.seedcode.toString())
       this.seedcode = x.seedcode.toString()
       this.cl_seedcode = 'success'
     }
@@ -542,8 +537,9 @@ export class AddActivityPage implements OnInit {
     }
 
     // ระยะร่อง
+    this.groove = data.groove.toString()
+    // console.log('groove: ', this.groove)
     if (data.groove >= 160) {
-      this.groove = x.groove.toString()
       this.cl_groove = 'success'
     }
 
@@ -629,18 +625,18 @@ export class AddActivityPage implements OnInit {
 
     // กลุ่มตัด
     if (data.groupcuted != null || data.groupcuted != undefined) {
-      this.groupcuted = x.groupcuted
+      this.groupcuted = data.groupcuted
       this.cl_groupC = 'success'
     } else {
-      this.groupcuted = x.groupcuted
+      this.groupcuted = data.groupcuted
     }
 
     // กลุ่มบำรุง
     if (data.groupMaintenance != null || data.groupMaintenance != undefined) {
-      this.groupMaintenance = x.groupMaintenance
+      this.groupMaintenance = data.groupMaintenance
       this.cl_groupM = 'success'
     } else {
-      this.groupMaintenance = x.groupMaintenance
+      this.groupMaintenance = data.groupMaintenance
     }
 
   }
