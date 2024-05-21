@@ -34,9 +34,17 @@
       </ion-title>
       <ion-list>
         <!-- วันปลูก/ตัด -->
-        <ion-item [color]="cl_plantdate" class="w3-round-large divMg-5">
-          <ion-input type="date" [(ngModel)]="plantdate" formControlName="plantdate" label="วันปลูก/ตัด"></ion-input>
+        <ion-item class="w3-round-large divMg-5 ion-item-border">
+          <ion-grid class="divPadding-5 ">
+            <ion-text *ngIf="canetype == 'R'">อ้อยใหม่</ion-text>
+            <ion-text *ngIf="canetype == 'T'">อ้อยตอ ระบุวันตัด</ion-text>
+            <ion-text *ngIf="canetype == 'R'" class="w3-sand showDesc w3-border w3-round-xlarge">ก่อน 15 มค.
+            </ion-text>
+            <ion-datetime locale="th-TH" presentation="date" [(ngModel)]="plantdate" formControlName="plantdate">
+            </ion-datetime>
+          </ion-grid>
         </ion-item>
+        <!-- <ion-input type="date" [(ngModel)]="plantdate" formControlName="plantdate" label="วันปลูก/ตัด"></ion-input> -->
         <!-- ระดับพื้นที่ -->
         <ion-item [color]="cl_groundlevel" class="w3-round-large divMg-5">
           <ion-toggle [enableOnOffLabels]="true" [(ngModel)]="tg_groundlevel" (ionChange)="ck_groundlevel($event)"
@@ -296,7 +304,7 @@
               <ion-col class="w3-display-right ion-padding-end">
                 <ion-select justify="end" (ionChange)="ck_disease($event)" formControlName="disease"
                   [(ngModel)]="cpActivitydata.disease">
-                  <ion-select-option *ngFor="let item of diseaseData" [value]="item.Disease">{{ item.descript}}
+                  <ion-select-option *ngFor="let item of diseaseData" [value]="item.disease">{{ item.descript}}
                   </ion-select-option>
                 </ion-select>
               </ion-col>
@@ -475,19 +483,21 @@
       <ion-title class="w3-center w3-amber">อัพเดตข้อมูล</ion-title>
       <ion-list>
         <!-- วันปลูก/ตัด -->
-        <ion-item class="w3-round-large divMg-5">
+        <ion-item class="w3-round-large divMg-5 ion-item-border">
           <ion-grid class="divPadding-5 ">
             <ion-text *ngIf="canetype == 'R'">วันปลูก</ion-text>
             <ion-text *ngIf="canetype == 'T'">วันตัด <ion-text class="w3-sand showDesc w3-border w3-round-xlarge">
                 {{ cpActivitydata.plantdateTh }}</ion-text>
             </ion-text>
             <ion-text *ngIf="canetype == 'R'" class="w3-sand showDesc w3-border w3-round-xlarge">ก่อน 15 มค.</ion-text>
-            <ion-label>เลือก >></ion-label>
-            <ion-datetime locale="th-TH" [(ngModel)]="plantdate" formControlName="plantdate"></ion-datetime>
+
+            <!-- <ion-label>เลือก >></ion-label> -->
+
+            <!-- <ion-datetime locale="th-TH" [(ngModel)]="plantdate" formControlName="plantdate"></ion-datetime> -->
             <!-- <ion-datetime presentation="date" [(ngModel)]="plantdate" formControlName="plantdate"></ion-datetime> -->
-            <!-- <ion-datetime displayFormat="DD.MM.YYYY" presentation="date" [(ngModel)]="plantdate" formControlName="plantdate"
-              formControlName="plantdate"></ion-datetime> -->
-            <!-- <ion-input type="date" [(ngModel)]="cpActivitydata.plantdate" formControlName="plantdate" label="เลือก >>">
+            <ion-datetime locale="th-TH" presentation="date" [(ngModel)]="plantdate" formControlName="plantdate">
+            </ion-datetime>
+            <!-- <ion-input type="date" [(ngModel)]="plantdate" formControlName="plantdate" label="เลือก >>">
             </ion-input> -->
           </ion-grid>
         </ion-item>
@@ -501,13 +511,23 @@
               <ion-text *ngIf="canetype == 'R'">ปรับพื้นที่</ion-text>
               <ion-text *ngIf="canetype == 'T'">ทำทางระบายน้ำ</ion-text>
             </ion-text>
-            <ion-text class="txtBlue" id="click-groundlevel">?</ion-text>
+            <!-- <ion-text class="txtBlue" id="click-groundlevel">?</ion-text>
+            <ion-popover trigger="click-groundlevel" triggerAction="click">
+              <ng-template>
+                <ion-content>
+                  <div class="w3-panel w3-leftbar w3-light-grey">
+                    <p class="txtSmall">
+                      <i>"ราบเรียบ ไม่มีแอ่งน้ำขังภายในแปลง"</i></p>
+                  </div>
+                </ion-content>
+              </ng-template>
+            </ion-popover> -->
             <ion-list style="margin-top: 5px;">
               <ion-item>
                 <ion-toggle [enableOnOffLabels]="true" alignment="center" (ionChange)="ck_groundlevel($event)"
                   formControlName="groundlevel" [(ngModel)]="tg_groundlevel">
                   ทำ/ยังไม่ทำ >>
-                  <ion-text class="txtBlue" id="click-groundlevel">?</ion-text>
+                  <!-- <ion-text class="txtBlue" id="click-groundlevel">?</ion-text> -->
                   <!-- <ion-text class="w3-sand showDesc w3-border w3-round-xlarge">
                     {{ cpActivitydata.seedclearDesc }}
                   </ion-text> -->
@@ -515,16 +535,6 @@
               </ion-item>
             </ion-list>
           </ion-grid>
-          <ion-popover trigger="click-groundlevel" triggerAction="click">
-            <ng-template>
-              <ion-content>
-                <div class="w3-panel w3-leftbar w3-light-grey">
-                  <p class="txtSmall">
-                    <i>"ราบเรียบ ไม่มีแอ่งน้ำขังภายในแปลง"</i></p>
-                </div>
-              </ion-content>
-            </ng-template>
-          </ion-popover>
         </ion-item>
         <!-- ระเบิดดินดาน -->
         <ion-item [color]="cl_hardSoilBlast" class="w3-round-large divMg-5">
@@ -535,7 +545,7 @@
             <ion-list style="margin-top: 5px;">
               <ion-item>
                 <ion-select label="เลือก >>" (ionChange)="ck_hardSoilBlast($event)" formControlName="hardSoilBlast_code"
-                  [(ngModel)]="cpActivitydata.hardSoilBlast_code">
+                  [(ngModel)]="hardSoilBlast_code">
                   <ion-select-option value="0">ยังไม่ได้ทำ</ion-select-option>
                   <ion-select-option value="1">ทำแล้วลึก<40 ซม.</ion-select-option> <ion-select-option value="2">
                       ทำแล้วลึก>40 ซม.</ion-select-option>
@@ -741,6 +751,42 @@
             </ion-list>
           </ion-grid>
         </ion-item>
+        <!-- โรคอ้อย -->
+        <ion-item [color]="cl_disease" class="w3-round-large divMg-5">
+          <ion-grid class="divPadding-5 ">
+            <ion-text>8.โรคอ้อย</ion-text>
+            <ion-text class="w3-sand showDesc w3-border w3-round-xlarge">ไม่มีโรค
+            </ion-text>
+            <ion-list style="margin-top: 5px;">
+              <ion-item>
+                <ion-select label="เลือก >>" (ionChange)="ck_disease($event)" formControlName="disease"
+                  [(ngModel)]="disease">
+                  <ion-select-option value="">ยังไม่ระบุ</ion-select-option>
+                  <ion-select-option *ngFor="let item of diseaseData" [value]="item.disease">{{ item.descript}}
+                  </ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-list>
+          </ion-grid>
+        </ion-item>
+        <!-- แมลงอ้อย -->
+        <ion-item [color]="cl_insect" class="w3-round-large divMg-5">
+          <ion-grid class="divPadding-5 ">
+            <ion-text>9.แมลงอ้อย</ion-text>
+            <ion-text class="w3-sand showDesc w3-border w3-round-xlarge">ไม่มีแมลง
+            </ion-text>
+            <ion-list style="margin-top: 5px;">
+              <ion-item>
+                <ion-select label="เลือก >>" (ionChange)="ck_insect($event)" formControlName="insect"
+                  [(ngModel)]="insect">
+                  <ion-select-option value="">ยังไม่ระบุ</ion-select-option>
+                  <ion-select-option *ngFor="let item of insectData" [value]="item.insect">{{ item.insectdesc}}
+                  </ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-list>
+          </ion-grid>
+        </ion-item>
         <!-- การพูนโคน -->
         <!-- <ion-item [color]="cl_pipeup" class="w3-round-large divMg-5">
           <ion-toggle [enableOnOffLabels]="true" alignment="center" (ionChange)="ck_pipeup($event)"
@@ -794,7 +840,7 @@
           <ion-grid>
             <ion-row class="divPadding-5">
               <ion-col>
-                <ion-text>8.ประเมินอ้อย</ion-text>
+                <ion-text>10.ประเมินอ้อย</ion-text>
                 <ion-text *ngIf="canetype == 'R'" class="w3-sand showDesc w3-border w3-round-xlarge">อ้อยใหม่ 14
                 </ion-text>
                 <ion-text *ngIf="canetype == 'T'" class="w3-sand showDesc w3-border w3-round-xlarge">อ้อยตอ 10
@@ -835,7 +881,7 @@
           <ion-grid>
             <ion-row class="divPadding-5">
               <ion-col>
-                <ion-text>9.กลุ่มตัดอ้อย</ion-text>
+                <ion-text>11.กลุ่มตัดอ้อย</ion-text>
               </ion-col>
               <ion-col (click)="getAutoGroupC()" style="text-align: end;">
                 <ion-button size="small" shape="round">ใช้กลุ่มเดิม{{ groupCname }}
@@ -846,9 +892,9 @@
           <ion-searchbar (ionInput)="filterGC($event.detail.value)" color="clear" [debounce]="1000"
             placeholder="1.คีย์ชื่อกลุ่ม..">
           </ion-searchbar>
-          <ion-select justify="space-between" formControlName="groupcuted" [(ngModel)]="groupcuted"
-            label="เลือกกลุ่มตัด >>">
-            <ion-select-option *ngFor="let item of results" [value]="item.groupcode.toString()">{{item.groupname}}
+          <ion-select (ionChange)="setGroupC($event)" justify="space-between" formControlName="groupcuted"
+            [(ngModel)]="groupcuted" label="เลือกกลุ่มตัด >>">
+            <ion-select-option *ngFor="let item of results" [value]="item.groupcode">{{item.groupname}}
             </ion-select-option>
           </ion-select>
         </ion-item>
@@ -857,7 +903,7 @@
           <ion-grid>
             <ion-row class="divPadding-5">
               <ion-col>
-                <ion-text>10.กลุ่มบำรุงอ้อย</ion-text>
+                <ion-text>12.กลุ่มบำรุงอ้อย</ion-text>
               </ion-col>
               <ion-col (click)="getAutoGroupM()" style="text-align: end;">
                 <ion-button size="small" shape="round">ใช้กลุ่มเดิม{{ groupMname }}
@@ -870,8 +916,8 @@
             placeholder="1.คีย์ชื่อกลุ่ม..">
           </ion-searchbar>
 
-          <ion-select justify="space-between" formControlName="groupMaintenance" [(ngModel)]="groupMaintenance"
-            label="เลือกกลุ่มบำรุง >>">
+          <ion-select (ionChange)="setGroupM($event)" justify="space-between" formControlName="groupMaintenance"
+            [(ngModel)]="groupMaintenance" label="เลือกกลุ่มบำรุง >>">
             <ion-select-option *ngFor="let item of gm_results" [value]="item.groupcode">{{item.groupname}}
             </ion-select-option>
           </ion-select>

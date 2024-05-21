@@ -4,12 +4,12 @@ export class GlobalConstants {
     public static appname: string = "brdFarm";
     public static yearCr: string = "2425";
     public static yearTh: string = "6768";
-    public static appversion: string = "1.7.0 Beta";
-    public static lastupdate: string = "18 พ.ค.67"
+    public static appversion: string = "1.8.0 Beta";
+    public static lastupdate: string = "20 พ.ค.67"
     public static versionDesc = [
         { "subject": "1.อัพเดตโปรไฟล์ เช่น รูปประจำตัว เบอร์โทร เบอร์sms ไลน์ไอดี เฟซไอดี อีเมล์" },
         { "subject": "2.แก้ไขฟอร์มบันทึกกิจกรรมแปลง แยกกิจกรรมอ้อยใหม่ อ้อยตอ" },
-        // { "subject": "3.อัพเดตฟอร์มบันทึกกิจกรรมแปลง" },
+        { "subject": "3.อัพเดต รายงานกิจกรรมแปลง ตาม BRR Model" },
     ];
     public static yeardata: any = [];
     public static fmdata: any = [];

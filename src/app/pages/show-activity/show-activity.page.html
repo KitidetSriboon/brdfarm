@@ -25,8 +25,8 @@
             cpdata.landname }}</ion-label>
       </div>
       <p style="margin-left: 5%; margin: 0;">แปลง: {{cpActivityData.intlandno}}</p>
-      <p class="txtSmall" style="margin-left: 5%; margin: 0;">{{ cpActivityData.CaneTypeName}}
-        {{ cpActivityData.landvalue }} ไร่ โซน:
+      <p class="txtSmall" style="margin-left: 5%; margin: 0;">{{ cpActivityData.caneTypeName}}
+        {{ cpActivityData.landvalue }} ไร่ พันธุ์ {{ cpActivityData.seedname}} โซน:
         {{cpActivityData.supzone}} อายุ {{cpActivityData.caneage}} วัน</p>
     </ion-text>
   </div>
@@ -45,7 +45,17 @@
       <ion-row style="margin-bottom: 5px;">
         <ion-col class="ion-text-center borderDashData bgYellowSoft">
           <ion-text class="txtBold">คงเหลืออ้อย
-            <p class="ion-text-center txtLarger txtRed">{{ cpActivityData.Assess_left_fm | number: '1.1-2' }} </p>
+            <p class="ion-text-center txtLarger txtBlue">{{ cpActivityData.assess_left_fm | number: '1.1-2' }} </p>
+          </ion-text>
+          <ion-text class="txtBold">
+            <ion-icon name="wallet-outline"></ion-icon> ท่านจะได้เงินค่าอ้อย
+            <p class="ion-text-center w3-xlarge txtRed">{{ getCanemoney | number: '1.1-2' }} </p>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col class="w3-center">
+          <ion-text class="w3-small">*ใช้ค่าอ้อยและซีซีเอสเฉลี่ยของท่าน ปี66/67
           </ion-text>
         </ion-col>
       </ion-row>
@@ -78,23 +88,42 @@
         </ion-chip>
       </ion-col>
     </ion-row>
+    <!-- วันปลูก ตัด -->
     <ion-row style="border-bottom: 1px solid #0003;">
       <ion-col size="2" class="ion-text-left w3-center">
-        <ion-icon *ngIf="cpActivityData.groundlevel == true" color="success" name="checkmark-circle"></ion-icon>
-        <ion-icon *ngIf="cpActivityData.groundlevel !== true" color="warning" name="close-circle">
-        </ion-icon>
+        <ion-icon *ngIf="canetype =='R' && newcanePlantinrange" color="success" name="checkmark-circle"></ion-icon>
+        <ion-icon *ngIf="canetype =='R' && !newcanePlantinrange" color="warning" name="close-circle"></ion-icon>
+        <ion-icon *ngIf="canetype =='T' && oldcaneHavePlant" color="success" name="checkmark-circle"></ion-icon>
+        <ion-icon *ngIf="canetype =='T' && !oldcaneHavePlant" color="warning" name="close-circle"></ion-icon>
       </ion-col>
       <ion-col size="6">
-        การปรับระดับในแปลง
+        <ion-text *ngIf="canetype =='T'">อ้อยตอ</ion-text>
+        <ion-text *ngIf="canetype =='R'">อ้อยใหม่ปลูกก่อน 15 มค.</ion-text>
+      </ion-col>
+      <ion-col size="4" class="ion-text-center">
+        <ion-text class="gfSriracha txtBlue"> {{ cpActivityData.plantdateTh }} </ion-text>
+      </ion-col>
+    </ion-row>
+    <!-- ปรับพื้นที่ -->
+    <ion-row style="border-bottom: 1px solid #0003;">
+      <ion-col size="2" class="ion-text-left w3-center">
+        <ion-icon *ngIf="cpActivityData.groundlevel == true" color="success" name="checkmark-circle">
+        </ion-icon>
+        <ion-icon *ngIf="cpActivityData.groundlevel !== true" color="warning" name="close-circle"></ion-icon>
+      </ion-col>
+      <ion-col size="6">
+        <ion-text *ngIf="canetype =='T'">อ้อยตอ ทำทางระบายน้ำ</ion-text>
+        <ion-text *ngIf="canetype =='R'">อ้อยใหม่ ปรับพื้นที่</ion-text>
       </ion-col>
       <ion-col size="4" class="ion-text-center">
         <ion-text class="gfSriracha txtBlue"> {{ cpActivityData.groundlevelDesc }} </ion-text>
       </ion-col>
     </ion-row>
+    <!-- ระเบิดดาน -->
     <ion-row style="border-bottom: 1px solid #0003;">
       <ion-col size="2" class="ion-text-left w3-center">
-        <ion-icon *ngIf="cpActivityData.hardSoilBlast == true" color="success" name="checkmark-circle"></ion-icon>
-        <ion-icon *ngIf="cpActivityData.hardSoilBlast == false" color="warning" name="close-circle">
+        <ion-icon *ngIf="cpActivityData.hardSoilBlast_code == '2'" color="success" name="checkmark-circle"></ion-icon>
+        <ion-icon *ngIf="cpActivityData.hardSoilBlast_code !== '2'" color="warning" name="close-circle">
         </ion-icon>
       </ion-col>
       <ion-col size="6">
@@ -104,19 +133,26 @@
         {{ cpActivityData.hardSoilBlastDesc }}
       </ion-col>
     </ion-row>
+    <!-- พันธุ์อ้อย -->
     <ion-row style="border-bottom: 1px solid #0003;">
       <ion-col size="2" class="ion-text-left w3-center">
-        <ion-icon *ngIf="cpActivityData.seedclear == true" color="success" name="checkmark-circle"></ion-icon>
-        <ion-icon *ngIf="cpActivityData.seedclear == false" color="warning" name="close-circle">
+        <ion-icon *ngIf="canetype == 'R' && cpActivityData.seedclear == true" color="success" name="checkmark-circle">
+        </ion-icon>
+        <ion-icon *ngIf="canetype == 'R' && cpActivityData.seedclear !== true" color="success" name="checkmark-circle">
+        </ion-icon>
+        <ion-icon *ngIf="canetype == 'T' && cpActivityData.seedcode !== null" color="success" name="checkmark-circle">
+        </ion-icon>
+        <ion-icon *ngIf="canetype == 'T' && cpActivityData.seedcode == null" color="warning" name="close-circle">
         </ion-icon>
       </ion-col>
       <ion-col size="6">
-        คัดพันธุ์สะอาด
+        พันธุ์อ้อย {{ cpActivityData.seedname }} สะอาด
       </ion-col>
       <ion-col size="4" class="ion-text-center gfSriracha txtBlue">
         {{ cpActivityData.seedclearDesc }}
       </ion-col>
     </ion-row>
+    <!-- ระยะร่อง -->
     <ion-row style="border-bottom: 1px solid #0003;">
       <ion-col size="2" class="ion-text-left w3-center">
         <ion-icon *ngIf="cpActivityData.groove >= 160" color="success" name="checkmark-circle"></ion-icon>
@@ -130,39 +166,96 @@
         {{ cpActivityData.grooveDesc }}
       </ion-col>
     </ion-row>
+    <!-- โดโลไมท์ -->
     <ion-row style="border-bottom: 1px solid #0003;">
       <ion-col size="2" class="ion-text-left w3-center">
-        <ion-icon *ngIf="cpActivityData.NaturalFertilizer !== '0' || cpActivityData.NaturalFertilizer !== null"
-          color="success" name="checkmark-circle"></ion-icon>
-        <ion-icon *ngIf="cpActivityData.NaturalFertilizer == '0' || cpActivityData.NaturalFertilizer == null"
-          color="warning" name="close-circle">
+        <ion-icon *ngIf="cpActivityData.dolomite >= 50 " color="success" name="checkmark-circle"></ion-icon>
+        <ion-icon *ngIf="cpActivityData.dolomite == 0 " color="warning" name="close-circle"></ion-icon>
+      </ion-col>
+      <ion-col size="6">
+        โดโลไมท์ 50 กก./ไร่
+      </ion-col>
+      <ion-col size="4" class="ion-text-center gfSriracha txtBlue">
+        {{ cpActivityData.dolomiteDesc }}
+      </ion-col>
+    </ion-row>
+    <!-- ปุ๋ยอินฦทรีย์ -->
+    <ion-row style="border-bottom: 1px solid #0003;">
+      <ion-col size="2" class="ion-text-left w3-center">
+        <ion-icon *ngIf="cpActivityData.naturalFertilizerRatio >= 500" color="success" name="checkmark-circle">
+        </ion-icon>
+        <ion-icon *ngIf="cpActivityData.naturalFertilizerRatio < 500" color="warning" name="close-circle"></ion-icon>
+      </ion-col>
+      <ion-col size="6">
+        ปุ๋ยอินทรีย์ 500 กก./ไร่
+      </ion-col>
+      <ion-col size="4" class="ion-text-center gfSriracha txtBlue">
+        {{ cpActivityData.naturalFertilizerRatio }}
+      </ion-col>
+    </ion-row>
+    <!-- ปุ๋ยเคมีรอบ1 -->
+    <ion-row style="border-bottom: 1px solid #0003;">
+      <ion-col size="2" class="ion-text-left w3-center">
+        <ion-icon *ngIf="cpActivityData.fertilizer1Ratio >= 50" color="success" name="checkmark-circle"></ion-icon>
+        <ion-icon *ngIf="cpActivityData.fertilizer1Ratio < 50" color="warning" name="close-circle"></ion-icon>
+      </ion-col>
+      <ion-col size="6">
+        ปุ๋ยเคมีรอบ1 50 กก./ไร่
+      </ion-col>
+      <ion-col size="4" class="ion-text-center gfSriracha txtBlue">{{ cpActivityData.fertilizer1Ratio }}</ion-col>
+    </ion-row>
+    <!-- ปุ๋ยเคมีรอบ2 -->
+    <ion-row style="border-bottom: 1px solid #0003;">
+      <ion-col size="2" class="ion-text-left w3-center">
+        <ion-icon *ngIf="cpActivityData.fertilizer2Ratio >= 50" color="success" name="checkmark-circle"></ion-icon>
+        <ion-icon *ngIf="cpActivityData.fertilizer2Ratio < 50" color="warning" name="close-circle"></ion-icon>
+      </ion-col>
+      <ion-col size="6">
+        ปุ๋ยเคมีรอบ2 50 กก./ไร่
+      </ion-col>
+      <ion-col size="4" class="ion-text-center gfSriracha txtBlue">{{ cpActivityData.fertilizer2Ratio }}</ion-col>
+    </ion-row>
+    <!-- ปุ๋ยเคมีรอบ3 -->
+    <ion-row style="border-bottom: 1px solid #0003;">
+      <ion-col size="2" class="ion-text-left w3-center">
+        <ion-icon *ngIf="cpActivityData.fertilizer3Ratio >= 50" color="success" name="checkmark-circle"></ion-icon>
+        <ion-icon *ngIf="cpActivityData.fertilizer3Ratio < 50" color="warning" name="close-circle"></ion-icon>
+      </ion-col>
+      <ion-col size="6">
+        ปุ๋ยเคมีรอบ3 50 กก./ไร่
+      </ion-col>
+      <ion-col size="4" class="ion-text-center gfSriracha txtBlue">{{ cpActivityData.fertilizer3Ratio }}</ion-col>
+    </ion-row>
+    <!-- โรคอ้อย -->
+    <ion-row style="border-bottom: 1px solid #0003;">
+      <ion-col size="2" class="ion-text-left w3-center">
+        <ion-icon *ngIf="cpActivityData.disease == '0'" color="success" name="checkmark-circle"></ion-icon>
+        <ion-icon *ngIf="cpActivityData.disease !== '0'" color="warning" name="close-circle">
         </ion-icon>
       </ion-col>
       <ion-col size="6">
-        ใส่อินทรีย์+โดโลไมท์
+        โรคอ้อย (ไม่มีโรค)
       </ion-col>
       <ion-col size="4" class="ion-text-center gfSriracha txtBlue">
-        {{ cpActivityData.organicDesc }}
+        {{ cpActivityData.diseaseDesc }}
       </ion-col>
     </ion-row>
+    <!-- แมลงอ้อย -->
     <ion-row style="border-bottom: 1px solid #0003;">
       <ion-col size="2" class="ion-text-left w3-center">
-        <ion-icon
-          *ngIf="cpActivityData.fertilizer1Ratio+cpActivityData.fertilizer2Ratio+cpActivityData.fertilizer3Ratio >= 100"
-          color="success" name="checkmark-circle"></ion-icon>
-        <ion-icon
-          *ngIf="cpActivityData.fertilizer1Ratio+cpActivityData.fertilizer2Ratio+cpActivityData.fertilizer3Ratio < 100"
-          color="warning" name="close-circle">
+        <ion-icon *ngIf="cpActivityData.insect == '0'" color="success" name="checkmark-circle"></ion-icon>
+        <ion-icon *ngIf="cpActivityData.insect !== '0'" color="warning" name="close-circle">
         </ion-icon>
       </ion-col>
       <ion-col size="6">
-        ปุ๋ยเคมีตามผลผลิต
+        แมลงอ้อย (ไม่มีแมลง)
       </ion-col>
       <ion-col size="4" class="ion-text-center gfSriracha txtBlue">
-        {{ cpActivityData.fertilizer1Ratio + cpActivityData.fertilizer2Ratio + cpActivityData.fertilizer3Ratio }}
+        {{ cpActivityData.insectDesc }}
       </ion-col>
     </ion-row>
-    <ion-row style="border-bottom: 1px solid #0003;">
+    <!-- การพูนโคน -->
+    <!-- <ion-row style="border-bottom: 1px solid #0003;">
       <ion-col size="2" class="ion-text-left w3-center">
         <ion-icon *ngIf="cpActivityData.pipeup == true" color="success" name="checkmark-circle"></ion-icon>
         <ion-icon *ngIf="cpActivityData.pipeup == false" color="warning" name="close-circle">
@@ -174,8 +267,9 @@
       <ion-col size="4" class="ion-text-center gfSriracha txtBlue">
         {{ cpActivityData.pipeupDesc }}
       </ion-col>
-    </ion-row>
-    <ion-row style="border-bottom: 1px solid #0003;">
+    </ion-row> -->
+    <!-- เปอร์เซ็นต์การงอก -->
+    <!-- <ion-row style="border-bottom: 1px solid #0003;">
       <ion-col size="2" class="ion-text-left w3-center">
         <ion-icon *ngIf="cpActivityData.GerminationPercent >= 90" color="success" name="checkmark-circle"></ion-icon>
         <ion-icon *ngIf="cpActivityData.GerminationPercent < 90 || cpActivityData.GerminationPercent == null"
@@ -188,7 +282,8 @@
       <ion-col size="4" class="ion-text-center gfSriracha txtBlue">
         {{ cpActivityData.GerminationPercent }}
       </ion-col>
-    </ion-row>
+    </ion-row> -->
+    <!-- ประเมินอ้อย -->
     <ion-row style="border-bottom: 1px solid #0003;">
       <ion-col size="2" class="ion-text-left w3-center">
         <ion-icon *ngIf="cpActivityData.ton_last_fm >= 14 && cpActivityData.canetype.includes('ER')" color="success"
@@ -217,6 +312,7 @@
         {{ cpActivityData.ton_last_fm }}
       </ion-col>
     </ion-row>
+    <!-- กลุ่มตัด -->
     <ion-row style="border-bottom: 1px solid #0003;">
       <ion-col size="2" class="ion-text-left w3-center">
         <ion-icon *ngIf="cpActivityData.groupcuted != null || cpActivityData.groupcuted != ''" color="success"
@@ -232,6 +328,7 @@
         {{ cpActivityData.groupnameC }}
       </ion-col>
     </ion-row>
+    <!-- กลุ่มบำรุง -->
     <ion-row style="border-bottom: 1px solid #0003;">
       <ion-col size="2" class="ion-text-left w3-center">
         <ion-icon *ngIf="cpActivityData.groupMaintenance != null || cpActivityData.groupMaintenance != ''"
@@ -247,6 +344,7 @@
         {{ cpActivityData.groupnameM }}
       </ion-col>
     </ion-row>
+    <!-- วงเงินได้รับ -->
     <ion-row class="w3-pale-red w3-xlarge">
       <ion-col class="ion-text-center">
         <ion-icon name="wallet-outline"></ion-icon> วงเงินได้รับ {{ cpActivityData.credit_amount | number }}

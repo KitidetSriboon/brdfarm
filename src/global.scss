@@ -1466,3 +1466,11 @@ div.absolute {
     animation-name: example;
     animation-duration: 4s;
 }
+
+ion-datetime {
+    --background: #b4ffe5;
+    --background-rgb: 255, 241, 242;
+
+    border-radius: 16px;
+    box-shadow: rgba(var(--ion-color-rose-rgb), 0.3) 0px 10px 15px -3px;
+}

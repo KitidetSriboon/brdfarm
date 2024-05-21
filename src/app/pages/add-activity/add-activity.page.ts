@@ -135,6 +135,8 @@ export class AddActivityPage implements OnInit {
 
   ) {
 
+    console.log('constructor')
+
     this.itid = this.route.snapshot.paramMap.get('itid');
     console.log('itid in add-activity :', this.itid)
 
@@ -147,19 +149,16 @@ export class AddActivityPage implements OnInit {
     this.perTon = cp_data.ton_last_fm
     this.yearid = this.cpdata.year
     this.canetype = this.cpdata.canetype.substring(2, 1)
-    // console.log('canetype: ', this.canetype)
+    console.log('canetype: ', this.canetype)
 
     // เชคว่า เคยมีการบันทึกข้อมูลไว้แล้วหรือไม่จาก itid
     this.brdsql.cpActivityFm(this.itid).subscribe({
       next: (res: any) => {
-        // console.log('res cpActivityFm ', res)
         if (res && res.recordset.length !== 0) {
           this.frm_edit = true
           this.formType = 'edit'
-          // console.log('frm_edit', this.frm_edit)
           this.cpActivitydata = res.recordset[0]
-          // console.log('cpActivityFm ', this.cpActivitydata)
-          this.ck_fmacOK(this.cpActivitydata);
+          console.log('cpActivityFm ', this.cpActivitydata)
 
           this.frm_editcpact = fb.group({
             itid: [this.cpActivitydata.itid,],
@@ -192,12 +191,11 @@ export class AddActivityPage implements OnInit {
             groupMaintenance: [this.cpActivitydata.groupMaintenance,],  // รหัสกลุ่มบำรุง
           })
 
-          // console.log('form value on load ', this.frm_editcpact.value)
+          this.ck_fmacOK(this.cpActivitydata);
 
         } else {
           this.frm_insert = true;
           this.formType = 'insert'
-          // console.log('frm_insert', this.frm_insert)
           let cp_data = this.cpdata
           this.frm_addcpact = fb.group({
             itid: [cp_data.itid, [Validators.required]],
@@ -249,7 +247,10 @@ export class AddActivityPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    // console.log('ionViewWillEnter')
+
+    // console.log('cpActivitydata in ionViewWillEnter', this.cpActivitydata)
+    // this.ck_fmacOK(this.cpActivitydata);
+
     let x: any = localStorage.getItem('groupcut')
     let m: any = localStorage.getItem('groupmt')
     if (x) {
@@ -288,14 +289,184 @@ export class AddActivityPage implements OnInit {
     // console.log('ionViewDidLeave')
   }
 
+  // ปรับสีกิจกรรมทำแล้ว สีเขียว
+  ck_fmacOK(data: any) {
+    console.log('ตรวจสอบกิจกรรมแต่ละอย่าง เพื่อกำหนดสี..')
+    let x = data
+    // console.log('data ', x)
+    // อ้อยปลูกใหม่ ต้องก่อน 15 มค.
+    if (x.canetype.substring(2, 1) == 'R' && x.plantdate !== null) {
+      const date1 = new Date('2024-01-15');    // กำหนด 15 มค.
+      const date2 = new Date(x.plantdate);    // วันปลูก
+      const year1 = date1.getFullYear();
+      const year2 = date2.getFullYear();
+
+      if (year1 > year2) {
+        // console.log('ปีปัจจุบัน มากกว่า ปีวันปลูก OK ผ่าน');
+        this.cl_plantdate = 'success'
+      } else if (year1 < year2) {
+        // console.log('ปีปัจจุบัน น้อยกว่า ปีวันปลูก');
+      } else {
+        // console.log('ปีปัจจุบัน เป็นปีเดียวกับ ปีวันปลูก');
+        let x: any = this.compareDateAndMonth(date1, date2)
+        // console.log('จำนวนวันจาก 15 มค. และ วันปลูก', x)
+        switch (x) {
+          case 0:
+            // console.log('วันปลูก เท่ากับ 15 มค.')
+            this.cl_plantdate = 'success'
+            break;
+          case 1:
+            // console.log('วันปลูก ภายใน 15 มค. OK')
+            this.cl_plantdate = 'success'
+            break;
+          default:
+            // console.log('วันปลูก เกิน 15 มค. !!No..')
+            this.cl_plantdate = 'warning'
+            break;
+        }
+      }
+    }
+
+    // อ้อยตก ต้องมีวันตัด
+    this.plantdate = x.plantdate
+    if (x.canetype.substring(2, 1) == 'T' && x.plantdate !== null) {
+      this.cl_plantdate = 'success'
+    }
+
+    // ปรับพื้นที่
+    this.groundlevel = x.groundlevel
+    if (x.groundlevel == true) {
+      this.cl_groundlevel = 'success'
+      this.tg_groundlevel = true
+    }
+
+    // ระเบิดดาน
+    this.hardSoilBlast_code = x.hardSoilBlast_code
+    if (x.hardSoilBlast_code == '2') {
+      this.cl_hardSoilBlast = 'success'
+    }
+
+    // พันธุ์อ้อย
+    this.seedcode = x.seedcode.toString()
+    if (x.seedcode !== '' || x.seedcode !== null) {
+      this.cl_seedcode = 'success'
+    }
+    this.seedclear = x.seedclear
+    if (x.seedclear == true) {
+      this.cl_seedclear = 'success'
+      this.tg_seedclear = true;
+    }
+
+    // ระยะร่อง
+    this.groove = x.groove.toString()
+    // console.log('groove: ', this.groove)
+    if (x.groove >= 160) {
+      this.cl_groove = 'success'
+    }
+
+    // โดโลไมท์
+    this.dolomite = x.dolomite.toString()
+    if (x.dolomite >= 50) {
+      this.cl_dolomite = 'success'
+    }
+
+    // ปุ๋ยอินทรีย์
+    this.naturalfertilizer = x.naturalFertilizer.toString()
+    this.naturalFertilizerRatio = x.naturalFertilizerRatio.toString()
+    if (x.naturalFertilizerRatio >= 500) {
+      this.cl_NaturalFertilizer = 'success'
+    } else {
+      this.cl_NaturalFertilizer = 'warning'
+    }
+
+    //ปุ๋ยเคมี
+    this.fertilizer1Formula = x.fertilizer1Formula.toString()
+    this.fertilizer2Formula = x.fertilizer2Formula.toString()
+    this.fertilizer3Formula = x.fertilizer3Formula.toString()
+    this.fertilizer1Ratio = x.fertilizer1Ratio.toString()
+    this.fertilizer2Ratio = x.fertilizer2Ratio.toString()
+    this.fertilizer3Ratio = x.fertilizer3Ratio.toString()
+
+    let chemicalSum: number = Number(x.fertilizer1Ratio) + Number(x.fertilizer2Ratio) + Number(x.fertilizer3Ratio)
+    // console.log('chemicalSum ', chemicalSum)
+
+    if (chemicalSum >= 150) {
+      this.cl_FertilizerRound1 = 'success'
+    }
+
+    // พื้นที่ - พื้นที่เสียหาย x ตัดพันธุ์+ตันสูญเสียจากการตัด = ปริมาณตันประเมิน
+    let caneleft: number = ((Number(x.landvalue) - Number(x.wastedSpaceRai)) * Number(x.ton_last_fm)) - (Number(x.ton_lost) + Number(x.cutseed))
+    // console.log('caneleft ', parseInt(caneleft.toString()))
+    this.ton = parseInt(caneleft.toString())
+
+    // ประเมินอ้อย อ้อยใหม่14 อ้อยตอ 10
+    switch (true) {
+      case (this.canetype == 'R' && x.ton_last_fm >= 14):
+        this.cl_tonfm = 'success'
+        break;
+      case (this.canetype == 'T' && x.ton_last_fm >= 10):
+        this.cl_tonfm = 'success'
+        break;
+      default:
+        this.ton_fm = x.ton_last_fm
+        break;
+    }
+
+    // โรคอ้อย
+    this.disease = x.disease.toString()
+    if (x.disease == '0') {
+      this.cl_disease = 'success'
+    }
+
+    // แมลงอ้อย
+    this.insect = x.insect.toString()
+    if (x.insect == '0') {
+      this.cl_insect = 'success'
+    }
+
+    // การพูนโคน
+    // if (data.pipeup == true) {
+    //   this.pipeup = x.pipeup
+    //   this.cl_pipeup = 'success'
+    //   this.tg_pipeup = true;
+    // } else {
+    //   this.pipeup = x.pipeup
+    // }
+
+    // เปอร์เซ็นต์การงอก
+    // if (data.GerminationPercent >= 90) {
+    //   this.germinationpercent = x.GerminationPercent
+    //   this.cl_GerminationPercent = 'success'
+    // } else {
+    //   this.germinationpercent = x.GerminationPercent
+    // }
+
+    // กลุ่มตัด
+    if (x.groupcuted != null || x.groupcuted != undefined) {
+      this.groupcuted = x.groupcuted
+      this.cl_groupC = 'success'
+    } else {
+      this.groupcuted = x.groupcuted
+    }
+
+    // กลุ่มบำรุง
+    if (x.groupMaintenance != null || x.groupMaintenance != undefined) {
+      this.groupMaintenance = x.groupMaintenance
+      this.cl_groupM = 'success'
+    } else {
+      this.groupMaintenance = x.groupMaintenance
+    }
+
+  }
+
   filterGC(event: any) {
-    console.log('user key..', event)
+    // console.log('user key..', event)
     if (event == null || event == '') {
       this.results = [];
     }
     this.showGroupCSelect = true;
     this.results = this.groupcutData.filter((d) => d.groupname.toLowerCase().indexOf(event) > -1);
-    console.log('group filter :', this.results)
+    // console.log('group filter :', this.results)
   }
 
   filterGM(event: any) {
@@ -465,180 +636,6 @@ export class AddActivityPage implements OnInit {
         }
       })
     }
-  }
-
-  // ปรับสีกิจกรรมทำแล้ว สีเขียว
-  ck_fmacOK(data: any) {
-    // console.log('ตรวจสอบกิจกรรมแต่ละอย่าง เพื่อกำหนดสี..')
-    let x = data
-    this.plantdate = x.plantdate
-
-    // อ้อยปลูกใหม่ ต้องก่อน 15 มค.
-    if (data.canetype.substring(2, 1) == 'R' && data.plantdate !== null) {
-      const date1 = new Date('2024-01-15');    // กำหนด 15 มค.
-      const date2 = new Date(x.plantdate);    // วันปลูก
-      const year1 = date1.getFullYear();
-      const year2 = date2.getFullYear();
-
-      if (year1 > year2) {
-        // console.log('ปีปัจจุบัน มากกว่า ปีวันปลูก OK ผ่าน');
-        this.cl_plantdate = 'success'
-      } else if (year1 < year2) {
-        // console.log('ปีปัจจุบัน น้อยกว่า ปีวันปลูก');
-      } else {
-        // console.log('ปีปัจจุบัน เป็นปีเดียวกับ ปีวันปลูก');
-        let x: any = this.compareDateAndMonth(date1, date2)
-        // console.log('จำนวนวันจาก 15 มค. และ วันปลูก', x)
-        switch (x) {
-          case 0:
-            // console.log('วันปลูก เท่ากับ 15 มค.')
-            this.cl_plantdate = 'success'
-            break;
-          case 1:
-            // console.log('วันปลูก ภายใน 15 มค. OK')
-            this.cl_plantdate = 'success'
-            break;
-          default:
-            // console.log('วันปลูก เกิน 15 มค. !!No..')
-            this.cl_plantdate = 'warning'
-            break;
-        }
-      }
-    }
-
-    // อ้อยตก ต้องมีวันตัด
-    if (data.canetype.substring(2, 1) == 'T' && data.plantdate !== null) {
-      this.plantdate = x.plantdate
-      this.cl_plantdate = 'success'
-    }
-
-    // ปรับพื้นที่
-    if (data.groundlevel == true) {
-      this.groundlevel = x.groundlevel
-      this.cl_groundlevel = 'success'
-      this.tg_groundlevel = true
-    }
-
-    // ระเบิดดาน
-    if (data.hardSoilBlast_code == '2') {
-      this.hardSoilBlast_code = x.hardSoilBlast_code
-      this.cl_hardSoilBlast = 'success'
-    }
-
-    // พันธุ์อ้อย
-    if (data.seedcode !== '' || data.seedcode !== null) {
-      this.seedcode = x.seedcode.toString()
-      this.cl_seedcode = 'success'
-    }
-    if (data.seedclear == true) {
-      this.seedclear = x.seedclear
-      this.cl_seedclear = 'success'
-      this.tg_seedclear = true;
-    }
-
-    // ระยะร่อง
-    this.groove = data.groove.toString()
-    // console.log('groove: ', this.groove)
-    if (data.groove >= 160) {
-      this.cl_groove = 'success'
-    }
-
-    // โดโลไมท์
-    this.dolomite = x.dolomite.toString()
-    if (data.dolomite >= 50) {
-      this.cl_dolomite = 'success'
-    }
-
-    // ปุ๋ยอินทรีย์
-    this.naturalfertilizer = x.naturalFertilizer.toString()
-    this.naturalFertilizerRatio = x.naturalFertilizerRatio.toString()
-    if (data.naturalFertilizerRatio >= 500) {
-      this.cl_NaturalFertilizer = 'success'
-    } else {
-      this.cl_NaturalFertilizer = 'warning'
-    }
-
-    //ปุ๋ยเคมี
-    this.fertilizer1Formula = x.fertilizer1Formula.toString()
-    this.fertilizer2Formula = x.fertilizer2Formula.toString()
-    this.fertilizer3Formula = x.fertilizer3Formula.toString()
-    this.fertilizer1Ratio = x.fertilizer1Ratio.toString()
-    this.fertilizer2Ratio = x.fertilizer2Ratio.toString()
-    this.fertilizer3Ratio = x.fertilizer3Ratio.toString()
-
-    let chemicalSum: number = Number(data.fertilizer1Ratio) + Number(data.fertilizer2Ratio) + Number(data.fertilizer3Ratio)
-    // console.log('chemicalSum ', chemicalSum)
-
-    if (chemicalSum >= 150) {
-      this.cl_FertilizerRound1 = 'success'
-    }
-
-    // พื้นที่ - พื้นที่เสียหาย x ตัดพันธุ์+ตันสูญเสียจากการตัด = ปริมาณตันประเมิน
-    let caneleft: number = ((Number(data.landvalue) - Number(data.wastedSpaceRai)) * Number(data.ton_last_fm)) - (Number(data.ton_lost) + Number(data.cutseed))
-    // console.log('caneleft ', parseInt(caneleft.toString()))
-    this.ton = parseInt(caneleft.toString())
-
-    // ประเมินอ้อย อ้อยใหม่14 อ้อยตอ 10
-    switch (true) {
-      case (this.canetype == 'R' && data.ton_last_fm >= 14):
-        this.cl_tonfm = 'success'
-        break;
-      case (this.canetype == 'R' && data.ton_last_fm >= 14):
-        this.cl_tonfm = 'success'
-        break;
-      case (this.canetype == 'T' && data.ton_last_fm >= 10):
-        this.cl_tonfm = 'success'
-        break;
-      default:
-        this.ton_fm = x.ton_last_fm
-        break;
-    }
-
-    // โรคอ้อย
-    if (data.disease == '0') {
-      this.disease = x.disease
-      this.cl_disease = 'success'
-    }
-
-    // แมลงอ้อย
-    if (data.insect == '0') {
-      this.insect = x.insect
-      this.cl_insect = 'success'
-    }
-
-    // การพูนโคน
-    // if (data.pipeup == true) {
-    //   this.pipeup = x.pipeup
-    //   this.cl_pipeup = 'success'
-    //   this.tg_pipeup = true;
-    // } else {
-    //   this.pipeup = x.pipeup
-    // }
-
-    // เปอร์เซ็นต์การงอก
-    // if (data.GerminationPercent >= 90) {
-    //   this.germinationpercent = x.GerminationPercent
-    //   this.cl_GerminationPercent = 'success'
-    // } else {
-    //   this.germinationpercent = x.GerminationPercent
-    // }
-
-    // กลุ่มตัด
-    if (data.groupcuted != null || data.groupcuted != undefined) {
-      this.groupcuted = data.groupcuted
-      this.cl_groupC = 'success'
-    } else {
-      this.groupcuted = data.groupcuted
-    }
-
-    // กลุ่มบำรุง
-    if (data.groupMaintenance != null || data.groupMaintenance != undefined) {
-      this.groupMaintenance = data.groupMaintenance
-      this.cl_groupM = 'success'
-    } else {
-      this.groupMaintenance = data.groupMaintenance
-    }
-
   }
 
   // การปรับพื้นที่แปลง
@@ -1143,15 +1140,12 @@ export class AddActivityPage implements OnInit {
       ctype = this.cpdata.canetype.trim()
       // console.log('ctype cpdata', ctype)
     }
-    ctype = ctype.substring(0, 2)
+    ctype = ctype.substring(2, 1)
     switch (true) {
-      case (ctype == 'ER' && tonfm >= 14):
+      case (ctype == 'R' && tonfm >= 14):
         this.cl_tonfm = 'success'
         break;
-      case (ctype == 'SR' && tonfm >= 14):
-        this.cl_tonfm = 'success'
-        break;
-      case (ctype == 'ST' && tonfm >= 10):
+      case (ctype == 'T' && tonfm >= 10):
         this.cl_tonfm = 'success'
         break;
       default:
@@ -1215,7 +1209,7 @@ export class AddActivityPage implements OnInit {
   }
 
   async saveData(f: any) {
-    console.log('form to brdservice :', f)
+    // console.log('form to brdservice :', f)
 
     // updat firebase database
     // this.firebase.updateFmAS(this.yearCr, this.itid, f)

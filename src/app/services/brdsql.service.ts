@@ -14,6 +14,7 @@ export class BrdsqlService {
   baseUrlUpdate = "https://asia-southeast2-brr-farmluck.cloudfunctions.net/dbcps/update_t_s_w?"
   baseUrlInsert = "https://asia-southeast2-brr-farmluck.cloudfunctions.net/dbcps/insert_t_c_v?"
   baseUrlExe = "https://asia-southeast2-brr-farmluck.cloudfunctions.net/dbcps/exec_f_v?"
+  baseBrdFuncUrl = "https://asia-southeast2-brr-farmluck.cloudfunctions.net/brdsqlapi"
 
   httpHeader = {
     headers: new HttpHeaders({ 'content-type': 'application/json' }),
@@ -178,8 +179,8 @@ export class BrdsqlService {
           + ",ton=" + f.ton_fm + ",tonm" + m + "=" + f.ton_fm + ",ton_last='" + m
           + "',wastedSpaceRai=" + f.wastedSpaceRai + ",cutseed=" + f.cutseed + ",ton_lost=" + f.ton_lost
           + ",groupcuted='" + f.groupcuted + "',groupMaintenance='" + f.groupMaintenance + "',update_date=getdate()&"
-          + "w=itid='" + f.itid + "'"
-        console.log('urlUpdate', urlUpdate)
+          + "w=itid='" + f.itid + "%27"
+        // console.log('urlUpdate', urlUpdate)
         return this.http.get<any[]>(urlUpdate)
         break;
       case 'insert':
@@ -192,7 +193,7 @@ export class BrdsqlService {
           + "," + f.fertilizer1Ratio + ",'" + f.fertilizer1Formula + "'," + f.fertilizer2Ratio + ",'" + f.fertilizer2Formula + "'," + f.fertilizer3Ratio + ",'" + f.fertilizer3Formula
           + "','" + f.disease + "','" + f.insect + "','" + f.pipeup + "'," + f.germinationpercent + ",getdate()," + f.ton_fm + "," + f.ton_fm + "," + m + ","
           + f.wastedSpaceRai + "," + f.cutseed + "," + f.ton_lost + ",'" + f.groupcuted + "','" + f.groupMaintenance + "',getdate()"
-        console.log('url insert', urlInsert)
+        // console.log('url insert', urlInsert)
         return this.http.get<any[]>(urlInsert)
         break;
       default:
@@ -391,6 +392,13 @@ export class BrdsqlService {
       + "t=cps6263.dbo.t_farmer&"
       + "s=tel='" + f.tel + "',smsnumber='" + f.smsnumber + "',e_mail='" + f.e_mail + "',line_id='" + f.line_id + "',facebook='" + f.facebook + "',pic_url='" + f.pic_url + "'&"
       + "w=fmcode_b1 ='" + f.fmcode + "'"
+    return this.http.get<any[]>(url)
+  }
+
+  // คำนวณประมาณการค่าอ้อยที่จะได้รับจากปริมาณอ้อย
+  canCalculate(fmcode: string | any, canewgt: number | any) {
+    const url = this.baseSelectUrl
+      + "s=*&f=[CPS6263].[dbo].[t_caneCal]('" + fmcode + "'," + canewgt + ")&w=1=1"
     return this.http.get<any[]>(url)
   }
 
