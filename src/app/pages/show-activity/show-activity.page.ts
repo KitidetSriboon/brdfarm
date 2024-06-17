@@ -63,39 +63,40 @@ export class ShowActivityPage implements OnInit {
         if (res.recordset.length != 0) {
           this.cpActivityData = res.recordset[0];
           this.canetype = this.cpActivityData.canetype.substring(2, 1)
-          console.log('data ', this.cpActivityData)
+          // console.log('data ', this.cpActivityData)
           this.yearDesc = this.cpActivityData.year
         }
       },
       error: err => console.error('Observable emitted an error: ' + err),
       complete: () => {
         this.getCanecal();
-        this.ckNewcanePlantdate();
       }
     });
   }
 
+  // คำนวณประมาณการวงเงินค่าอ้อย
   async getCanecal() {
     let fmdt: any = localStorage.getItem('fmdata'), fmcode: string = '', canewgt: number = this.cpActivityData.assess_left_fm
     if (fmdt) {
       fmdt = JSON.parse(fmdt)
       fmcode = fmdt[0].fmcode_b1
-      console.log('data ', fmcode, canewgt)
+      // console.log('data ', fmcode, canewgt)
       await this.brdsql.canCalculate(fmcode, canewgt).subscribe({
         next: (res: any) => {
-          console.log('getCanecal res: ', res)
+          // console.log('getCanecal res: ', res)
           if (res.recordset.length != 0) {
             this.getCanemoney = res.recordset[0].getcanemoney
           }
         },
         error: err => console.error('Observable emitted an error: ' + err),
         complete: () => {
-          // 
+          this.ckNewcanePlantdate();
         }
       })
     }
   }
 
+  // ตรวจสอบวันปลูก อ้อยใหม่ ก่อน 15 มค. อ้อยตอ ต้องระบุพันธุ์
   async ckNewcanePlantdate() {
     // console.log('ckNewcanePlantdate')
     let x = this.cpActivityData
