@@ -40,7 +40,7 @@
             <ion-text *ngIf="canetype == 'T'">อ้อยตอ ระบุวันตัด</ion-text>
             <ion-text *ngIf="canetype == 'R'" class="w3-sand showDesc w3-border w3-round-xlarge">ก่อน 15 มค.
             </ion-text>
-            <ion-datetime locale="th-TH" presentation="date" [(ngModel)]="plantdate" formControlName="plantdate">
+            <ion-datetime locale="th-TH" presentation="date" [(ngModel)]="plantdateSup" formControlName="plantdate">
             </ion-datetime>
           </ion-grid>
         </ion-item>
@@ -485,12 +485,12 @@
         <!-- วันปลูก/ตัด -->
         <ion-item class="w3-round-large divMg-5 ion-item-border">
           <ion-grid class="divPadding-5 ">
-            <ion-text *ngIf="canetype == 'R'">วันปลูก</ion-text>
+            <ion-text *ngIf="canetype == 'R'">ปลูกก่อน15 มค.</ion-text>
             <ion-text *ngIf="canetype == 'T'">วันตัด <ion-text class="w3-sand showDesc w3-border w3-round-xlarge">
                 {{ cpActivitydata.plantdateTh }}</ion-text>
             </ion-text>
-            <ion-text *ngIf="canetype == 'R'" class="w3-sand showDesc w3-border w3-round-xlarge">ก่อน 15 มค.</ion-text>
-
+            <ion-text *ngIf="canetype == 'R'" class="w3-sand showDesc w3-border w3-round-xlarge">
+              {{ cpActivitydata.plantdateThSup }}</ion-text>
             <!-- <ion-label>เลือก >></ion-label> -->
 
             <!-- <ion-datetime locale="th-TH" [(ngModel)]="plantdate" formControlName="plantdate"></ion-datetime> -->

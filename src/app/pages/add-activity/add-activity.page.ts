@@ -68,6 +68,7 @@ export class AddActivityPage implements OnInit {
   cl_groupM = "warning"  // สีกลุ่มบำรุง
   //ตัวแปร สำหรับ binding ฟอร์มกับ field database
   plantdate = ""
+  plantdateSup = ""
   // tg_plantdate = false;
   groundlevel = ""
   tg_groundlevel = false; // Default value
@@ -144,11 +145,13 @@ export class AddActivityPage implements OnInit {
     cp_data = localStorage.getItem('cpfmdata')
     cp_data = JSON.parse(cp_data)
     cp_data = cp_data.filter((o: any) => o.itid === this.itid)
-    // console.log('cpdata filter :', cp_data)
+    console.log('cpdata filter :', cp_data)
     this.cpdata = cp_data[0];
     this.perTon = cp_data.ton_last_fm
     this.yearid = this.cpdata.year
     this.canetype = this.cpdata.canetype.substring(2, 1)
+    this.plantdateSup = this.cpdata.PlantDate
+    console.log('plantdateSup ', this.plantdateSup)
     console.log('canetype: ', this.canetype)
 
     // เชคว่า เคยมีการบันทึกข้อมูลไว้แล้วหรือไม่จาก itid
@@ -200,7 +203,7 @@ export class AddActivityPage implements OnInit {
           this.frm_addcpact = fb.group({
             itid: [cp_data.itid, [Validators.required]],
             yearid: [cp_data.year, [Validators.required]],  // ปีของแปลงอ้อย
-            plantdate: [''],  // วันปลูก/ตัด
+            plantdate: [cp_data.PlantDate],  // วันปลูก/ตัด
             groundlevel: ['',],  // การปรับระดับพื้นที่
             // hardSoilBlast: [''],  // การระเบิดดาน
             hardSoilBlast_code: ['',],  // การระเบิดดาน 0=ไม่ได้ทำ 1=น้อยกว่า40cm 2=มากกว่า40cm
@@ -291,7 +294,7 @@ export class AddActivityPage implements OnInit {
 
   // ปรับสีกิจกรรมทำแล้ว สีเขียว
   ck_fmacOK(data: any) {
-    console.log('ตรวจสอบกิจกรรมแต่ละอย่าง เพื่อกำหนดสี..')
+    // console.log('ตรวจสอบกิจกรรมแต่ละอย่าง เพื่อกำหนดสี..')
     let x = data
     // console.log('data ', x)
     // อ้อยปลูกใหม่ ต้องก่อน 15 มค.
@@ -328,7 +331,8 @@ export class AddActivityPage implements OnInit {
     }
 
     // อ้อยตก ต้องมีวันตัด
-    this.plantdate = x.plantdate
+    this.plantdate = x.plantdate  // วันตัดของ ชาวไร่
+    // this.plantdateSup = x.plantdateSup   // วันตัดของ นสส
     if (x.canetype.substring(2, 1) == 'T' && x.plantdate !== null) {
       this.cl_plantdate = 'success'
     }
@@ -821,12 +825,12 @@ export class AddActivityPage implements OnInit {
       case (x !== null || x !== ''):
         console.log('มีการเลือก', x)
         this.showFertRatio = true;
-        this.cl_NaturalFertilizer = "warning"
+        this.cl_seedclear = "success"
         break;
       default:
         console.log('ว่าง หรือ null', x)
         this.showFertRatio = false;
-        this.cl_NaturalFertilizer = "warning"
+        this.cl_seedclear = "warning"
         break;
     }
   }
