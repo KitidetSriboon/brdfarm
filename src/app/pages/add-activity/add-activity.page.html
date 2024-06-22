@@ -162,7 +162,7 @@
             <!-- <ion-select-option value="0">ยังไม่ใส่</ion-select-option> -->
             <ion-select-option value="50">50</ion-select-option>
             <ion-select-option value="100">100</ion-select-option>
-            <ion-select-option value="200">200</ion-select-option>
+            <ion-select-option value="250">250</ion-select-option>
             <ion-select-option value="500">500</ion-select-option>
             <ion-select-option value="1000">1,000</ion-select-option>
             <ion-select-option value="1001">>1,000</ion-select-option>
@@ -192,7 +192,7 @@
             </ion-row>
             <ion-row>
               <ion-col>
-                <ion-select *ngIf="showChemical1Formula" (ionChange)="ck_NaturalFertilizer($event)"
+                <ion-select *ngIf="showChemical1Formula" (ionChange)="ck_chemical($event)"
                   formControlName="fertilizer1Ratio" [(ngModel)]="fertilizer1Ratio" label="ใส่อัตรา กก./ไร่"
                   placeholder="เลือก">
                   <ion-select-option value="25">25</ion-select-option>
@@ -217,7 +217,7 @@
             </ion-row>
             <ion-row>
               <ion-col>
-                <ion-select *ngIf="showChemical2Formula" (ionChange)="ck_NaturalFertilizer($event)"
+                <ion-select *ngIf="showChemical2Formula" (ionChange)="ck_chemical($event)"
                   formControlName="fertilizer2Ratio" [(ngModel)]="fertilizer2Ratio" label="ใส่อัตรา กก./ไร่"
                   placeholder="เลือก">
                   <ion-select-option value="25">25</ion-select-option>
@@ -242,7 +242,7 @@
             </ion-row>
             <ion-row>
               <ion-col>
-                <ion-select *ngIf="showChemical3Formula" (ionChange)="ck_NaturalFertilizer($event)"
+                <ion-select *ngIf="showChemical3Formula" (ionChange)="ck_chemical($event)"
                   formControlName="fertilizer3Ratio" [(ngModel)]="fertilizer3Ratio" label="ใส่อัตรา กก./ไร่"
                   placeholder="เลือก">
                   <ion-select-option value="25">25</ion-select-option>
@@ -304,6 +304,7 @@
               <ion-col class="w3-display-right ion-padding-end">
                 <ion-select justify="end" (ionChange)="ck_disease($event)" formControlName="disease"
                   [(ngModel)]="cpActivitydata.disease">
+                  <ion-select-option value="0">ไม่มีโรค</ion-select-option>
                   <ion-select-option *ngFor="let item of diseaseData" [value]="item.disease">{{ item.descript}}
                   </ion-select-option>
                 </ion-select>
@@ -323,6 +324,7 @@
               <ion-col class="w3-display-right ion-padding-end">
                 <ion-select justify="end" (ionChange)="ck_insect($event)" formControlName="insect"
                   [(ngModel)]="cpActivitydata.insect">
+                  <ion-select-option value="0">ไม่มีแมลง</ion-select-option>
                   <ion-select-option *ngFor="let item of insectData" [value]="item.insect">{{ item.insectdesc}}
                   </ion-select-option>
                 </ion-select>
@@ -648,7 +650,7 @@
             </ion-text>
             <ion-list style="margin-top: 5px;">
               <ion-item>
-                <ion-select (ionChange)="ck_NaturalFertilizer($event)" formControlName="naturalfertilizer"
+                <ion-select (ionChange)="ck_NaturalFertilizerSelect($event)" formControlName="naturalfertilizer"
                   [(ngModel)]="naturalfertilizer" label="เลือก >>" placeholder="เลือก">
                   <ion-select-option disabled>++ประเภทอินทรีย์++</ion-select-option>
                   <ion-select-option *ngFor="let item of organicType" [value]="item.id.toString()">{{ item.descript }}
@@ -660,7 +662,7 @@
                   [(ngModel)]="naturalFertilizerRatio" label="ใส่อัตรา กก./ไร่ >>" placeholder="เลือก">
                   <ion-select-option value="50">50</ion-select-option>
                   <ion-select-option value="100">100</ion-select-option>
-                  <ion-select-option value="200">200</ion-select-option>
+                  <ion-select-option value="250">250</ion-select-option>
                   <ion-select-option value="500">500</ion-select-option>
                   <ion-select-option value="1000">1,000</ion-select-option>
                   <ion-select-option value="1001">>1,000</ion-select-option>
@@ -761,7 +763,7 @@
               <ion-item>
                 <ion-select label="เลือก >>" (ionChange)="ck_disease($event)" formControlName="disease"
                   [(ngModel)]="disease">
-                  <ion-select-option value="">ยังไม่ระบุ</ion-select-option>
+                  <ion-select-option value="0">ไม่มีโรค</ion-select-option>
                   <ion-select-option *ngFor="let item of diseaseData" [value]="item.disease">{{ item.descript}}
                   </ion-select-option>
                 </ion-select>
@@ -779,7 +781,7 @@
               <ion-item>
                 <ion-select label="เลือก >>" (ionChange)="ck_insect($event)" formControlName="insect"
                   [(ngModel)]="insect">
-                  <ion-select-option value="">ยังไม่ระบุ</ion-select-option>
+                  <ion-select-option value="0">ไม่มีแมลง</ion-select-option>
                   <ion-select-option *ngFor="let item of insectData" [value]="item.insect">{{ item.insectdesc}}
                   </ion-select-option>
                 </ion-select>

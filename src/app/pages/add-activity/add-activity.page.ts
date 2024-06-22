@@ -769,47 +769,74 @@ export class AddActivityPage implements OnInit {
   }
 
   ck_NaturalFertilizerSelect(e: any) {
+    this.cl_NaturalFertilizer = "warning"
     let x: any = e.detail.value
     switch (true) {
       case (x !== 0):
         console.log('user seleccted', x)
         this.showFertRatio = true;
-        this.cl_NaturalFertilizer = "success"
+        // this.cl_NaturalFertilizer = "success"
         break;
       case '' || null:
         console.log('case null', x)
         this.showFertRatio = false;
-        this.cl_NaturalFertilizer = "warning"
+        // this.cl_NaturalFertilizer = "warning"
         break;
       case (x == 0):
         console.log('case 0', x)
         this.showFertRatio = false;
-        this.cl_NaturalFertilizer = "warning"
+        // this.cl_NaturalFertilizer = "warning"
         break;
       default:
         console.log('default', x)
         this.showFertRatio = false;
-        this.cl_NaturalFertilizer = "warning"
+        // this.cl_NaturalFertilizer = "warning"
         break;
     }
   }
 
+  // อัตราการใส่อินทรีย์ปรับตามประเภทที่ใส่ อินทรี 6-3-3 50 กก. เม็ด 100 ผง 250 อื่นๆ 250 เทกอง 500
   ck_NaturalFertilizer(e: any) {
     let x: number = e.detail.value
-    console.log('อัตราการใส่ปุ๋ยอินทรีย์', x)
+    let y = this.naturalfertilizer
+    console.log('ประเภทอินทรีย์ และ อัตรา', y, x)
     switch (true) {
-      case (x > 0 && x < 500):
-        console.log('case >0 < 500', x)
-        this.cl_NaturalFertilizer = "warning"
-        break;
-      case (x >= 500):
-        console.log('case >=500', x)
+      case (y == '1' && x >= 50):
+        console.log('6-3-3 ใส่ 50 กก.', x)
         this.cl_NaturalFertilizer = "success"
         break;
-      case '' || null:
-        console.log('case null', x)
+      case (y == '3' && x >= 100):
+        console.log('อินทรีย์เม็ด ใส่ 100 กก.', x)
+        this.cl_NaturalFertilizer = "success"
+        break;
+      case (y == '2' && x >= 250):
+        console.log('อินทรีย์ผงใส่กระสอบ25kg ใส่ 250 กก.', x)
+        this.cl_NaturalFertilizer = "success"
+        break;
+      case (y == '99' && x >= 250):
+        console.log('อินทรีย์อื่นๆ ใส่ 250 กก.', x)
+        this.cl_NaturalFertilizer = "success"
+        break;
+      case (y == '4' && x >= 500):
+        console.log('เทกองผสมโดโลไมท์ ใส่ 500 กก.', x)
+        this.cl_NaturalFertilizer = "success"
+        break;
+      case (y == '0'):
+        console.log('ยังไม่ใส่', x)
         this.cl_NaturalFertilizer = "warning"
         break;
+      // case (x > 0 && x < 500):
+      //   console.log('case >0 < 500', x)
+      //   this.cl_NaturalFertilizer = "warning"
+      //   break;
+      // case (x >= 500):
+      //   console.log('case >=500', x)
+      //   this.cl_NaturalFertilizer = "success"
+      //   break;
+      // case '' || null:
+      //   console.log('case null', x)
+      //   this.cl_NaturalFertilizer = "warning"
+      //   break;
       default:
         console.log('default', x)
         this.cl_NaturalFertilizer = "warning"
@@ -858,8 +885,8 @@ export class AddActivityPage implements OnInit {
   ck_chemical(e: any) {
     let y: number = Number(this.fertilizer1Ratio) + Number(this.fertilizer2Ratio) + Number(this.fertilizer3Ratio)
     console.log('chemical ratio is:', y)
-    if (y >= 150) {
-      this.cl_FertilizerRound1 = "success"
+    if (y >= 100) {
+      this.cl_fertilizer1Ratio = "success"
     }
   }
 
@@ -867,13 +894,6 @@ export class AddActivityPage implements OnInit {
   ck_chemical1Formula(e: any) {
     let x = e.detail.value
     x = parseInt(x)
-    let y: any = Number(this.fertilizer1Ratio) + Number(this.fertilizer2Ratio) + Number(this.fertilizer3Ratio)
-    console.log('chemical ratio is:', y)
-    if (y >= 150) {
-      this.cl_FertilizerRound1 = "success"
-    } else {
-      this.cl_FertilizerRound1 = "warning"
-    }
     switch (true) {
       case (x >= 50):
         // this.cl_FertilizerRound1 = "success"
@@ -896,13 +916,6 @@ export class AddActivityPage implements OnInit {
   ck_chemical2Formula(e: any) {
     let x = e.detail.value
     x = parseInt(x)
-    let y: number = this.fertilizer1Ratio + this.fertilizer2Ratio + this.fertilizer3Ratio
-    console.log('chemical ratio is:', y)
-    if (y >= 150) {
-      this.cl_FertilizerRound1 = "success"
-    } else {
-      this.cl_FertilizerRound1 = "warning"
-    }
     switch (true) {
       case (x >= 50):
         this.cl_FertilizerRound2 = "success"
@@ -924,13 +937,6 @@ export class AddActivityPage implements OnInit {
   ck_chemical3Formula(e: any) {
     let x = e.detail.value
     x = parseInt(x)
-    let y: number = this.fertilizer1Ratio + this.fertilizer2Ratio + this.fertilizer3Ratio
-    console.log('chemical ratio is:', y)
-    if (y >= 150) {
-      this.cl_FertilizerRound1 = "success"
-    } else {
-      this.cl_FertilizerRound1 = "warning"
-    }
     switch (true) {
       case (x >= 50):
         this.cl_FertilizerRound3 = "success"
@@ -953,7 +959,7 @@ export class AddActivityPage implements OnInit {
     let x: any = e.detail.value
     console.log('ck_disease value ', x)
     switch (true) {
-      case (x == 0):
+      case (x == '0'):
         console.log('ไม่มีโรค', x)
         this.cl_disease = "success"
         break;
