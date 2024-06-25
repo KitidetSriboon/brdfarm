@@ -377,11 +377,44 @@ export class AddActivityPage implements OnInit {
     // ปุ๋ยอินทรีย์
     this.naturalfertilizer = x.naturalFertilizer.toString()
     this.naturalFertilizerRatio = x.naturalFertilizerRatio.toString()
-    if (x.naturalFertilizerRatio >= 500) {
-      this.cl_NaturalFertilizer = 'success'
-    } else {
-      this.cl_NaturalFertilizer = 'warning'
+    let y1 = x.naturalFertilizer.toString()
+    let x1 = x.naturalFertilizerRatio.toString()
+    switch (true) {
+      case (y1 == '1' && x1 >= 50):
+        console.log('6-3-3 ใส่ 50 กก.', x1 ,y1)
+        this.cl_NaturalFertilizer = "success"
+        break;
+      case (y1 == '3' && x1 >= 100):
+        console.log('อินทรีย์เม็ด ใส่ 100 กก.', x1 ,y1)
+        this.cl_NaturalFertilizer = "success"
+        break;
+      case (y1 == '2' && x1 >= 250):
+        console.log('อินทรีย์ผงใส่กระสอบ25kg ใส่ 250 กก.', x1 ,y1)
+        this.cl_NaturalFertilizer = "success"
+        break;
+      case (y1 == '99' && x1 >= 250):
+        console.log('อินทรีย์อื่นๆ ใส่ 250 กก.', x1 ,y1)
+        this.cl_NaturalFertilizer = "success"
+        break;
+      case (y1 == '4' && x1 >= 500):
+        console.log('เทกองผสมโดโลไมท์ ใส่ 500 กก.', x1 ,y1)
+        this.cl_NaturalFertilizer = "success"
+        break;
+      case (y1 == '0'):
+        console.log('ยังไม่ใส่', x1 ,y1)
+        this.cl_NaturalFertilizer = "warning"
+        break;
+      default:
+        console.log('default', x1 ,y1)
+        this.cl_NaturalFertilizer = "warning"
+        break;
     }
+
+    // if (x.naturalFertilizerRatio >= 500) {
+    //   this.cl_NaturalFertilizer = 'success'
+    // } else {
+    //   this.cl_NaturalFertilizer = 'warning'
+    // }
 
     //ปุ๋ยเคมี
     this.fertilizer1Formula = x.fertilizer1Formula.toString()
@@ -394,7 +427,7 @@ export class AddActivityPage implements OnInit {
     let chemicalSum: number = Number(x.fertilizer1Ratio) + Number(x.fertilizer2Ratio) + Number(x.fertilizer3Ratio)
     // console.log('chemicalSum ', chemicalSum)
 
-    if (chemicalSum >= 150) {
+    if (chemicalSum >= 100) {
       this.cl_FertilizerRound1 = 'success'
     }
 
@@ -886,7 +919,7 @@ export class AddActivityPage implements OnInit {
     let y: number = Number(this.fertilizer1Ratio) + Number(this.fertilizer2Ratio) + Number(this.fertilizer3Ratio)
     console.log('chemical ratio is:', y)
     if (y >= 100) {
-      this.cl_fertilizer1Ratio = "success"
+      this.cl_FertilizerRound1 = "success"
     }
   }
 
