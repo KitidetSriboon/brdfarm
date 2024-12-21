@@ -123,19 +123,19 @@ export class BrdsqlService {
   }
 
   // สรุปอ้อยเข้า ซีซีเอส แต่ละวันของชาวไร่
-  cpcDiaryFm(fmcode: string) {
+  cpcDiaryFm(fmcode: string ,year: any) {
     const url = this.baseSelectUrl
       + "s=*&"
-      + "f=dbqbrd.dbo.fnc_cpcfmdairy('" + fmcode + "')&"
+      + "f=dbqbrd.dbo.fnc_cpcfmdairy_"+ year +"('" + fmcode + "')&"
       + "w=1=1 order by reportdate_th"
     return this.http.get<any[]>(url)
   }
 
   // CCS BRR Diary
-  ccsBrr() {
+  ccsBrr(year: any) {
     const url = this.baseSelectUrl
       + "s=Format(reportdate,'dd-MMM-yy','th') reportdate_th, SUM(wgt_net) wgt_net, Convert(decimal(10, 2), AVG(ccs_value)) ccs_value&"
-      + "f=dbqbrd.dbo.v_qcard6667&"
+      + "f=dbqbrd.dbo.v_qcard"+ year +"&"
       + "w=ccs_value > 0 group by reportdate order by reportdate_th"
     return this.http.get<any[]>(url)
   }
@@ -287,19 +287,19 @@ export class BrdsqlService {
   }
 
   // ข้อมูล สรุปอ้อยเข้าหีบ
-  getCpcSummary(fmcode: any) {
+  getCpcSummary(fmcode: any ,year: any) {
     const url = this.baseSelectUrl
       + "s=*"
-      + "&f=dbQBRD.dbo.fnc_cpcSummaryFM('" + fmcode + "')"
+      + "&f=dbQBRD.dbo.fnc_cpcSummaryFM_"+ year +"('" + fmcode + "')"
       + "&w=1=1";
     return this.http.get<any[]>(url);
   }
 
   // ข้อมูล รายละเอียดอ้อยเข้าหีบของชาวไร่
-  getCpcDetail(fmcode: any) {
+  getCpcDetail(fmcode: any ,year: any) {
     const url = this.baseSelectUrl
       + "s=*"
-      + "&f=dbQBRD.dbo.fnc_cpcFM('" + fmcode + "')"
+      + "&f=dbQBRD.dbo.fnc_cpcFM_"+ year +"('" + fmcode + "')"
       + "&w=1=1 order by reportdate desc";
     return this.http.get<any[]>(url);
   }

@@ -33,6 +33,7 @@ export class CpcPage implements OnInit {
   lineChart_ccsbrr: any;
 
   yearDesc?: string = GlobalConstants.yearLabel
+  yearCR?: string = GlobalConstants.yearCr;
   cpcSummaryFm?: any = []
   cpcDiaryFm?: any = []
   cpcDetail?: any = []
@@ -54,7 +55,7 @@ export class CpcPage implements OnInit {
   ) { Chart.register(...registerables); }
 
   async ionViewWillEnter(e: any) {
-    console.log('ionViewWillEnter');
+    // console.log('ionViewWillEnter');
 
     setTimeout(() => {
       // Any calls to load data go here
@@ -79,9 +80,9 @@ export class CpcPage implements OnInit {
         }, 500);
       }
       // ccs brr diary
-      this.brdsql.ccsBrr().subscribe({
+      this.brdsql.ccsBrr(this.yearCR).subscribe({
         next: (res: any) => {
-          // console.log('res ccs ', res)
+          // console.log('res ccs brr: ', res)
           this.ccsbrr = res.recordset
         }, error(err) {
 
@@ -90,12 +91,12 @@ export class CpcPage implements OnInit {
         },
       })
       setTimeout(() => {
-        this.lineChartCcsBrr()
+        this.lineChartCcsBrr(this.ccsbrr);
       }, 500)
 
-      this.subcpcDetail = this.brdsql.getCpcDetail(this.fmcode).subscribe({
+      this.subcpcDetail = this.brdsql.getCpcDetail(this.fmcode ,this.yearCR).subscribe({
         next: (res: any) => {
-          // console.log('getCpcDetail res ', res)
+          // console.log('getCpcDetail f:'+ this.fmcode + ' y:' + this.yearCR +' res: ', res)
           this.cpcDetail = res.recordset
         }, error(err) {
           alert('Error :' + err)
@@ -114,11 +115,11 @@ export class CpcPage implements OnInit {
   }
 
   async ionViewDidEnter() {
-    console.log('ionViewDidEnter');
+    // console.log('ionViewDidEnter');
   }
 
   ngAfterViewInit() {
-    console.log('ngAfterViewInit');
+    // console.log('ngAfterViewInit');
     // setTimeout(() => {
     //   this.lineChartMethod();
     //   this.lineChartCcs();
@@ -280,9 +281,10 @@ export class CpcPage implements OnInit {
     // this.lineChart_ccs.destroy()
   }
 
-  async lineChartCcsBrr() {
+  async lineChartCcsBrr(para_data: any) {
     this.lineChart_ccs = null
-    let data = this.ccsbrr
+    let data = para_data
+    // console.log('para_data : ' ,data);
     this.lineChart_ccsbrr = await new Chart(this.lineCanvas_ccsbrr.nativeElement, {
       type: 'line',
       data: {

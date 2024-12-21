@@ -310,9 +310,9 @@ export class Tab1Page {
   subCPCSummary!: Subscription;
   async getCpcSummary(fmcode: string) {
     localStorage.removeItem('cpcSummaryFm')
-    this.subCPCSummary = await this.brdsql.getCpcSummary(fmcode).subscribe({
+    this.subCPCSummary = await this.brdsql.getCpcSummary(fmcode ,this.yearCr).subscribe({
       next: (res: any) => {
-        // console.log('getCpcSummary res ', res)
+        // console.log('getCpcSummary : '+ fmcode + ' :' +this.yearCr+' res: ', res)
         this.cpcSummaryFm = res.recordset[0]
         localStorage.setItem('cpcSummaryFm', JSON.stringify(this.cpcSummaryFm))
         // this.closeLoading()
@@ -386,10 +386,10 @@ export class Tab1Page {
   // ข้อมูลสรุปอ้อยเข้า ซีซีเอส แต่ละวันของชาวไร่
   async getcpcDiaryFm() {
     this.cpcDiaryFm = []
-    await this.brdsql.cpcDiaryFm(this.fmcode).subscribe({
+    await this.brdsql.cpcDiaryFm(this.fmcode ,this.yearCr).subscribe({
       next: (res: any) => {
         this.cpcDiaryFm = res.recordset
-        // console.log('cpcDiaryFm ', this.cpcDiaryFm)
+        console.log('cpcDiaryFm : '+ this.fmcode + ' :' +this.yearCr+' res: ', res)
         localStorage.setItem('cpcdiaryfm', JSON.stringify(this.cpcDiaryFm))
       }, complete() {
       }, error(err) {

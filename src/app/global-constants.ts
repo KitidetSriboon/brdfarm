@@ -4,10 +4,10 @@ export class GlobalConstants {
     public static appname: string = "brdFarm";
     public static yearCr: string = "2425";
     public static yearTh: string = "6768";
-    public static appversion: string = "1.8.2 Beta";
-    public static lastupdate: string = "25 มิ.ย.67"
+    public static appversion: string = "2.0.0";
+    public static lastupdate: string = "21 ธ.ค.67"
     public static versionDesc = [
-        { "subject": "1.แก้ไขหน้าบันทึกกิจกรรมแปลง" },
+        { "subject": "1.อัพเดตข้อมูลฤดูหีบปี 67/68" },
         // { "subject": "2.แก้ไขฟอร์มบันทึกกิจกรรมแปลง แยกกิจกรรมอ้อยใหม่ อ้อยตอ" },
         // { "subject": "3.อัพเดต รายงานกิจกรรมแปลง ตาม BRR Model" },
     ];
