@@ -52,7 +52,9 @@ export class CpcPage implements OnInit {
   constructor(
     private brdsql: BrdsqlService,
     private excelsv: ExcelService,
-  ) { Chart.register(...registerables); }
+  ) { 
+    Chart.register(...registerables); 
+  }
 
   async ionViewWillEnter(e: any) {
     // console.log('ionViewWillEnter');
@@ -358,6 +360,25 @@ export class CpcPage implements OnInit {
     /* save to file */
     XLSX.writeFile(wb, this.fmcode + filename);
 
+  }
+
+  async exportToExcelTable1(tb: string) {
+    let element: any
+    let filename: string = '_.xlsx'
+    switch (tb) {
+      case 'tb1':
+        element = document.getElementById('tb_cpcdetail')
+        filename = this.fmcode+'-รายการอ้อยเข้าหีบ.xlsx'
+        break;
+      case 'tb2':
+        element = document.getElementById('tb_cpcpc')
+        filename = this.fmcode+'-รายการแปลงอ้อยเข้าหีบ.xlsx'
+        break;
+      default:
+        element = null
+        break;
+    }
+    this.excelsv.exportToExcel(element, filename);
   }
 
   cpcCountdown() {
